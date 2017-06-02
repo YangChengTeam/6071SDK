@@ -9,6 +9,7 @@ import android.util.Log;
  * 
  * @author zdh
  * 
+ * fix bug 
  */
 public class Logger {
 	private static final boolean DEBUG = true;
