@@ -1,0 +1,184 @@
+<resources>
+
+    <string name="app_name">飞游SDK</string>
+    <string name="message_quick_login">短信一键快速登录</string>
+    <string name="quick_in">立即进入</string>
+    <string name="send_message_finished">发送短信完成验证</string>
+    <string name="other_login">其他登录方式</string>
+    <string name="change_account_login">切换到账号登录</string>
+    <string name="change_mobile_login">切换到手机登录</string>
+    <string name="agree_text">《服务条款》</string>
+    <string name="service_number_text">客服电话:4007966071   QQ:3453725652</string>
+    <string name="quick_register_text">快速注册</string>
+    <string name="has_login">已有账号登录</string>
+    <string name="quick_play">极速试玩</string>
+    <string name="quick_play_hint">一键试玩，快速体验游戏</string>
+    <string name="phone_login_or_register">手机号注册登录</string>
+    <string name="play_account_text">账号:</string>
+    <string name="register_account_text">账号:</string>
+    <string name="into_game_text">进入游戏</string>
+    <string name="register_text">注册</string>
+    <string name="account_hint_text">请输入账号</string>
+    <string name="account_pass_text">请输入密码</string>
+    <string name="forget_text">忘记密码</string>
+    <string name="photo_text">手机号</string>
+    <string name="photo_hint_text">请输入手机号</string>
+    <string name="validate_text">验证码</string>
+    <string name="validate_hint_text">请输入验证码</string>
+    <string name="get_validate_code_text">获取验证码</string>
+    <string name="ptb_text">平台币:</string>
+    <string name="coin_text">币</string>
+    <string name="yxb_text">游戏币:</string>
+    <string name="charge_text">充值</string>
+    <string name="auto_login_text">自动登录</string>
+    <string name="change_account_text">切换账号</string>
+    <string name="compaign_detail_text">查看详情</string>
+    <string name="compaign_time_text">活动时间：</string>
+    <string name="compaign_content_text">活动内容：</string>
+    <string name="service_text">联系客服</string>
+    <string name="service_qq_num_text">客服QQ</string>
+    <string name="service_qq_num1_text">客服QQ-1</string>
+    <string name="service_qq_num2_text">客服QQ-2</string>
+    <string name="kefu1_text">客服1</string>
+    <string name="kefu2_text">客服2</string>
+    <string name="call_number_text">电话:4007966071</string>
+    <string name="qq_number_text">QQ:3453725652</string>
+    <string name="service_time_text">工作时间：周一至周日 8:00 至 24:00</string>
+    <string name="service_tel_text">客服电话：4007966071</string>
+    <string name="service_qq_text">客服QQ号：3453725652</string>
+    <string name="qq_server_text">客服  QQ：</string>
+    <string name="weixin_number_text">微信公众号：</string>
+    <string name="default_weixin_number_text">6071weixin</string>
+    <string name="compaign_center_text">活动中心</string>
+    <string name="hint_nick_name_text">请填写昵称</string>
+    <string name="bind_mobile_text">请绑定手机号</string>
+    <string name="balance_text">余额：</string>
+    <string name="charge_10_text">10 元</string>
+    <string name="charge_50_text">50 元</string>
+    <string name="charge_100_text">100 元</string>
+    <string name="charge_200_text">200 元</string>
+    <string name="charge_500_text">500 元</string>
+    <string name="charge_1000_text">1000 元</string>
+    <string name="custom_money_text">自定义金额</string>
+    <string name="other_pay_text">使用第三方平台支付</string>
+    <string name="alipay_text">支付宝充值</string>
+    <string name="wxpay_text">微信充值</string>
+    <string name="recommend_text">(推荐)</string>
+    <string name="charge_confirm_text">立即充值</string>
+    <string name="game_coin_list_text">游戏币</string>
+    
+    <string name="update_user_info_text">修改资料</string>
+    <string name="head_img_text">头像</string>
+    <string name="nick_name_text">昵称</string>
+    <string name="sex_text">性别</string>
+    <string name="birth_text">生日</string>
+    <string name="mobile_text">手机号</string>
+    <string name="email_text">邮箱</string>
+    <string name="qq_text">QQ</string>
+    <string name="exchange_text">立即兑换</string>
+    <string name="score_text">积分</string>
+    <string name="game_package_count_text">共有礼包:</string>
+    <string name="detail_game_package_text">查看</string>
+    <string name="score_store_text">积分商城</string>
+    <string name="game_package_text">游戏礼包</string>
+	<string name="surplus_text">剩余</string>
+	<string name="detail_get_text">领取</string>
+	<string name="game_package_detail_text">游戏礼包详情</string>
+	<string name="order_id_text">订单号:</string>
+	<string name="charge_record_text">充值记录</string>
+	<string name="charge_to_text">到账</string>
+	<string name="charge_unit_text"> 元</string>
+	
+	<string name="update_ps_text">修改密码</string>
+	<string name="bind_text">绑定手机</string>
+	<string name="again_bind_text">重新绑定手机</string>
+	<string name="is_bind_text">(已绑定)</string>
+	<string name="un_bind_text">(未绑定)</string>
+	<string name="account_safety_text">账号安全</string>
+	<string name="validate_phone_text">验证手机-重置密码</string>
+	<string name="set_new_ps_text">设置新密码</string>
+	
+	<string name="old_ps_text">旧密码</string>
+	<string name="new_ps_text">新密码</string>
+	<string name="confirm_ps_text">确认密码</string>
+	
+	<string name="old_ps_hint_text">请输入原始密码</string>
+	<string name="new_ps_hint_text">请输入新密码</string>
+	<string name="confirm_ps_hint_text">请再次输入新密码</string>
+	<string name="submit_text">提交</string>
+	
+	<string name="payment_text">订单支付</string>
+	
+	<string name="coupon_coin_text">优惠券抵用</string>
+	<string name="platform_coin_text">平台币抵用</string>
+	<string name="game_coin_text">游戏币抵用</string>
+	
+	<string name="share_wechat_text">微信</string>
+	<string name="share_friends_text">朋友圈</string>
+	<string name="share_qq_text">QQ</string>
+	<string name="share_weibo_text">微博</string>
+	<string name="cancel_text">取消</string>
+	
+	<string name="alipay_pay_text">支付宝</string>
+	<string name="alipay_recommend_text">(推荐)</string>
+	<string name="wxpay_pay_text">微信支付</string>
+	<string name="pay_result">实付款:</string>
+	<string name="pay_text">立即支付</string>
+	<string name="notice_text">公告</string>
+	
+	<string name="nick_name_update_text">修改昵称</string>
+	<string name="email_update_text">修改邮箱</string>
+	<string name="qq_update_text">修改QQ</string>
+	<string name="sex_update_text">修改性别</string>
+	<string name="hint_update_info_text">请输入信息</string>
+	<string name="update_info_text">请输入修改信息</string>
+	<string name="update_btn_text">确认修改</string>
+	
+	<string name="boy_text">男</string>
+	<string name="girl_text">女</string>
+	
+	<string name="order_amount_text">订单金额：</string>
+	<string name="activity_detail_text">活动详情</string>
+	<string name="line_text"> - </string>
+	
+	<string name="login_out_text">退出游戏</string>
+	<string name="down_game_box_text">下载游戏盒子</string>
+	<string name="open_game_box_text">打开游戏盒子</string>
+	
+	<string name="continue_pay_text">继续支付</string>
+	<string name="pay_exit_text">确认退出</string>
+	
+	<string name="continue_pay_hint_text">支付未完成，是否继续支付?</string>
+	<string name="pay_hint_text">温馨提示</string>
+	
+	<string name="pay_way_text">支付方式：</string>
+	<string name="order_money_text">总额：</string>
+	<string name="order_real_money_text">实付：</string>
+	
+	<string name="sdk_charge_success_text">充值成功</string>
+	<string name="sdk_charge_fail_text">充值失败</string>
+	<string name="sdk_charge_wait_pay_text">待支付</string>
+	
+	<string name="cancel_order_text">取消订单</string>
+	<string name="cancel_order_hint_text">是否取消订单?</string>
+	
+	<string name="pay_config_text">确定</string>
+	<string name="pay_cancel_text">取消</string>
+	
+	<string name="game_speed_text">游戏加速</string>
+	
+	<string name="box_down_text">游戏盒子下载</string>
+	<string name="box_down_hint_text">下载游戏盒子,让游戏飞起来,是否下载?</string>
+	<string name="down_text">立即下载</string>
+	<string name="loading_text">加载中···</string>
+	<string name="no_more_text">已经到底了</string>
+	<string name="no_charge_record_text">暂无充值记录</string>
+	
+	<string name="sdk_all_game_charge_text">全部游戏</string>
+	<string name="sdk_current_game_charge_text">当前游戏</string>
+	
+	<string name="copy_text">复制</string>
+	
+	<string name="sdk_version_text">版本：</string>
+	<string name="default_version_text">2.1</string>
+</resources>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="sdk_transparent">#0000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="white1">#f2f1f1f1</color>
+    <color name="white2">#f2f5f5f5</color>
+    <color name="black">#000000</color>
+    <color name="black1">#333333</color>
+    <color name="loading_color">#FFEC43</color>
+    <color name="loading_circle">#000000</color>
+	<color name="message_send_color">#999999</color>
+	<color name="other_login_color">#a0a0a0</color>
+	<color name="feiyou_service">#8a8a8a</color>
+	<color name="service_bg_color">#f1f1f1</color>
+	<color name="welcome_color">#555555</color>
+	<color name="line_color">#7fbfbfbf</color>
+	<color name="login_edit_text_color">#a9a9a9</color>
+	<color name="border_line_color">#18b2f5</color>
+	<color name="change_color">#545454</color>
+	<color name="input_color">#343434</color>
+	<color name="account_register_color">#19b1f5</color>
+	<color name="test_play_account_color">#ff5654</color>
+	<color name="text_selected_color">#18b2f5</color>
+	<color name="text_normal_color">#545454</color>
+	<color name="quick_play_selected_color">#1887cb</color>
+	<color name="top_line_color">#49444c</color>
+	<color name="module_default_bg_color">#fafafa</color>
+	<color name="module_select_bg_color">#eeeeee</color>
+	<color name="compaign_detail_bg_color">#7f000000</color>
+	<color name="service_line_color">#dddddd</color>
+	<color name="compaign_bg_color">#e1dbdd</color>
+	<color name="pay_recommend_color">#fe0103</color>
+	
+	<color name="score_color">#00bc00</color>
+	<color name="charge_record_text_color">#565656</color>
+	<color name="alipay_recommend_color">#fcf555</color>
+	<color name="coupon_line_color">#d7d7d4</color>
+	<color name="pay_color">#5c5c5c</color>
+	
+	<color name="sdk_common_bg_border_color">#7ff5f5f5</color>
+	
+</resources>

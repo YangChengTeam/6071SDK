@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="lib" path="libs/alipaySDK-20150602.jar"/>
+	<classpathentry kind="lib" path="libs/android-support-v4.jar"/>
+	<classpathentry kind="lib" path="libs/commons-codec-1.6.jar"/>
+	<classpathentry kind="lib" path="libs/commons-lang.jar"/>
+	<classpathentry kind="lib" path="libs/okhttp-3.4.2.jar"/>
+	<classpathentry kind="lib" path="libs/okio-1.11.0.jar"/>
+	<classpathentry kind="lib" path="libs/fastjson-1.2.16.jar"/>
+	<classpathentry kind="lib" path="libs/ipaynow_base_v2.0.1.jar"/>
+	<classpathentry kind="lib" path="libs/ipaynow_qqwp_v1.0.4.jar"/>
+	<classpathentry kind="lib" path="libs/ipaynow_upmp_assist_v1.0.4.jar"/>
+	<classpathentry kind="lib" path="libs/ipaynow_upmp_plugin_v1.0.4.jar"/>
+	<classpathentry kind="lib" path="libs/ipaynow_view_v2.0.1.jar"/>
+	<classpathentry kind="lib" path="libs/ipaynow_wechatwp_v2.0.0.jar"/>
+	<classpathentry kind="lib" path="libs/picasso-2.5.2.jar"/>
+	<classpathentry kind="lib" path="libs/umeng-analytics-v6.0.7.jar"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="output" path="bin/classes"/>
+</classpath>

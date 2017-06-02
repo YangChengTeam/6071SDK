@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 按压后的背景 -->
+    <item android:drawable="@drawable/pay_select" android:state_pressed="true"></item>
+    <!-- 选择后的背景 -->
+    <item android:drawable="@drawable/pay_select" android:state_activated="true"></item>
+    <item android:drawable="@drawable/pay_select" android:state_selected="true"></item>
+    <item android:drawable="@drawable/pay_select" android:state_focused="true"></item>
+    <item android:drawable="@drawable/pay_select" android:state_checked="true"></item>
+
+    <!-- 默认的背景 -->
+    <item android:drawable="@drawable/pay_normal"></item>
+
+</selector>

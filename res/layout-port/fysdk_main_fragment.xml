@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/bg_layout"
+        android:layout_width="300dp"
+        android:layout_height="430dp"
+        android:background="@drawable/common_bg"
+        android:orientation="vertical" >
+
+        <include
+            android:id="@+id/common_title"
+            layout="@layout/main_common_title" />
+
+        <View
+            android:id="@+id/top_line_view"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/line_color" >
+        </View>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/common_input_bg"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:id="@+id/user_message_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal" >
+
+                    <LinearLayout
+                        android:id="@+id/user_head_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="5dp"
+                        android:orientation="vertical"
+                        android:gravity="center" >
+
+                        <com.game.sdk.view.CustomRoundImageView
+                            android:id="@+id/user_head_iv"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
+                            android:layout_marginTop="4dp"
+                            android:src="@drawable/user_default_icon" />
+
+                        <ImageView
+                            android:id="@+id/user_member_level_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:src="@drawable/member_level0" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:orientation="vertical" >
+
+                        <LinearLayout
+                            android:id="@+id/nick_name_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:gravity="left" >
+
+                            <TextView
+                                android:id="@+id/nick_name_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawablePadding="3dp"
+                                android:drawableRight="@drawable/user_name_edit_icon"
+                                android:gravity="left"
+                                android:hint="@string/hint_nick_name_text"
+                                android:textColor="@color/welcome_color"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/mobile_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="13dp"
+                            android:layout_marginTop="8dp"
+                            android:gravity="left"
+                            android:orientation="horizontal" >
+
+                            <ImageView
+                                android:id="@+id/mobile_iv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="center"
+                                android:src="@drawable/phone_unbind_icon" />
+
+                            <TextView
+                                android:id="@+id/mobile_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="2dp"
+                                android:gravity="center"
+                                android:hint="@string/bind_mobile_text"
+                                android:textColor="@color/welcome_color"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="10dp"
+                    android:orientation="horizontal" >
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:orientation="vertical" >
+
+                        <LinearLayout
+                            android:id="@+id/platform_count_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:gravity="center"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:text="@string/ptb_text"
+                                android:textColor="@color/welcome_color"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/platform_count_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="2dp"
+                                android:layout_marginRight="5dp"
+                                android:text="1000"
+                                android:textColor="@color/welcome_color"
+                                android:textSize="14sp" />
+
+                            <ImageView
+                                android:id="@+id/platform_refresh_iv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/refresh_icon" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/game_count_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="8dp"
+                            android:gravity="center"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:text="@string/yxb_text"
+                                android:textColor="@color/welcome_color"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/game_count_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="2dp"
+                                android:layout_marginRight="5dp"
+                                android:text="500"
+                                android:textColor="@color/welcome_color"
+                                android:textSize="14sp" />
+
+                            <ImageView
+                                android:id="@+id/game_money_list_iv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/game_count_icon" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/charge_layout"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="5dp" >
+
+                        <Button
+                            android:id="@+id/charge_btn"
+                            android:layout_width="match_parent"
+                            android:layout_height="35dp"
+                            android:background="@drawable/common_btn"
+                            android:text="@string/charge_text"
+                            android:textColor="@color/white"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical" >
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/viewpager"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+				
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_marginBottom="6dp" >
+
+                    <CheckBox
+                        android:id="@+id/auto_login_ck"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:button="@null"
+                        android:checked="false"
+                        android:drawableLeft="@drawable/check_box_selector"
+                        android:drawablePadding="4dp"
+                        android:text="@string/auto_login_text"
+                        android:textColor="@color/welcome_color"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/change_account_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:drawableLeft="@drawable/change_account"
+                        android:drawablePadding="4dp"
+                        android:gravity="center"
+                        android:text="@string/change_account_text"
+                        android:textColor="@color/welcome_color"
+                        android:textSize="14sp" />
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

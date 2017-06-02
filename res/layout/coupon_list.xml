@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_pw"
+    android:layout_width="100dip"
+    android:layout_height="wrap_content"
+    android:background="@drawable/coupon_bg"
+    android:gravity="center_vertical"
+    android:orientation="vertical" >
+
+    <ListView
+        android:id="@+id/coupon_list_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:divider="@color/coupon_line_color"
+        android:dividerHeight="0.5dp"
+        android:focusable="true"
+        android:listSelector="@drawable/coupon_list_selector"
+        android:paddingLeft="5dip"
+        android:paddingRight="5dip" >
+    </ListView>
+
+</LinearLayout>
