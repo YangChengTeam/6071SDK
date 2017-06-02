@@ -8,7 +8,7 @@ import android.util.Log;
  * 日志输出类
  * 
  * @author Administrator
- * 
+ * fix bug 
  */
 public class Logger {
 	private static final boolean DEBUG = true;
