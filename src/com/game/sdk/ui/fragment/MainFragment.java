@@ -449,31 +449,43 @@ public class MainFragment extends BaseFragment implements OnClickListener,
 
 		if (v.getId() == findIdByString("back_iv")) {
 			((Activity) mainActivity).finish();
+			return;
 		}
 		if (v.getId() == findIdByString("share_iv")) {
 			shareDialog = new ShareDialog((Activity) mainActivity);
 			shareDialog.show();
+			return;
 		}
 
 		if (v.getId() == findIdByString("user_head_iv")) {
 			Intent intent = new Intent(mainActivity, UserInfoActivity.class);
 			startActivity(intent);
+			return;
 		}
 
 		if (v.getId() == findIdByString("nick_name_layout")) {
 			Intent intent = new Intent(mainActivity, UserInfoActivity.class);
 			startActivity(intent);
+			return;
 		}
 		
 		//跳转到手机号绑定界面
 		if (v.getId() == findIdByString("mobile_layout")) {
 			GoagalInfo.bindMobileFrom = 0;
 			mainActivity.changeFragment(8);
+			return;
 		}
 		
 		if (v.getId() == findIdByString("charge_btn")) {
+			//Intent intent = new Intent(mainActivity, ChargeActivity.class);
+			//startActivity(intent);
+			
 			Intent intent = new Intent(mainActivity, ChargeActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(intent);
+			mainActivity.overridePendingTransition(0, 0);
+			return;
 		}
 
 		//if (v.getId() == findIdByString("platform_refresh_iv")) {
@@ -486,9 +498,11 @@ public class MainFragment extends BaseFragment implements OnClickListener,
 		
 		if (v.getId() == findIdByString("platform_count_layout")) {
 			toGameBoxPersionInfo();
+			return;
 		}
 		if (v.getId() == findIdByString("game_count_layout")) {
 			toGameBoxPersionInfo();
+			return;
 		}
 		if (v.getId() == findIdByString("change_account_tv")) {
 			GoagalInfo.loginType = 2;
@@ -496,6 +510,7 @@ public class MainFragment extends BaseFragment implements OnClickListener,
 			GoagalInfo.isLogin = false;
 			fyGmaeSDk.switchUser();
 			((Activity) mainActivity).finish();
+			return;
 		}
 	}
 
