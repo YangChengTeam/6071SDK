@@ -7,7 +7,7 @@ import android.util.Log;
 /**
  * 日志输出类
  * 
- * @author Administrator
+ * @author zdh
  * 
  */
 public class Logger {
