@@ -49,6 +49,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.WindowManager;
@@ -620,6 +622,16 @@ public class Util {
 		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 		ComponentName componentName = intent.resolveActivity(context.getPackageManager());
 		return componentName != null;
+	}
+
+	private static final Handler gUiHandler = new Handler(Looper.getMainLooper());
+
+	public static void post(Runnable r) {
+		gUiHandler.post(r);
+	}
+
+	public static void postDelayed(long delay, Runnable r) {
+		gUiHandler.postDelayed(r, delay);
 	}
 
 }
