@@ -600,10 +600,10 @@ public class AccountLoginFragment extends BaseFragment implements OnClickListene
 				Logger.msg("登录失败----");
 
 				Util.toast(loginActivity,
-						StringUtils.isEmpty(loginResult.message) ? "用户名或密码错误，请重试" : loginResult.message);
+						StringUtils.isEmpty(loginResult.message) ? "服务器异常，请重试" : loginResult.message);
 
 				LoginErrorMsg loginErrorMsg = new LoginErrorMsg(-1,
-						StringUtils.isEmpty(loginResult.message) ? "用户名或密码错误，请重试" : loginResult.message);
+						StringUtils.isEmpty(loginResult.message) ? "服务器异常，请重试" : loginResult.message);
 				GoagalInfo.loginlistener.loginError(loginErrorMsg);
 
 			}

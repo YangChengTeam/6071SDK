@@ -213,6 +213,8 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 		super.onResume();
 		MobclickAgent.onPageStart("UserInfoActivity");
 		MobclickAgent.onResume(this);
+		
+		MobclickAgent.onEvent(this,"open_user_center_page");
 	}
 
 	@Override

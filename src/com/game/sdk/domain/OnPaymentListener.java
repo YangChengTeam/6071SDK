@@ -21,5 +21,5 @@ public interface OnPaymentListener {
 	 * 充值取消回调
 	 * @param cancelMsg
 	 */
-	void paymentCancel(PaymentCancelMsg cancelMsg);
+	//void paymentCancel(PaymentCancelMsg cancelMsg);
 }

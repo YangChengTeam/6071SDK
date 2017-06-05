@@ -518,15 +518,24 @@ public class MainFragment extends BaseFragment implements OnClickListener,
 	 * 跳转到游戏盒子个人中心页面
 	 */
 	public void toGameBoxPersionInfo(){
-		String pwd = Base64.encode(Encrypt.encode(GoagalInfo.userInfo.password).getBytes());
 		
-		String mobile = StringUtils.isEmpty(GoagalInfo.userInfo.mobile) ? GoagalInfo.userInfo.username: GoagalInfo.userInfo.mobile;
+		if (CheckUtil.isInstallGameBox(mainActivity)) {
+			//自定义事件
+			MobclickAgent.onEvent(mainActivity,"my_coin_open_game_box");
+			
+			String pwd = Base64.encode(Encrypt.encode(GoagalInfo.userInfo.password).getBytes());
+			
+			String mobile = StringUtils.isEmpty(GoagalInfo.userInfo.mobile) ? GoagalInfo.userInfo.username: GoagalInfo.userInfo.mobile;
+			
+			Uri uri = Uri.parse("gamebox://?act=MainActivity&tab=3&pwd=" + pwd + "&phone=" + mobile + "&username=" + GoagalInfo.userInfo.username);
+			
+			Logger.msg("游戏盒子个人中心---" + uri.toString());
+			Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+			mainActivity.startActivity(intent);
+		} else {
+			gameBoxDown(4);
+		}
 		
-		Uri uri = Uri.parse("gamebox://?act=MainActivity&tab=3&pwd=" + pwd + "&phone=" + mobile + "&username=" + GoagalInfo.userInfo.username);
-		
-		Logger.msg("游戏盒子个人中心---" + uri.toString());
-		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-		mainActivity.startActivity(intent);
 	}
 	
 	/**
@@ -680,12 +689,18 @@ public class MainFragment extends BaseFragment implements OnClickListener,
 			ModuleInfo moduleInfo = moduleInfoList.get(position);
 			if (moduleInfo.type == 0
 					&& moduleInfo.typeVal.equals(Constants.SERVER_CALL)) {
+				
+				//自定义事件
+				MobclickAgent.onEvent(mainActivity,"call_service");
+				
 				callDialog = new ServiceDialog(mainActivity, 0.6f);
 				callDialog.setCanceledOnTouchOutside(true);
 				callDialog.show();
 			}
 			if (moduleInfo.type == 0
 					&& moduleInfo.typeVal.equals(Constants.COMPAIGN_CENTER)) {
+				//自定义事件
+				MobclickAgent.onEvent(mainActivity,"active_center");
 				mainActivity.changeFragment(2);
 			}
 			if (moduleInfo.type == 0
@@ -705,6 +720,9 @@ public class MainFragment extends BaseFragment implements OnClickListener,
 				
 				if (CheckUtil.isInstallGameBox(mainActivity)) {
 					
+					//自定义事件
+					MobclickAgent.onEvent(mainActivity,"score_open_game_box");
+					
 					String pwd = Base64.encode(Encrypt.encode(GoagalInfo.userInfo.password).getBytes());
 
 					String mobile = StringUtils.isEmpty(GoagalInfo.userInfo.mobile) ? GoagalInfo.userInfo.username: GoagalInfo.userInfo.mobile;
@@ -716,7 +734,7 @@ public class MainFragment extends BaseFragment implements OnClickListener,
 					Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 					mainActivity.startActivity(intent);
 				} else {
-					gameBoxDown();
+					gameBoxDown(1);
 				}
 				
 			}
@@ -735,6 +753,9 @@ public class MainFragment extends BaseFragment implements OnClickListener,
 				
 				if (CheckUtil.isInstallGameBox(mainActivity)) {
 					
+					//自定义事件
+					MobclickAgent.onEvent(mainActivity,"package_open_game_box");
+					
 					String pwd = Base64.encode(Encrypt.encode(GoagalInfo.userInfo.password).getBytes());
 					
 					String mobile = StringUtils.isEmpty(GoagalInfo.userInfo.mobile) ? GoagalInfo.userInfo.username: GoagalInfo.userInfo.mobile;
@@ -743,23 +764,28 @@ public class MainFragment extends BaseFragment implements OnClickListener,
 					Uri uri = Uri.parse("gamebox://?act=GiftListActivity&pwd=" + pwd + "&phone="
 							+ mobile + "&username=" + GoagalInfo.userInfo.username+"&data="+tempData);
 					
-					Logger.msg("积分商城URI---" + uri.toString());
+					Logger.msg("游戏礼包URI---" + uri.toString());
 					Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 					mainActivity.startActivity(intent);
 					
 				}else {
-					gameBoxDown();
+					gameBoxDown(2);
 				}
 			}
 			
 			if (moduleInfo.type == 0
 					&& moduleInfo.typeVal.equals(Constants.ACCOUNT_SAFETY)) {
+				MobclickAgent.onEvent(mainActivity,"account_safety");
 				mainActivity.changeFragment(6);
 			}
 			
 			//游戏中心
 			if (moduleInfo.type == 0 && moduleInfo.typeVal.equals(Constants.GAME_CENTER)) {
 				if (CheckUtil.isInstallGameBox(mainActivity)) {
+					
+					//自定义事件
+					MobclickAgent.onEvent(mainActivity,"gamecenter_open_game_box");
+					
 					String pwd = Base64.encode(Encrypt.encode(GoagalInfo.userInfo.password).getBytes());
 					
 					String mobile = StringUtils.isEmpty(GoagalInfo.userInfo.mobile) ? GoagalInfo.userInfo.username: GoagalInfo.userInfo.mobile;
@@ -771,37 +797,54 @@ public class MainFragment extends BaseFragment implements OnClickListener,
 					Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 					mainActivity.startActivity(intent);
 				}else{
-					gameBoxDown();
+					gameBoxDown(3);
 				}
 			}
 		}
 	}
 	
 	
-	public void gameBoxDown() {
+	public void gameBoxDown(int type) {
 		if (!SystemUtil.isServiceWork(mainActivity, "com.game.sdk.service.DownGameBoxService")) {
 			// 如果下载文件存在，直接启动安装
 			File downFile = new File(PathUtil.getApkPath("game_box"));
 			if (downFile.exists()) {
 				if (ZipUtil.isArchiveFile(downFile)) {
 					if (GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.boxInfo != null && !StringUtils.isEmpty(GoagalInfo.inItInfo.boxInfo.boxDownUrl)) {
-						new DownAsyncTask().execute();
+						new DownAsyncTask(type).execute();
 					}
 				} else {
 					downFile.delete();// 删除下载的错误的盒子文件，提示用户重新下载
 					Util.toast(mainActivity, "盒子文件错误，请重新下载");
 				}
 			} else {
-				downBoxApp();
+				downBoxApp(type);
 			}
 		} else {
 			Util.toast(mainActivity, "游戏盒子下载中");
 		}
 	}
 
-	public void downBoxApp() {
+	public void downBoxApp(int type) {
 		if (GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.boxInfo != null
 				&& !StringUtils.isEmpty(GoagalInfo.inItInfo.boxInfo.boxDownUrl)) {
+			
+			if(type == 1){
+				MobclickAgent.onEvent(mainActivity,"score_down_game_box");
+			}
+			
+			if(type == 2){
+				MobclickAgent.onEvent(mainActivity,"package_down_game_box");
+			}
+			
+			if(type == 3){
+				MobclickAgent.onEvent(mainActivity,"gamecenter_down_game_box");
+			}
+			
+			if(type == 4){
+				MobclickAgent.onEvent(mainActivity,"my_coin_down_game_box");
+			}
+			
 			Util.toast(mainActivity, "开始下载游戏盒子");
 			Intent intent = new Intent(mainActivity, DownGameBoxService.class);
 			intent.putExtra("downUrl", GoagalInfo.inItInfo.boxInfo.boxDownUrl);
@@ -811,8 +854,14 @@ public class MainFragment extends BaseFragment implements OnClickListener,
 		}
 	}
 	
-	
 	public class DownAsyncTask extends AsyncTask<Integer, Integer, Integer> {
+		
+		public int type;
+		
+		public DownAsyncTask(int type){
+			this.type = type;
+		}
+		
 		@Override
 		protected Integer doInBackground(Integer... params) {
 			return CheckUtil.getFileLengthByUrl(GoagalInfo.inItInfo.boxInfo.boxDownUrl);
@@ -825,7 +874,7 @@ public class MainFragment extends BaseFragment implements OnClickListener,
 			
 			if(result != downFile.length()){
 				downFile.delete();
-				downBoxApp();
+				downBoxApp(type);
 			}else{
 				Intent intent = new Intent(Intent.ACTION_VIEW);
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

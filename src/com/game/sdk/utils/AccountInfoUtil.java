@@ -96,7 +96,7 @@ public class AccountInfoUtil {
 				nUser.password = userInfo.password;
 				
 				if (userInfos != null) {
-					userInfos.add(i,nUser);
+					userInfos.add(0,nUser);
 					continue;
 				}
 			}
@@ -106,7 +106,7 @@ public class AccountInfoUtil {
 				userInfos.remove(i);
 				if (userInfos != null) {
 					userInfo.username = _userInfo.username;
-					userInfos.add(i,userInfo);
+					userInfos.add(0,userInfo);
 					continue;
 				}
 			}

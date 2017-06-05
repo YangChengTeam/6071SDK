@@ -33,6 +33,7 @@
                 android:layout_marginLeft="25dp"
                 android:gravity="center"
                 android:text="@string/play_account_text"
+                android:textColor="@color/black1"
                 android:textSize="16sp" />
 
             <TextView
@@ -40,6 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:textColor="@color/black1"
                 android:layout_marginLeft="5dp"
                 android:textSize="16sp" />
         </LinearLayout>
@@ -72,6 +74,7 @@
                     android:id="@+id/line_view"
                     android:layout_width="0.5dp"
                     android:layout_height="20dp"
+                    android:layout_marginLeft="6dp"
                     android:layout_gravity="center_vertical"
                     android:background="@color/line_color" />
 
@@ -128,6 +131,7 @@
                     android:id="@+id/validate_line_view"
                     android:layout_width="0.5dp"
                     android:layout_height="20dp"
+                    android:layout_marginLeft="6dp"
                     android:layout_gravity="center_vertical"
                     android:background="@color/line_color" />
 

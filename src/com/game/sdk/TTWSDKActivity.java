@@ -161,13 +161,12 @@ public class TTWSDKActivity extends Activity implements OnClickListener {
 							Logger.msg("充值失败：code:" + errorMsg.code + "  ErrorMsg:" + errorMsg.msg + "  预充值的金额：" + errorMsg.money);
 						}
 						
-						
-						@Override
+						/*@Override
 						public void paymentCancel(PaymentCancelMsg cancelMsg) {
 							// TODO Auto-generated method stub
 							//Toast.makeText(getApplication(), "充值取消",Toast.LENGTH_LONG).show();
 							Logger.msg("充值取消paymentCancel--->");
-						}
+						}*/
 					});
 			return;
 		}

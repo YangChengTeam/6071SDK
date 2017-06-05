@@ -735,7 +735,9 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 		super.onResume();
 		MobclickAgent.onPageStart("ChargeActivity");
 		MobclickAgent.onResume(this);
-
+		
+		MobclickAgent.onEvent(this,"sdk_open_charge_page");
+		
 		if (isnowpay.equals("2")) {
 			if (nowpayCode.equals("00")) {
 				Util.toast(this, "支付成功");

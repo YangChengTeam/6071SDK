@@ -181,8 +181,8 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 							GoagalInfo.paymentListener.paymentSuccess(pci);
 						}
 
-						//finish();
-						finishSuccess();
+						finish();
+						//finishSuccess();
 					} else {
 						PaymentErrorMsg msg_e = new PaymentErrorMsg();
 						msg_e.code = resultStatus;
@@ -702,14 +702,14 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 						}
 					} else {
 						Util.toast(PayActivity.this, "支付成功");
-						finishSuccess();
-						//finish();
+						//finishSuccess();
+						finish();
 					}
 				}
 			} else if (result != null && result.code == HttpConfig.ORDER_ERROR) {
 				Util.toast(PayActivity.this, result.errorMsg != null ? result.errorMsg : "订单错误，请关闭后重试");
-				finishSuccess();
-				//finish();
+				//finishSuccess();
+				finish();
 			} else {
 				Util.toast(PayActivity.this, result.errorMsg);
 			}
@@ -873,7 +873,9 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 		super.onResume();
 		MobclickAgent.onPageStart("PayActivity");
 		MobclickAgent.onResume(this);
-
+		
+		MobclickAgent.onEvent(this,"game_open_charge");
+		
 		Logger.msg("Payactivity onResume---");
 		// setOrientation();
 
@@ -892,8 +894,8 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 					GoagalInfo.paymentListener.paymentSuccess(pci);
 				}
 
-				finishSuccess();
-				//finish();
+				//finishSuccess();
+				finish();
 			}
 			if (nowpayCode.equals("02")) {
 				//Util.toast(this, "支付取消");
@@ -1008,7 +1010,7 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 		Logger.msg("Pay----onDestroy--->");
 	}
 
-	public void finishSuccess() {
+	/*public void finishSuccess() {
 		super.finish();
 		Logger.msg("正常支付成功后finishSuccess--->");
 	}
@@ -1031,6 +1033,6 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 }

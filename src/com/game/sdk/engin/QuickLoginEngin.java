@@ -167,6 +167,7 @@ public class QuickLoginEngin extends BaseEngin<QuickLoginInfo> {
 		}
 		
 		GoagalInfo.userInfo.username = accountNumber;
+		GoagalInfo.userInfo.mobile = quickLoginInfo.mobile;
 		GoagalInfo.userInfo.password = quickLoginInfo.passWord;
 		GoagalInfo.userInfo.userId = quickLoginInfo.userId;
 		GoagalInfo.userInfo.logintime = quickLoginInfo.lastLoginTime;
