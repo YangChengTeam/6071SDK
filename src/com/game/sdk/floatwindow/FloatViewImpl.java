@@ -1,14 +1,5 @@
 package com.game.sdk.floatwindow;
 
-import com.game.sdk.domain.GoagalInfo;
-import com.game.sdk.ui.MainActivity;
-import com.game.sdk.utils.Constants;
-import com.game.sdk.utils.DimensionUtil;
-import com.game.sdk.utils.EmulatorCheckUtil;
-import com.game.sdk.utils.Logger;
-import com.game.sdk.utils.MResource;
-import com.game.sdk.utils.Util;
-
 import android.animation.Animator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
@@ -26,11 +17,20 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
+import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+import com.game.sdk.domain.GoagalInfo;
+import com.game.sdk.ui.MainActivity;
+import com.game.sdk.utils.Constants;
+import com.game.sdk.utils.DimensionUtil;
+import com.game.sdk.utils.EmulatorCheckUtil;
+import com.game.sdk.utils.Logger;
+import com.game.sdk.utils.MResource;
+import com.game.sdk.utils.Util;
 
 public class FloatViewImpl {
     public static int speed = 1;
@@ -250,12 +250,12 @@ public class FloatViewImpl {
         PropertyValuesHolder mPropertyValuesY = PropertyValuesHolder.ofInt("y", y1, y2);
         ValueAnimator mAnimator = ValueAnimator.ofPropertyValuesHolder(mPropertyValuesX,
                 mPropertyValuesY);
-
+        mAnimator.setInterpolator(new BounceInterpolator());//使用线性插值器
         mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                int x = Integer.parseInt(animation.getAnimatedValue("x") + "");
-                int y = Integer.parseInt(animation.getAnimatedValue("y") + "");
+                int x = (int) animation.getAnimatedValue("x");
+                int y = (int) animation.getAnimatedValue("y");
                 wmParams.x = x;
                 wmParams.y = y;
                 mWindowManager.updateViewLayout(mFloatLayout, wmParams);
