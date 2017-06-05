@@ -254,8 +254,8 @@ public class FloatViewImpl {
         mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                int x = (int) animation.getAnimatedValue("x");
-                int y = (int) animation.getAnimatedValue("y");
+                int x = Integer.parseInt(animation.getAnimatedValue("x") + "");
+                int y = Integer.parseInt(animation.getAnimatedValue("y") + "");
                 wmParams.x = x;
                 wmParams.y = y;
                 mWindowManager.updateViewLayout(mFloatLayout, wmParams);
@@ -312,13 +312,14 @@ public class FloatViewImpl {
     }
 
     private boolean isHolder = false;
+
     private void setHolder() {
         isHolder = true;
         if (xfor == 0) {
             Util.postDelayed(1000, new Runnable() {
                 @Override
                 public void run() {
-                    if(isHolder) {
+                    if (isHolder) {
                         isHolder = false;
                         setBackground("float_holder");
                     }
@@ -328,7 +329,7 @@ public class FloatViewImpl {
             Util.postDelayed(1000, new Runnable() {
                 @Override
                 public void run() {
-                    if(isHolder) {
+                    if (isHolder) {
                         isHolder = false;
                         setBackground("float_holder2");
                     }
