@@ -254,8 +254,8 @@ public class FloatViewImpl {
         mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                int x = (int) animation.getAnimatedValue("x");
-                int y = (int) animation.getAnimatedValue("y");
+                int x = Integer.parseInt(animation.getAnimatedValue("x") + "");
+                int y = Integer.parseInt(animation.getAnimatedValue("y") + "");
                 wmParams.x = x;
                 wmParams.y = y;
                 mWindowManager.updateViewLayout(mFloatLayout, wmParams);

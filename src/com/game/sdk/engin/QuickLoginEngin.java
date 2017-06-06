@@ -150,8 +150,8 @@ public class QuickLoginEngin extends BaseEngin<QuickLoginInfo> {
 	public void saveUserInfo(QuickLoginInfo quickLoginInfo) {
 
 		// 存储账号，若手机号为空，则存储用户名
-		String accountNumber = StringUtils.isEmpty(quickLoginInfo.mobile) == true ? quickLoginInfo.userName
-				: quickLoginInfo.mobile;
+		String accountNumber = StringUtils.isEmpty(quickLoginInfo.userName) == true ? quickLoginInfo.mobile
+				: quickLoginInfo.userName;
 
 		boolean isExist = UserLoginInfodao.getInstance(mContext).findUserLoginInfoByName(accountNumber);
 
@@ -184,6 +184,6 @@ public class QuickLoginEngin extends BaseEngin<QuickLoginInfo> {
 		PreferenceUtil.getImpl(this.context).putInt(SystemUtil.getPhoneIMEI(mContext), GoagalInfo.loginType);
 
 		// 保存用户信息到本地
-		MobileInfoUtil.insertUserInfo(mContext, GoagalInfo.userInfo);
+		//MobileInfoUtil.insertUserInfo(mContext, GoagalInfo.userInfo);
 	}
 }

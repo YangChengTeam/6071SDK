@@ -31,7 +31,9 @@ public class SetNewPassWordFragment extends BaseFragment implements OnClickListe
 	private EditText newPassWordEt;
 
 	private EditText confirmPassWordEt;
-
+	
+	private TextView userNameTv;
+	
 	private Button submitBtn;
 
 	private UpdatePassWordEngin updatePassWordEngin;
@@ -64,14 +66,20 @@ public class SetNewPassWordFragment extends BaseFragment implements OnClickListe
 		loginActivity = (LoginActivity) getActivity();
 		updateDialog = new CustomDialog(loginActivity, "正在修改密码");
 		backIv = findImageViewByString("back_iv");
+		
 		titleTv = findTextViewByString("title_tv");
 		titleTv.setText(findStringByResId("set_new_ps_text"));
 
+		userNameTv = findTextViewByString("user_name_tv");
 		newPassWordEt = findEditTextByString("new_ps_et");
 		confirmPassWordEt = findEditTextByString("confirm_ps_et");
 		submitBtn = findButtonByString("submit_btn");
 		backIv.setOnClickListener(this);
 		submitBtn.setOnClickListener(this);
+		
+		if(!StringUtils.isEmpty(GoagalInfo.userInfo.username)){
+			userNameTv.setText(GoagalInfo.userInfo.username);
+		}
 	}
 
 	@Override

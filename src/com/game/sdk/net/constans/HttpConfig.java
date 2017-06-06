@@ -13,4 +13,7 @@ public class HttpConfig {
     public static final int ORDER_ERROR = -99;
     
     public static final int VALIDATE_CODE_IS_SEND = -1;
+    
+    public static final int PHONE_IS_NOT_BIND = -2;
+    
 }

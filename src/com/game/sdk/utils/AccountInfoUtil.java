@@ -86,7 +86,7 @@ public class AccountInfoUtil {
 		for (int i = 0; i < len; i++) {
 			UserInfo _userInfo = userInfos.get(i);
 			
-			if(!StringUtils.isEmpty(userInfo.mobile) && _userInfo.username.equals(userInfo.mobile)){
+			if(!StringUtils.isEmpty(userInfo.mobile) && !StringUtils.isEmpty(_userInfo.username) && _userInfo.username.equals(userInfo.mobile)){
 				isAdd ++;
 				userInfos.remove(i);
 				
@@ -96,17 +96,17 @@ public class AccountInfoUtil {
 				nUser.password = userInfo.password;
 				
 				if (userInfos != null) {
-					userInfos.add(0,nUser);
+					userInfos.add(i,nUser);
 					continue;
 				}
 			}
 			
-			if (!StringUtils.isEmpty(userInfo.username) && _userInfo.mobile.equals(userInfo.mobile)) {
+			if (!StringUtils.isEmpty(userInfo.username) && !StringUtils.isEmpty(_userInfo.mobile) && _userInfo.mobile.equals(userInfo.mobile)) {
 				isAdd ++;
 				userInfos.remove(i);
 				if (userInfos != null) {
 					userInfo.username = _userInfo.username;
-					userInfos.add(0,userInfo);
+					userInfos.add(i,userInfo);
 					continue;
 				}
 			}

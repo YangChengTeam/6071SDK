@@ -194,6 +194,9 @@ public class ValidatePhoneFragment extends BaseFragment implements OnClickListen
 				GoagalInfo.isGetValidate = 1;
 				// 清空验证码输入框
 				validateCodeEt.setText("");
+			} else if (resultInfo != null && resultInfo.code == HttpConfig.PHONE_IS_NOT_BIND) {//手机未绑定账号
+				Util.toast(loginActivity, resultInfo.message);
+				GoagalInfo.isGetValidate = 0;
 			} else {
 				Util.toast(loginActivity, resultInfo.message);
 				GoagalInfo.isGetValidate = 0;
