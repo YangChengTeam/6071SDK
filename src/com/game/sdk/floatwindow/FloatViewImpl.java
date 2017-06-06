@@ -312,13 +312,14 @@ public class FloatViewImpl {
     }
 
     private boolean isHolder = false;
+
     private void setHolder() {
         isHolder = true;
         if (xfor == 0) {
             Util.postDelayed(1000, new Runnable() {
                 @Override
                 public void run() {
-                    if(isHolder) {
+                    if (isHolder) {
                         isHolder = false;
                         setBackground("float_holder");
                     }
@@ -328,7 +329,7 @@ public class FloatViewImpl {
             Util.postDelayed(1000, new Runnable() {
                 @Override
                 public void run() {
-                    if(isHolder) {
+                    if (isHolder) {
                         isHolder = false;
                         setBackground("float_holder2");
                     }
