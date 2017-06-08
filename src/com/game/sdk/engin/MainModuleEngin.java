@@ -67,7 +67,7 @@ public class MainModuleEngin extends BaseEngin<String> {
 		ParamsInfo paramsInfo = new ParamsInfo();
 
 		paramsInfo.page = page;
-		paramsInfo.user_id = GoagalInfo.userInfo.userId != null ? GoagalInfo.userInfo.userId : "";
+		paramsInfo.user_id = GoagalInfo.userInfo != null && GoagalInfo.userInfo.userId != null ? GoagalInfo.userInfo.userId : "";
 		paramsInfo.version = FYGameSDK.defaultSDK().getVersion() != null ? FYGameSDK.defaultSDK().getVersion() : "";//增加参数-->sdk当前版本号
 		Map<String, String> params = getParams(paramsInfo);
 		this.agetResultInfo(true, params, callback);

@@ -28,6 +28,8 @@ public class UpdatePassWordFragment extends BaseFragment implements OnClickListe
 
 	private TextView titleTv;
 
+	private TextView userNameTv;
+	
 	private EditText newPassWordEt;
 
 	private EditText confirmPassWordEt;
@@ -67,11 +69,16 @@ public class UpdatePassWordFragment extends BaseFragment implements OnClickListe
 		titleTv = findTextViewByString("title_tv");
 		titleTv.setText(findStringByResId("account_safety_text"));
 
+		userNameTv = findTextViewByString("user_name_tv");
 		newPassWordEt = findEditTextByString("new_ps_et");
 		confirmPassWordEt = findEditTextByString("confirm_ps_et");
 		submitBtn = findButtonByString("submit_btn");
 		backIv.setOnClickListener(this);
 		submitBtn.setOnClickListener(this);
+		
+		if(!StringUtils.isEmpty(GoagalInfo.userInfo.username)){
+			userNameTv.setText(GoagalInfo.userInfo.username);
+		}
 	}
 
 	@Override

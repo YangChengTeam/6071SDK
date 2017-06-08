@@ -74,6 +74,9 @@ public class MainActivity extends BaseActivity {
 	public void initData() {
 		super.initData();
 		//MobclickAgent.openActivityDurationTrack(false);
+		
+		//自定义事件,统计SDK主页面打开的次数
+		MobclickAgent.onEvent(MainActivity.this,"fysdk_main_activity");
 	}
 
 	public void setOrientation() {
@@ -99,9 +102,6 @@ public class MainActivity extends BaseActivity {
 		//MobclickAgent.onPageStart("MainActivity");
 		MobclickAgent.onResume(this);
 		//setOrientation();
-		
-		//自定义事件,统计SDK主页面打开的次数
-		MobclickAgent.onEvent(MainActivity.this,"fysdk_main_activity");
 	}
 	
 	@Override
