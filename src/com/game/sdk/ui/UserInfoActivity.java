@@ -8,6 +8,7 @@ import java.util.Map;
 import com.game.sdk.domain.GoagalInfo;
 import com.game.sdk.domain.ResultInfo;
 import com.game.sdk.domain.UpdateInfo;
+import com.game.sdk.domain.UpdateInfoResult;
 import com.game.sdk.domain.UserInfo;
 import com.game.sdk.engin.UpdateAvaterEngin;
 import com.game.sdk.engin.UpdateUserInfoEngin;
@@ -107,7 +108,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 			case 1:
 				if (GoagalInfo.userInfo != null && !StringUtils.isEmpty(GoagalInfo.userInfo.face)) {
 					Picasso.with(UserInfoActivity.this).load(GoagalInfo.userInfo.face).into(userHeadIv);
-					Util.toast(UserInfoActivity.this, "修改成功");
+					Util.toast(UserInfoActivity.this, msg.obj != null && !msg.obj.toString().equals("") ? msg.obj.toString() : "修改成功");
 				}
 
 				break;
@@ -287,7 +288,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 	 * @author admin
 	 *
 	 */
-	private class UpdateUserBirthTask extends AsyncTask<String, Integer, Boolean> {
+	private class UpdateUserBirthTask extends AsyncTask<String, Integer, UpdateInfoResult> {
 		UserInfo uInfo;
 
 		public UpdateUserBirthTask(UserInfo uInfo) {
@@ -300,17 +301,17 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 		}
 
 		@Override
-		protected Boolean doInBackground(String... params) {
+		protected UpdateInfoResult doInBackground(String... params) {
 			updateUserInfoEngin = new UpdateUserInfoEngin(UserInfoActivity.this, uInfo);
 			return updateUserInfoEngin.updateUserInfo();
 		}
 
 		@Override
-		protected void onPostExecute(Boolean result) {
-			super.onPostExecute(result);
+		protected void onPostExecute(UpdateInfoResult updateInfoResult) {
+			super.onPostExecute(updateInfoResult);
 			updateDialog.dismiss();
-			if (result) {
-				Util.toast(UserInfoActivity.this, "修改成功");
+			if (updateInfoResult!= null && updateInfoResult.result) {
+				Util.toast(UserInfoActivity.this, !StringUtils.isEmpty(updateInfoResult.pointMessage)?updateInfoResult.pointMessage:"修改成功");
 			} else {
 				Util.toast(UserInfoActivity.this, "修改失败");
 			}
@@ -447,6 +448,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 
 						if (resultInfo != null && resultInfo.data != null) {
 							GoagalInfo.userInfo.face = resultInfo.data.face;
+							msg.obj = resultInfo.data.pointMessage;
 							msg.what = 1;
 						} else {
 							msg.what = 3;
@@ -481,7 +483,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 	 * @author admin
 	 *
 	 */
-	private class UpdateAvaterTask extends AsyncTask<String, Integer, Boolean> {
+	private class UpdateAvaterTask extends AsyncTask<String, Integer, UpdateInfoResult> {
 
 		public UserInfo updateUserInfo;
 
@@ -495,20 +497,21 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 		}
 
 		@Override
-		protected Boolean doInBackground(String... params) {
+		protected UpdateInfoResult doInBackground(String... params) {
 			UpdateAvaterEngin acaterEngin = new UpdateAvaterEngin(UserInfoActivity.this, updateUserInfo.face);
 			return acaterEngin.updateUserAvater();
 		}
 
 		@Override
-		protected void onPostExecute(Boolean result) {
-			super.onPostExecute(result);
+		protected void onPostExecute(UpdateInfoResult updateInfoResult) {
+			super.onPostExecute(updateInfoResult);
 			updateDialog.dismiss();
-			if (result) {
+			if (updateInfoResult != null && updateInfoResult.result) {
 
 				// 更新头像
 				Message msg = new Message();
 				msg.what = 1;
+				msg.obj = updateInfoResult.pointMessage;
 				handler.sendMessage(msg);
 
 				Logger.msg("修改用户信息成功----");

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
 import com.game.sdk.domain.BindPhoneResult;
+import com.game.sdk.domain.PointMessage;
 import com.game.sdk.domain.ResultInfo;
 import com.game.sdk.net.constans.HttpConfig;
 import com.game.sdk.net.constans.ServerConfig;
@@ -15,7 +16,7 @@ import android.content.Context;
 /**
  * Created by zhangkai on 16/9/20.
  */
-public class BindPhoneEngin extends BaseEngin<String> {
+public class BindPhoneEngin extends BaseEngin<PointMessage> {
 
 	public Context mContext;
 	
@@ -46,14 +47,16 @@ public class BindPhoneEngin extends BaseEngin<String> {
 			params.put("m", phoneNumber);
 			params.put("n", userName);
 			params.put("code", validateCode);
-			ResultInfo<String> resultInfo = getResultInfo(true, String.class, params);
+			ResultInfo<PointMessage> resultInfo = getResultInfo(true, PointMessage.class, params);
 			
 			if (resultInfo != null && resultInfo.code == HttpConfig.STATUS_OK) {
 				Logger.msg("绑定手机号结果----" + JSON.toJSONString(resultInfo.data));
 				bindPhoneResult.result = true;
+				bindPhoneResult.pointMessage = resultInfo.data != null && resultInfo.data.pointMessage != null ? resultInfo.data.pointMessage : "";
 			} else {
 				bindPhoneResult.result = false;
 				bindPhoneResult.message = resultInfo.message;
+				bindPhoneResult.pointMessage = "";
 			}
 			
 		} catch (Exception e) {

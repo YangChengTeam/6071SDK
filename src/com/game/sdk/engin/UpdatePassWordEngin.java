@@ -5,7 +5,9 @@ import java.util.Map;
 
 import com.game.sdk.db.impl.UserLoginInfodao;
 import com.game.sdk.domain.GoagalInfo;
+import com.game.sdk.domain.PointMessage;
 import com.game.sdk.domain.ResultInfo;
+import com.game.sdk.domain.UpdateInfoResult;
 import com.game.sdk.net.constans.HttpConfig;
 import com.game.sdk.net.constans.ServerConfig;
 import com.game.sdk.utils.AccountInfoUtil;
@@ -16,7 +18,7 @@ import android.content.Context;
 /**
  * Created by zhangkai on 16/9/20.
  */
-public class UpdatePassWordEngin extends BaseEngin<String> {
+public class UpdatePassWordEngin extends BaseEngin<PointMessage> {
 
 	public Context mContext;
 
@@ -41,27 +43,28 @@ public class UpdatePassWordEngin extends BaseEngin<String> {
 		return ServerConfig.UPDATE_PASS_WORD_URL;
 	}
 
-	public boolean run() {
-		boolean flag = true;
-		ResultInfo<String> resultInfo = null;
+	public UpdateInfoResult run() {
+		UpdateInfoResult updateInfoResult = new UpdateInfoResult();
+		ResultInfo<PointMessage> resultInfo = null;
 		try {
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("n", userName);
 			params.put("old_pwd", oldPassWord);
 			params.put("new_pwd", newPassWord);
-			resultInfo = getResultInfo(true, String.class, params);
+			resultInfo = getResultInfo(true, PointMessage.class, params);
 
 			if (resultInfo != null && resultInfo.code == HttpConfig.STATUS_OK) {
-				flag = true;
+				updateInfoResult.result = true;
+				updateInfoResult.pointMessage = resultInfo.data != null && resultInfo.data.pointMessage != null ? resultInfo.data.pointMessage : "";
 				saveUserInfo(newPassWord);
 			} else {
-				flag = false;
+				updateInfoResult.result = false;
 			}
 		} catch (Exception e) {
-			flag = false;
+			updateInfoResult.result = false;
 		}
 
-		return flag;
+		return updateInfoResult;
 	}
 
 	/**

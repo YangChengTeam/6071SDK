@@ -10,6 +10,7 @@ import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.game.sdk.FYGameSDK;
 import com.game.sdk.domain.GoagalInfo;
 import com.game.sdk.ui.fragment.AccountSafetyFragment;
 import com.game.sdk.ui.fragment.BaseFragment;
@@ -76,7 +77,7 @@ public class MainActivity extends BaseActivity {
 		//MobclickAgent.openActivityDurationTrack(false);
 		
 		//自定义事件,统计SDK主页面打开的次数
-		MobclickAgent.onEvent(MainActivity.this,"fysdk_main_activity");
+		MobclickAgent.onEvent(MainActivity.this,"fysdk_main_activity",FYGameSDK.defaultSDK().getVersion() != null ? FYGameSDK.defaultSDK().getVersion() : "");
 	}
 
 	public void setOrientation() {

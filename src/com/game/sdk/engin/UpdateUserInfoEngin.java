@@ -6,6 +6,7 @@ import java.util.Map;
 import com.game.sdk.domain.GoagalInfo;
 import com.game.sdk.domain.ResultInfo;
 import com.game.sdk.domain.UpdateInfo;
+import com.game.sdk.domain.UpdateInfoResult;
 import com.game.sdk.domain.UserInfo;
 import com.game.sdk.net.constans.HttpConfig;
 import com.game.sdk.net.constans.ServerConfig;
@@ -43,9 +44,9 @@ public class UpdateUserInfoEngin extends BaseEngin<UpdateInfo> {
 	 * @param updateUserInfo
 	 * @return
 	 */
-	public boolean updateUserInfo() {
-		boolean result = true;
-
+	public UpdateInfoResult updateUserInfo() {
+		UpdateInfoResult updateInfoResult = new UpdateInfoResult();
+		
 		try {
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("user_id", GoagalInfo.userInfo.userId);
@@ -79,15 +80,17 @@ public class UpdateUserInfoEngin extends BaseEngin<UpdateInfo> {
 			ResultInfo<UpdateInfo> resultInfo = getResultInfo(true, UpdateInfo.class, params);
 
 			if (resultInfo != null && resultInfo.code == HttpConfig.STATUS_OK) {
+				updateInfoResult.result = true;
+				updateInfoResult.pointMessage = resultInfo.data != null && resultInfo.data.pointMessage != null ? resultInfo.data.pointMessage : "";
 				Logger.msg("修改用户信息成功!");
 			} else {
-				result = false;
+				updateInfoResult.result = false;
 			}
 		} catch (Exception e) {
-			result = false;
+			updateInfoResult.result = false;
 		}
-
-		return result;
+		
+		return updateInfoResult;
 	}
 
 }

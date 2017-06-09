@@ -78,6 +78,9 @@ public class ServerConfig {
 	//取消订单
 	public static final String PAY_CANCEL_URL = getBaseUrl() + "cancel_pay";
 	
+	//验证订单
+	public static final String PAY_VALIDATE_URL = getBaseUrl() + "orders_chk";
+	
 	public static String getBaseUrl() {
 		return DEBUG ? DEBUG_BASE_URL : BASE_URL;
 	}

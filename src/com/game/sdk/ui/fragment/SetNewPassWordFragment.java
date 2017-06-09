@@ -1,6 +1,7 @@
 package com.game.sdk.ui.fragment;
 
 import com.game.sdk.domain.GoagalInfo;
+import com.game.sdk.domain.UpdateInfoResult;
 import com.game.sdk.engin.UpdatePassWordEngin;
 import com.game.sdk.ui.LoginActivity;
 import com.game.sdk.utils.StringUtils;
@@ -146,7 +147,7 @@ public class SetNewPassWordFragment extends BaseFragment implements OnClickListe
 	 * @author admin
 	 *
 	 */
-	private class UpdatePassWordTask extends AsyncTask<String, Integer, Boolean> {
+	private class UpdatePassWordTask extends AsyncTask<String, Integer, UpdateInfoResult> {
 		String userName;
 		String oldPassWord;
 		String newPassWord;
@@ -163,16 +164,16 @@ public class SetNewPassWordFragment extends BaseFragment implements OnClickListe
 		}
 
 		@Override
-		protected Boolean doInBackground(String... params) {
+		protected UpdateInfoResult doInBackground(String... params) {
 			updatePassWordEngin = new UpdatePassWordEngin(loginActivity, userName, oldPassWord, newPassWord);
 			return updatePassWordEngin.run();
 		}
 
 		@Override
-		protected void onPostExecute(Boolean result) {
-			super.onPostExecute(result);
+		protected void onPostExecute(UpdateInfoResult updateInfoResult) {
+			super.onPostExecute(updateInfoResult);
 			updateDialog.dismiss();
-			if (result) {
+			if (updateInfoResult != null && updateInfoResult.result) {
 				Util.toast(loginActivity, "修改密码成功");
 				loginActivity.changeFragment(2);
 			} else {

@@ -238,7 +238,7 @@ public class BindPhoneFragment extends BaseFragment implements OnClickListener {
 			
 			if (bindPhoneResult.result) {
 				GoagalInfo.userInfo.validateMobile = 1;
-				Util.toast(mainActivity, "绑定手机号成功");
+				Util.toast(mainActivity, !StringUtils.isEmpty(bindPhoneResult.pointMessage)?bindPhoneResult.pointMessage:"绑定手机号成功");
 				
 				//存储账号，若手机号为空，则存储用户名
 				String accountNumber = GoagalInfo.userInfo.username;

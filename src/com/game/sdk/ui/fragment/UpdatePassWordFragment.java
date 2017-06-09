@@ -1,6 +1,7 @@
 package com.game.sdk.ui.fragment;
 
 import com.game.sdk.domain.GoagalInfo;
+import com.game.sdk.domain.UpdateInfoResult;
 import com.game.sdk.engin.UpdatePassWordEngin;
 import com.game.sdk.ui.MainActivity;
 import com.game.sdk.utils.StringUtils;
@@ -145,7 +146,7 @@ public class UpdatePassWordFragment extends BaseFragment implements OnClickListe
 	 * @author admin
 	 *
 	 */
-	private class UpdatePassWordTask extends AsyncTask<String, Integer, Boolean> {
+	private class UpdatePassWordTask extends AsyncTask<String, Integer, UpdateInfoResult> {
 		String userName;
 		String oldPassWord;
 		String newPassWord;
@@ -162,17 +163,17 @@ public class UpdatePassWordFragment extends BaseFragment implements OnClickListe
 		}
 
 		@Override
-		protected Boolean doInBackground(String... params) {
+		protected UpdateInfoResult doInBackground(String... params) {
 			updatePassWordEngin = new UpdatePassWordEngin(mainActivity, userName, oldPassWord, newPassWord);
 			return updatePassWordEngin.run();
 		}
 
 		@Override
-		protected void onPostExecute(Boolean result) {
-			super.onPostExecute(result);
+		protected void onPostExecute(UpdateInfoResult updateInfoResult) {
+			super.onPostExecute(updateInfoResult);
 			updateDialog.dismiss();
-			if (result) {
-				Util.toast(mainActivity, "修改密码成功");
+			if (updateInfoResult != null && updateInfoResult.result) {
+				Util.toast(mainActivity, !StringUtils.isEmpty(updateInfoResult.pointMessage)?updateInfoResult.pointMessage:"修改密码成功");
 				mainActivity.changeFragment(6);
 			} else {
 				Util.toast(mainActivity, "修改密码失败,请稍后重试");

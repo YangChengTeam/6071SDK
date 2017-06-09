@@ -13,12 +13,13 @@ import com.game.sdk.domain.GoagalInfo;
 import com.game.sdk.domain.OnPaymentListener;
 import com.game.sdk.domain.PayInfo;
 import com.game.sdk.domain.PayRequestParams;
+import com.game.sdk.domain.PayValidateResult;
 import com.game.sdk.domain.PaymentCallbackInfo;
-import com.game.sdk.domain.PaymentCancelMsg;
 import com.game.sdk.domain.PaymentErrorMsg;
 import com.game.sdk.engin.ChargeEngin;
 import com.game.sdk.engin.PayCancelEngin;
 import com.game.sdk.engin.PayCoinEngin;
+import com.game.sdk.engin.PayValidateEngin;
 import com.game.sdk.net.constans.HttpConfig;
 import com.game.sdk.net.constans.ServerConfig;
 import com.game.sdk.security.Rsa;
@@ -117,7 +118,9 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 	private List<CouponInfo> couponInfoList;
 
 	private PayCoinEngin payCoinEngin;
-
+	
+	private PayValidateEngin payValidateEngin;
+	
 	private String payWay = Constants.ALIPAY_CR;
 
 	private ChargeEngin chargeEngin;
@@ -176,7 +179,10 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 						pci.money = amount;
 						pci.msg = memo;
 						// Util.toast(PayActivity.this, "支付成功");
-
+						
+						//验证订单
+						new PayValidateTask().execute();
+						
 						if (GoagalInfo.paymentListener != null) {
 							GoagalInfo.paymentListener.paymentSuccess(pci);
 						}
@@ -242,7 +248,9 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 				couponCountTv.setText(GoagalInfo.couponCount + "");
 
 				break;
-
+			case 3:
+				
+				break;
 			default:
 				break;
 			}
@@ -715,7 +723,36 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 			}
 		}
 	}
+	
+	
+	/**
+	 * 支付成功后验证订单
+	 * 
+	 */
+	private class PayValidateTask extends AsyncTask<String, Integer, PayValidateResult> {
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+		}
 
+		@Override
+		protected PayValidateResult doInBackground(String... params) {
+			payValidateEngin = new PayValidateEngin(PayActivity.this, orderid);
+			return payValidateEngin.run();
+		}
+
+		@Override
+		protected void onPostExecute(PayValidateResult payValidateResult) {
+			super.onPostExecute(payValidateResult);
+			if (payValidateResult != null && payValidateResult.result) {
+				Message msg = new Message();
+				msg.obj = payValidateResult.pointMessage;
+				msg.what = 3;
+				handler.sendMessage(msg);
+			}
+		}
+	}
+	
 	/**
 	 * 支付前获取的支付信息
 	 * 
@@ -889,7 +926,10 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 				pci.money = amount;
 				pci.msg = "支付成功";
 				// Util.toast(PayActivity.this, "支付成功");
-
+				
+				//验证订单
+				new PayValidateTask().execute();
+				
 				if (GoagalInfo.paymentListener != null) {
 					GoagalInfo.paymentListener.paymentSuccess(pci);
 				}

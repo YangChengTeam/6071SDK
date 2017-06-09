@@ -1,6 +1,7 @@
 package com.game.sdk.ui;
 
 import com.game.sdk.domain.GoagalInfo;
+import com.game.sdk.domain.UpdateInfoResult;
 import com.game.sdk.domain.UserInfo;
 import com.game.sdk.engin.UpdateUserInfoEngin;
 import com.game.sdk.utils.Constants;
@@ -212,7 +213,7 @@ public class CommonInfoActivity extends BaseActivity implements OnClickListener 
 	 * @author admin
 	 *
 	 */
-	private class UpdateInfoTask extends AsyncTask<String, Integer, Boolean> {
+	private class UpdateInfoTask extends AsyncTask<String, Integer, UpdateInfoResult> {
 		UserInfo uInfo;
 
 		public UpdateInfoTask(UserInfo uInfo) {
@@ -225,17 +226,17 @@ public class CommonInfoActivity extends BaseActivity implements OnClickListener 
 		}
 
 		@Override
-		protected Boolean doInBackground(String... params) {
+		protected UpdateInfoResult doInBackground(String... params) {
 			updateUserInfoEngin = new UpdateUserInfoEngin(CommonInfoActivity.this, uInfo);
 			return updateUserInfoEngin.updateUserInfo();
 		}
 
 		@Override
-		protected void onPostExecute(Boolean result) {
-			super.onPostExecute(result);
+		protected void onPostExecute(UpdateInfoResult updateInfoResult) {
+			super.onPostExecute(updateInfoResult);
 			updateDialog.dismiss();
-			if (result) {
-				Util.toast(CommonInfoActivity.this, "修改成功");
+			if (updateInfoResult!= null && updateInfoResult.result) {
+				Util.toast(CommonInfoActivity.this, !StringUtils.isEmpty(updateInfoResult.pointMessage)?updateInfoResult.pointMessage:"修改成功");
 				setResult(Constants.UPDATE_SUCCESS);
 				finish();
 			} else {

@@ -6,6 +6,7 @@ import java.util.Map;
 import com.game.sdk.domain.GoagalInfo;
 import com.game.sdk.domain.ResultInfo;
 import com.game.sdk.domain.UpdateInfo;
+import com.game.sdk.domain.UpdateInfoResult;
 import com.game.sdk.net.constans.ServerConfig;
 import com.game.sdk.net.entry.Response;
 import com.game.sdk.net.listeners.Callback;
@@ -56,9 +57,9 @@ public class UpdateAvaterEngin extends BaseEngin<UpdateInfo> {
 	 * @param updateUserInfo
 	 * @return
 	 */
-	public boolean updateUserAvater() {
-		boolean result = true;
-
+	public UpdateInfoResult updateUserAvater() {
+		
+		final UpdateInfoResult updateInfoResult = new UpdateInfoResult();
 		try {
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("user_id", GoagalInfo.userInfo.userId);
@@ -70,21 +71,24 @@ public class UpdateAvaterEngin extends BaseEngin<UpdateInfo> {
 				public void onSuccess(ResultInfo<UpdateInfo> resultInfo) {
 					// Util.toast(mContext, "修改图像成功");
 					if (resultInfo != null && resultInfo.data != null) {
+						updateInfoResult.result = true;
+						updateInfoResult.pointMessage = resultInfo.data != null && resultInfo.data.pointMessage != null ? resultInfo.data.pointMessage : "";
 						GoagalInfo.userInfo.face = resultInfo.data.face;
 					}
 				}
-
+				
 				@Override
 				public void onFailure(Response response) {
 					// Util.toast(mContext, "修改图像失败");
+					updateInfoResult.result = false;
 				}
 			});
 
 		} catch (Exception e) {
-			result = false;
+			updateInfoResult.result = false;
 		}
 
-		return result;
+		return updateInfoResult;
 	}
 
 }

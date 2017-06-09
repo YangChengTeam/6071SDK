@@ -18,6 +18,7 @@ import com.game.sdk.engin.LoginEngin;
 import com.game.sdk.floatwindow.FloatViewImpl;
 import com.game.sdk.net.constans.ServerConfig;
 import com.game.sdk.net.impls.OKHttpRequest;
+import com.game.sdk.ui.ChargeActivity;
 import com.game.sdk.ui.InitActivity;
 import com.game.sdk.ui.LoginActivity;
 import com.game.sdk.ui.LoginoutActivity;
@@ -28,6 +29,7 @@ import com.game.sdk.utils.Constants;
 import com.game.sdk.utils.CrashHandler;
 import com.game.sdk.utils.EmulatorCheckUtil;
 import com.game.sdk.utils.Logger;
+import com.game.sdk.utils.MResource;
 import com.game.sdk.utils.MobileInfoUtil;
 import com.game.sdk.utils.NetworkImpl;
 import com.game.sdk.utils.PreferenceUtil;
@@ -257,8 +259,12 @@ public class FYGameSDK {
 		//预初始化(移到此处预初始化，2017.5.12修改)
 		preInit();
 		
+		/*Intent intent = new Intent(context, InitActivity.class);
+		context.startActivity(intent);*/
+		
 		Intent intent = new Intent(context, InitActivity.class);
 		context.startActivity(intent);
+		context.overridePendingTransition(MResource.getIdByName(context, "anim", "fysdk_init_enter"), MResource.getIdByName(context, "anim", "fysdk_init_exit"));
 	}
 	
 	
@@ -708,7 +714,7 @@ public class FYGameSDK {
 	 * @return 返回游戏SDK版本号
 	 */
 	public String getVersion() {
-		return "2.2.14";
+		return "2.2.15";
 	}
 
 	/**
