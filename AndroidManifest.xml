@@ -265,10 +265,10 @@
 				
         <meta-data
             android:name="FY_APPID"
-            android:value="23" />
+            android:value="41" />
         <meta-data
             android:name="FY_GAMEID"
-            android:value="23" />
+            android:value="41" />
         <meta-data
             android:name="FY_AGENT"
             android:value="113" />

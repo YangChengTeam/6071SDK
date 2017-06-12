@@ -249,7 +249,9 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 
 				break;
 			case 3:
-				
+				if(msg.obj != null && !msg.obj.toString().equals("")){
+					Util.toast(PayActivity.this, msg.obj.toString());
+				}
 				break;
 			default:
 				break;

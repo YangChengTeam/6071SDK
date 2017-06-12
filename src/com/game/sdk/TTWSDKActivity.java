@@ -137,7 +137,7 @@ public class TTWSDKActivity extends Activity implements OnClickListener {
 		// 充值事件
 		if (null != btn_charger && btn_charger.getId() == v.getId() && fyGmaeSDk.isInitOk()) {
 			String money_str = et_money.getText().toString().trim();
-			String money = "0.01f";
+			String money = "1f";
 			if (!TextUtils.isEmpty(money_str) && !"".equals(money_str)) {
 				money = money_str;
 			}
