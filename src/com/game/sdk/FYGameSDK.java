@@ -359,9 +359,11 @@ public class FYGameSDK {
 		// 设置登录监听
 		GoagalInfo.loginlistener = loginlistener;
 
-		boolean isAutoLogin = PreferenceUtil.getImpl(acontext).getBoolean(Constants.isAutoLogin, false);
+		boolean isAutoLogin = PreferenceUtil.getImpl(acontext).getBoolean(Constants.isAutoLogin, true);
 
 		if (GoagalInfo.userInfo != null && isAutoLogin) {
+			PreferenceUtil.getImpl(context).putBoolean(Constants.isAutoLogin, true);
+			
 			GoagalInfo.isChangeAccount = false;
 			autoLoginDialog = new LoginInDialog(acontext, GoagalInfo.userInfo.username);
 			autoLoginDialog.setCanceledOnTouchOutside(false);

@@ -254,11 +254,15 @@ public class FloatViewImpl {
         mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                int x = Integer.parseInt(animation.getAnimatedValue("x") + "");
-                int y = Integer.parseInt(animation.getAnimatedValue("y") + "");
-                wmParams.x = x;
-                wmParams.y = y;
-                mWindowManager.updateViewLayout(mFloatLayout, wmParams);
+            	try{
+            		int x = Integer.parseInt(animation.getAnimatedValue("x") + "");
+                    int y = Integer.parseInt(animation.getAnimatedValue("y") + "");
+                    wmParams.x = x;
+                    wmParams.y = y;
+                    mWindowManager.updateViewLayout(mFloatLayout, wmParams);
+            	}catch(Exception e){
+            		e.printStackTrace();
+            	}
             }
         });
         mAnimator.addListener(new Animator.AnimatorListener() {
@@ -358,6 +362,7 @@ public class FloatViewImpl {
                     Intent intent = new Intent(mContext, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
                     mContext.startActivity(intent);
+                    isHolder = false;
                     removeFloat();
                 }
                 return;

@@ -288,8 +288,9 @@ public class MainFragment extends BaseFragment implements OnClickListener,
 		mobileLayout.setOnClickListener(this);
 		changeAccountTv.setOnClickListener(this);
 		
-		boolean isAutoLogin = PreferenceUtil.getImpl(mainActivity).getBoolean(Constants.isAutoLogin, false);
+		boolean isAutoLogin = PreferenceUtil.getImpl(mainActivity).getBoolean(Constants.isAutoLogin, true);
 		autoLoginCk.setChecked(isAutoLogin);
+		PreferenceUtil.getImpl(mainActivity).putBoolean(Constants.isAutoLogin,isAutoLogin);
 		
 		autoLoginCk.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override

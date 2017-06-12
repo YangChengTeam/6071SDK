@@ -20,7 +20,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.http.HttpResponseCache;
 import android.os.Handler;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
@@ -51,7 +50,7 @@ public class InitActivity extends BaseActivity implements InitCloseListener {
 	@Override
 	public void initViews() {
 		super.initViews();
-		initLayout = (RelativeLayout) findViewById(MResource.getIdByName(this, "id", "init_bg"));
+		initLayout = (RelativeLayout) findViewById(MResource.getIdByName(this, "id", "fysdk_init_bg"));
 		installCache(this);
 		
 		Bitmap initBitmap = Util.getInitLogoFileBitmap(this, Constants.INIT_IMAGE);
