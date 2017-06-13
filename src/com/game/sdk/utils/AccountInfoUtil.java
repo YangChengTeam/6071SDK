@@ -47,7 +47,9 @@ public class AccountInfoUtil {
 			if(userInfos == null){
 				userInfos = new ArrayList<UserInfo>();
 			}
-			userInfos.add(0,userInfo);
+			if(!StringUtils.isEmpty(userInfo.username)){
+				userInfos.add(0,userInfo);
+			}
 		}
 		saveUserInfos(context, userInfos);
 	}
@@ -64,7 +66,9 @@ public class AccountInfoUtil {
 		}
 		
 		if (userInfos != null) {
-			userInfos.add(0,userInfo);
+			if(!StringUtils.isEmpty(userInfo.username)){
+				userInfos.add(0,userInfo);
+			}
 		}
 		
 		saveUserInfos(context, userInfos);
@@ -112,7 +116,7 @@ public class AccountInfoUtil {
 			}
 		}
 		
-		if(isAdd == 0){
+		if(isAdd == 0 && !StringUtils.isEmpty(userInfo.username)){
 			userInfos.add(0,userInfo);
 		}
 		
@@ -164,10 +168,19 @@ public class AccountInfoUtil {
 					
 					userInfos.add(userInfo);
 				}*/
-
+				
+				if(userInfos != null && userInfos.size() > 0){
+					for(int i=0;i<userInfos.size();i++){
+						if(StringUtils.isEmpty(userInfos.get(i).username)){
+							userInfos.remove(userInfos.get(i));
+						}
+					}
+				}
+				
 			} catch (Exception e) {
 			}
 		}
+		
 		return userInfos;
 	}
 

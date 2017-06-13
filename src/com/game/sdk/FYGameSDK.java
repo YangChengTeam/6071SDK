@@ -18,7 +18,6 @@ import com.game.sdk.engin.LoginEngin;
 import com.game.sdk.floatwindow.FloatViewImpl;
 import com.game.sdk.net.constans.ServerConfig;
 import com.game.sdk.net.impls.OKHttpRequest;
-import com.game.sdk.ui.ChargeActivity;
 import com.game.sdk.ui.InitActivity;
 import com.game.sdk.ui.LoginActivity;
 import com.game.sdk.ui.LoginoutActivity;
@@ -532,7 +531,7 @@ public class FYGameSDK {
 						
 						int len = list.size();
 						for(int j = 0;j < len;j++){
-							if(!_userInfo.username.equals(list.get(j).username)){
+							if(!StringUtils.isEmpty(_userInfo.username) && !_userInfo.username.equals(list.get(j).username)){
 								list.add(0,_userInfo);
 								AccountInfoUtil.insertUserInfo(acontext, _userInfo);
 							}

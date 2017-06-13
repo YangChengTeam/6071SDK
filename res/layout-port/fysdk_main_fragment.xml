@@ -65,7 +65,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="10dp"
                             android:layout_marginTop="2dp"
-                            android:src="@drawable/member_level0" />
+                            android:background="@drawable/member_level0" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -242,7 +242,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1" />
-				
+				<LinearLayout
+                    android:id="@+id/gride_point_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="15dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+                </LinearLayout>
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="20dp"

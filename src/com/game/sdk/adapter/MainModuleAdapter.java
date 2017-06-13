@@ -25,10 +25,21 @@ public class MainModuleAdapter extends BaseAdapter {
 
 	OkHttpClient mOkHttpClient;
 
-	public MainModuleAdapter(Context mContext, List<ModuleInfo> list) {
+	/**
+	 * 页数下标,从0开始(当前是第几页)
+	 */
+	private int curIndex;
+	/**
+	 * 每一页显示的个数
+	 */
+	private int pageSize;
+
+	public MainModuleAdapter(Context mContext, List<ModuleInfo> list, int curIndex, int pageSize) {
 		super();
 		this.mContext = mContext;
 		this.moduleInfoList = list;
+		this.curIndex = curIndex;
+		this.pageSize = pageSize;
 		mOkHttpClient = new OkHttpClient();
 	}
 
@@ -43,24 +54,31 @@ public class MainModuleAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		return moduleInfoList.size();
+		return moduleInfoList.size() > (curIndex + 1) * pageSize ? pageSize
+				: (moduleInfoList.size() - curIndex * pageSize);
 	}
 
 	@Override
 	public Object getItem(int pos) {
-		return moduleInfoList.get(pos);
+		return moduleInfoList.get(pos + curIndex * pageSize);
 	}
 
 	@Override
-	public long getItemId(int arg0) {
-		return arg0;
+	public long getItemId(int position) {
+		return position + curIndex * pageSize;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
 		final ViewHolder holder;
-		final String url = moduleInfoList.get(position).ico;
+		
+		/**
+         * 在给View绑定显示的数据时，计算正确的position = position + curIndex * pageSize，
+         */
+        int pos = position + curIndex * pageSize;
+		
+		final String url = moduleInfoList.get(pos).ico;
 
 		if (convertView == null) {
 			holder = new ViewHolder();
@@ -77,15 +95,15 @@ public class MainModuleAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		
-		if(moduleInfoList.get(position).num > 0){
+
+		if(moduleInfoList.get(pos).num > 0){
 			holder.numLayout.setVisibility(View.VISIBLE);
-			holder.numTv.setText(moduleInfoList.get(position).num + "");
+			holder.numTv.setText(moduleInfoList.get(pos).num + "");
 		}else{
 			holder.numLayout.setVisibility(View.INVISIBLE);
 		}
 		
-		holder.moduleTv.setText(moduleInfoList.get(position).title);
+		holder.moduleTv.setText(moduleInfoList.get(pos).title);
 
 		if (!StringUtils.isEmpty(url)) {
 			Picasso.with(mContext).load(url).into(holder.moduleIv);
@@ -97,8 +115,9 @@ public class MainModuleAdapter extends BaseAdapter {
 	class ViewHolder {
 		ImageView moduleIv;
 		TextView moduleTv;
+		
 		RelativeLayout numLayout;
 		TextView numTv;
 	}
-	
+
 }
