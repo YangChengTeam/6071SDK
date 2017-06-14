@@ -65,10 +65,8 @@ public class AccountInfoUtil {
 			}
 		}
 		
-		if (userInfos != null) {
-			if(!StringUtils.isEmpty(userInfo.username)){
-				userInfos.add(0,userInfo);
-			}
+		if (userInfos != null && !StringUtils.isEmpty(userInfo.username)) {
+			userInfos.add(0,userInfo);
 		}
 		
 		saveUserInfos(context, userInfos);
