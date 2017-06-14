@@ -715,7 +715,7 @@ public class FYGameSDK {
 	 * @return 返回游戏SDK版本号
 	 */
 	public String getVersion() {
-		return "2.2.15";
+		return "2.2.16";
 	}
 
 	/**
