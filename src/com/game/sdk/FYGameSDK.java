@@ -578,7 +578,7 @@ public class FYGameSDK {
 	 *            充值回调监听
 	 **/
 	@Deprecated
-	private void pay(Context context, String roleid, String money, String serverid, String productname,
+	public void pay(Context context, String roleid, String money, String serverid, String productname,
 			String productdesc, String fcallbackurl, String attach, OnPaymentListener paymentListener) {
 		pay(context, roleid, money, serverid, productname, productdesc, attach, paymentListener);
 	}
