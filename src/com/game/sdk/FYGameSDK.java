@@ -248,6 +248,9 @@ public class FYGameSDK {
 	 *            游戏退出回调
 	 */
 	public void initSDK(final Activity context, OnSDKInitListener initCallback,Runnable switchAccountCallback, Runnable logoutCallback) {
+		if(isInitOk){
+			return;
+		}
 		acontext = context;
 		switchCallBack = switchAccountCallback;
 		alogout = logoutCallback;

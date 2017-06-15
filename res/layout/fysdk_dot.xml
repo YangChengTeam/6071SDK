@@ -6,9 +6,9 @@
     <!-- 小圆点View -->
     <View
         android:id="@+id/v_dot"
-        android:layout_width="18dp"
+        android:layout_width="12dp"
         android:layout_height="12dp"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="3dp"
         android:background="@drawable/module_point" />
 
 </RelativeLayout>

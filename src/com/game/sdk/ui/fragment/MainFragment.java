@@ -11,6 +11,7 @@ import com.game.sdk.adapter.ViewPagerAdapter;
 import com.game.sdk.domain.GoagalInfo;
 import com.game.sdk.domain.ModuleInfo;
 import com.game.sdk.domain.ModuleList;
+import com.game.sdk.domain.OnChargerListener;
 import com.game.sdk.domain.ResultInfo;
 import com.game.sdk.engin.MainModuleEngin;
 import com.game.sdk.engin.PayCoinEngin;
@@ -21,10 +22,7 @@ import com.game.sdk.security.Base64;
 import com.game.sdk.security.Encrypt;
 import com.game.sdk.service.DownGameBoxService;
 import com.game.sdk.ui.ChargeActivity;
-import com.game.sdk.ui.ChargeRecordActivity;
-import com.game.sdk.ui.GamePackageDetailActivity;
 import com.game.sdk.ui.MainActivity;
-import com.game.sdk.ui.ScoreStoreActivity;
 import com.game.sdk.ui.UserInfoActivity;
 import com.game.sdk.utils.CheckUtil;
 import com.game.sdk.utils.Constants;
@@ -41,6 +39,8 @@ import com.game.sdk.view.BoxDownDialog;
 import com.game.sdk.view.CustomRoundImageView;
 import com.game.sdk.view.ServiceDialog;
 import com.game.sdk.view.ShareDialog;
+import com.game.sdk.view.SlideSwitchButton;
+import com.game.sdk.view.SlideSwitchButton.OnStateChangedListener;
 import com.squareup.picasso.Picasso;
 import com.umeng.analytics.MobclickAgent;
 
@@ -133,8 +133,10 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 
 	private GridView moduleGridView1;
 
-	private CheckBox autoLoginCk;
+	//private CheckBox autoLoginCk;
 
+	private SlideSwitchButton slideSwitchButton;
+	
 	private TextView changeAccountTv;
 
 	// 底部小点的图片
@@ -256,7 +258,10 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 		gameMoneyListIv = findImageViewByString("game_money_list_iv");
 		chargeBtn = findButtonByString("charge_btn");
 
-		autoLoginCk = (CheckBox) findViewByString("auto_login_ck");
+		//autoLoginCk = (CheckBox) findViewByString("auto_login_ck");
+		
+		slideSwitchButton = (SlideSwitchButton)findViewByString("is_auto_login_switch");
+		
 		changeAccountTv = findTextViewByString("change_account_tv");
 
 		// 底部导航圆点控件
@@ -286,16 +291,45 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 		changeAccountTv.setOnClickListener(this);
 
 		boolean isAutoLogin = PreferenceUtil.getImpl(mainActivity).getBoolean(Constants.isAutoLogin, true);
-		autoLoginCk.setChecked(isAutoLogin);
+		//autoLoginCk.setChecked(isAutoLogin);
 		PreferenceUtil.getImpl(mainActivity).putBoolean(Constants.isAutoLogin, isAutoLogin);
 
-		autoLoginCk.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		/*autoLoginCk.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				// 保存是否自动登录
 				PreferenceUtil.getImpl(mainActivity).putBoolean(Constants.isAutoLogin, isChecked);
 			}
+		});*/
+		
+		slideSwitchButton.setOnStateChangedListener(new OnStateChangedListener(){
+
+            @Override
+            public void onStateChanged(boolean state) {
+                // TODO Auto-generated method stub
+                if(true == state)
+                {
+                    //Toast.makeText(MainActivity.this, "开关已打开", 1000).show();
+                	Util.toast(mainActivity, "打开");
+                }
+                else
+                {
+                    //Toast.makeText(MainActivity.this, "开关已关闭", 1000).show();
+                	Util.toast(mainActivity, "关闭");
+                }
+            }
 		});
+		
+		slideSwitchButton.setSwitchOpen(true);
+		
+		slideSwitchButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Util.toast(mainActivity, "点击");
+			}
+		});
+		
 	}
 
 	@Override
@@ -621,8 +655,13 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 				stateDrawable.addState(new int[] { focused }, gdPressed);
 				stateDrawable.addState(new int[] { -selected, -focused, -pressed }, gdNormal);
 				chargeBtn.setBackgroundDrawable(stateDrawable);
+				
+				//设置自动登录开关颜色
+				//slideSwitchButton.setLineColor(btnColor);
 			}
 		}
+		
+		
 	}
 
 	@Override
@@ -772,7 +811,7 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 				@Override
 				public void onSuccess(ResultInfo<ModuleList> resultInfo) {
 
-					if (resultInfo.data.list != null && resultInfo.data.list.size() > 0) {
+					if (resultInfo.data != null && resultInfo.data.list != null && resultInfo.data.list.size() > 0) {
 						moduleInfoList = resultInfo.data.list;
 
 						saveModuleList(mainModuleEngin.getUrl(), moduleInfoList);
