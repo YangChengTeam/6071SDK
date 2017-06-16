@@ -11,7 +11,6 @@ import com.game.sdk.adapter.ViewPagerAdapter;
 import com.game.sdk.domain.GoagalInfo;
 import com.game.sdk.domain.ModuleInfo;
 import com.game.sdk.domain.ModuleList;
-import com.game.sdk.domain.OnChargerListener;
 import com.game.sdk.domain.ResultInfo;
 import com.game.sdk.engin.MainModuleEngin;
 import com.game.sdk.engin.PayCoinEngin;
@@ -63,9 +62,6 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -136,6 +132,8 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 	//private CheckBox autoLoginCk;
 
 	private SlideSwitchButton slideSwitchButton;
+	
+	private TextView autoLoginTv;
 	
 	private TextView changeAccountTv;
 
@@ -261,7 +259,7 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 		//autoLoginCk = (CheckBox) findViewByString("auto_login_ck");
 		
 		slideSwitchButton = (SlideSwitchButton)findViewByString("is_auto_login_switch");
-		
+		autoLoginTv = findTextViewByString("auto_login_tv");
 		changeAccountTv = findTextViewByString("change_account_tv");
 
 		// 底部导航圆点控件
@@ -282,7 +280,7 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 
 		platformCountLayout.setOnClickListener(this);
 		gameCountLayout.setOnClickListener(this);
-
+		autoLoginTv.setOnClickListener(this);
 		// platformRefreshIv.setOnClickListener(this);
 		// gameMoneyListIv.setOnClickListener(this);
 		userHeadIv.setOnClickListener(this);
@@ -292,6 +290,7 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 
 		boolean isAutoLogin = PreferenceUtil.getImpl(mainActivity).getBoolean(Constants.isAutoLogin, true);
 		//autoLoginCk.setChecked(isAutoLogin);
+		slideSwitchButton.setSwitchOpen(isAutoLogin);
 		PreferenceUtil.getImpl(mainActivity).putBoolean(Constants.isAutoLogin, isAutoLogin);
 
 		/*autoLoginCk.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -303,31 +302,19 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 		});*/
 		
 		slideSwitchButton.setOnStateChangedListener(new OnStateChangedListener(){
-
-            @Override
+			@Override
             public void onStateChanged(boolean state) {
-                // TODO Auto-generated method stub
                 if(true == state)
                 {
-                    //Toast.makeText(MainActivity.this, "开关已打开", 1000).show();
-                	Util.toast(mainActivity, "打开");
+                	//Util.toast(mainActivity, "打开");
+                	PreferenceUtil.getImpl(mainActivity).putBoolean(Constants.isAutoLogin, true);
                 }
                 else
                 {
-                    //Toast.makeText(MainActivity.this, "开关已关闭", 1000).show();
-                	Util.toast(mainActivity, "关闭");
+                	//Util.toast(mainActivity, "关闭");
+                	PreferenceUtil.getImpl(mainActivity).putBoolean(Constants.isAutoLogin, false);
                 }
             }
-		});
-		
-		slideSwitchButton.setSwitchOpen(true);
-		
-		slideSwitchButton.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Util.toast(mainActivity, "点击");
-			}
 		});
 		
 	}
@@ -657,7 +644,7 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 				chargeBtn.setBackgroundDrawable(stateDrawable);
 				
 				//设置自动登录开关颜色
-				//slideSwitchButton.setLineColor(btnColor);
+				slideSwitchButton.setLineColor(btnColor);
 			}
 		}
 		
@@ -731,6 +718,10 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 			fyGmaeSDk.switchUser();
 			((Activity) mainActivity).finish();
 			return;
+		}
+		
+		if (v.getId() == findIdByString("auto_login_tv")) {
+			slideSwitchButton.setClickSwitchOpen();
 		}
 	}
 

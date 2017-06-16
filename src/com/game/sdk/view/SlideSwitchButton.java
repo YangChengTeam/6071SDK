@@ -1,8 +1,6 @@
 package com.game.sdk.view;
 
-import com.game.sdk.utils.DimensionUtil;
-import com.game.sdk.utils.Logger;
-import com.game.sdk.utils.Util;
+import com.game.sdk.utils.StringUtils;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -113,12 +111,36 @@ public class SlideSwitchButton extends View {
 		lineEnd = (SCALE - 1) * radius;
 	}
 	
+	public void setClickSwitchOpen(){
+		isOn = !isOn;
+		curX = isOn ? radius + lineWidth : radius;
+		
+		if (false == isOn) {
+			//curX = lineEnd;
+			// 只有状态发生改变才调用回调函数， 下同
+			if (null != onStateChangedListener) {
+				onStateChangedListener.onStateChanged(false);
+			}
+		} else {
+			//curX = lineStart;
+			if (null != onStateChangedListener) {
+				onStateChangedListener.onStateChanged(true);
+			}
+		}
+		
+		this.postInvalidate();
+	}
+	
+	//设置是否打开开关
 	public void setSwitchOpen(boolean isSwitch){
 		isOn = isSwitch;
 	}
 	
+	//设置开关背景线的颜色
 	public void setLineColor(String lineColor){
-		this.lineColor = lineColor;
+		if(!StringUtils.isEmpty(lineColor)){			
+			this.lineColor = lineColor;
+		}
 	}
 	
 	@Override
@@ -134,21 +156,21 @@ public class SlideSwitchButton extends View {
 		mPaint.setStyle(Paint.Style.STROKE);
 		mPaint.setStrokeWidth(lineWidth);
 		/* 左边部分的线，绿色 */
-		mPaint.setColor(Color.parseColor("#f65d4a"));
+		mPaint.setColor(Color.parseColor("#"+lineColor));
 		canvas.drawLine(lineStart, centerY, curX, centerY, mPaint);
 		/* 右边部分的线，灰色 */
-		mPaint.setColor(Color.parseColor("#dbdbdb"));
+		mPaint.setColor(Color.parseColor("#d0d0d0"));
 		canvas.drawLine(curX, centerY, lineEnd, centerY, mPaint);
 
 		/* 画圆 */
 		/* 画最左和最右的圆，直径为直线段宽度， 即在直线段两边分别再加上一个半圆 */
 		mPaint.setStyle(Paint.Style.FILL);
-		mPaint.setColor(Color.parseColor("#dbdbdb"));
+		mPaint.setColor(Color.parseColor("#d0d0d0"));
 		canvas.drawCircle(lineEnd, centerY, lineWidth / 2, mPaint);
-		mPaint.setColor(Color.parseColor("#f65d4a"));
+		mPaint.setColor(Color.parseColor("#"+lineColor));
 		canvas.drawCircle(lineStart, centerY, lineWidth / 2, mPaint);
 		/* 圆形滑块 */
-		mPaint.setColor(Color.parseColor("#bfbfbf"));
+		mPaint.setColor(Color.parseColor("#bdbdbd"));
 		canvas.drawCircle(curX, centerY, radius, mPaint);
 
 	}
