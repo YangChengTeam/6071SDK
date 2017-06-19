@@ -202,4 +202,7 @@ public class Constants {
 	
 	//最后一次登录用户的渠道信息
 	public static final String LAST_AGENT_ID = "last_agent_id";
+	
+	//是否显示过引导页
+	public static final String IS_SHOW_GUIDE = "is_show_guide";
 }

@@ -81,7 +81,7 @@ public class MainActivity extends BaseActivity {
 	}
 
 	public void setOrientation() {
-		
+		GoagalInfo.inItInfo.vertical = 1;
 		if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.vertical == 0){
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		}

@@ -44,9 +44,9 @@ public class TTWSDKActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		instance = this;
 		
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		//setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		
-		//setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		
 		fyGmaeSDk = FYGameSDK.defaultSDK();
 		// fyGmaeSDk.openLogout();

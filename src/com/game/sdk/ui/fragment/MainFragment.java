@@ -26,6 +26,7 @@ import com.game.sdk.ui.UserInfoActivity;
 import com.game.sdk.utils.CheckUtil;
 import com.game.sdk.utils.Constants;
 import com.game.sdk.utils.DimensionUtil;
+import com.game.sdk.utils.GuideUtil;
 import com.game.sdk.utils.Logger;
 import com.game.sdk.utils.MResource;
 import com.game.sdk.utils.PathUtil;
@@ -175,6 +176,10 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 
 	private List<MainModuleAdapter> adapters;
 
+	private GuideUtil guideUtil = null;
+	
+	private int[] images;
+	
 	@SuppressLint("HandlerLeak")
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -317,13 +322,34 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
             }
 		});
 		
+		//判断是否展示用户操作引导页
+		boolean isShowGuide = PreferenceUtil.getImpl(mainActivity).getBoolean(Constants.IS_SHOW_GUIDE, false);
+		if(!isShowGuide){
+			int tempW = 0;
+			int tempH = 0;
+			
+			if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.vertical == 0){
+				tempW = DimensionUtil.dip2px(mainActivity, 510);
+				tempH = DimensionUtil.dip2px(mainActivity, 300);
+				images = new int[]{ MResource.getIdByName(mainActivity, "drawable", "horizontal_guide1"), MResource.getIdByName(mainActivity, "drawable", "horizontal_guide2") };
+			}
+			
+			if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.vertical == 1){
+				tempW = DimensionUtil.dip2px(mainActivity, 300);
+				tempH = DimensionUtil.dip2px(mainActivity, 430);
+				images = new int[]{ MResource.getIdByName(mainActivity, "drawable", "vertical_guide1"), MResource.getIdByName(mainActivity, "drawable", "vertical_guide2") };
+			}
+			
+			guideUtil = GuideUtil.getInstance();
+	        guideUtil.initGuide(mainActivity, images ,tempW,tempH);
+		}
 	}
-
+	
 	@Override
 	public void initData() {
 		super.initData();
 		initTheme();
-
+		
 		if (GoagalInfo.inItInfo != null) {
 			if (GoagalInfo.inItInfo.isSpeedUp == 1) {
 				changeAccountTv.setVisibility(View.GONE);

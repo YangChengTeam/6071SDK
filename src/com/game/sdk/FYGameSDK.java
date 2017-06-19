@@ -266,7 +266,7 @@ public class FYGameSDK {
 		
 		Intent intent = new Intent(context, InitActivity.class);
 		context.startActivity(intent);
-		context.overridePendingTransition(MResource.getIdByName(context, "anim", "fysdk_init_enter"), MResource.getIdByName(context, "anim", "fysdk_init_exit"));
+		//context.overridePendingTransition(MResource.getIdByName(context, "anim", "fysdk_init_enter"), MResource.getIdByName(context, "anim", "fysdk_init_exit"));
 	}
 	
 	
@@ -718,7 +718,7 @@ public class FYGameSDK {
 	 * @return 返回游戏SDK版本号
 	 */
 	public String getVersion() {
-		return "2.2.16";
+		return "2.2.17";
 	}
 
 	/**
