@@ -50,13 +50,13 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="5dp"
-                        android:orientation="vertical"
-                        android:gravity="center" >
+                        android:gravity="center"
+                        android:orientation="vertical" >
 
                         <com.game.sdk.view.CustomRoundImageView
                             android:id="@+id/user_head_iv"
-                            android:layout_width="45dp"
-                            android:layout_height="45dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             android:layout_marginTop="4dp"
                             android:src="@drawable/user_default_icon" />
 
@@ -65,6 +65,7 @@
                             android:layout_width="24dp"
                             android:layout_height="10dp"
                             android:layout_marginTop="2dp"
+                            android:layout_marginBottom="2dp"
                             android:background="@drawable/member_level0" />
                     </LinearLayout>
 
@@ -85,9 +86,9 @@
                                 android:id="@+id/nick_name_tv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:drawablePadding="3dp"
                                 android:drawableRight="@drawable/user_name_edit_icon"
-                                android:gravity="left"
+                                android:drawablePadding="3dp"
+                                android:gravity="center_vertical"
                                 android:hint="@string/hint_nick_name_text"
                                 android:textColor="@color/welcome_color"
                                 android:textSize="14sp" />
@@ -116,7 +117,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginLeft="2dp"
-                                android:gravity="center"
+                                android:gravity="left|center"
                                 android:hint="@string/bind_mobile_text"
                                 android:textColor="@color/welcome_color"
                                 android:textSize="14sp" />
@@ -178,7 +179,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="6dp"
                             android:gravity="center"
                             android:orientation="horizontal" >
 
@@ -214,7 +215,8 @@
                         android:id="@+id/charge_layout"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
+                        android:layout_marginBottom="6dp"
+                        android:layout_gravity="center_vertical|bottom"
                         android:layout_marginLeft="5dp" >
 
                         <Button
@@ -222,6 +224,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="35dp"
                             android:background="@drawable/common_btn"
+                            android:gravity="center"
                             android:text="@string/charge_text"
                             android:textColor="@color/white"
                             android:textSize="14sp" />
@@ -242,36 +245,40 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1" />
-				<LinearLayout
+
+                <LinearLayout
                     android:id="@+id/gride_point_layout"
                     android:layout_width="match_parent"
                     android:layout_height="15dp"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal" >
                 </LinearLayout>
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
                     android:layout_marginBottom="6dp" >
 
-					<com.game.sdk.view.SlideSwitchButton
+                    <com.game.sdk.view.SlideSwitchButton
                         android:id="@+id/is_auto_login_switch"
                         android:layout_width="32dp"
                         android:layout_height="16dp"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true" />
-					<TextView
-					    android:id="@+id/auto_login_tv"
-                        android:layout_toRightOf="@+id/is_auto_login_switch"
+
+                    <TextView
+                        android:id="@+id/auto_login_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginBottom="0.5dp"
+                        android:layout_marginLeft="2dp"
+                        android:layout_toRightOf="@+id/is_auto_login_switch"
+                        android:gravity="left"
                         android:text="@string/auto_login_text"
                         android:textColor="@color/feiyou_service"
-                        android:layout_centerVertical="true"
-                        android:gravity="left"
-                        android:layout_marginLeft="2dp"
-                        android:layout_marginBottom="0.5dp"
                         android:textSize="14sp" />
+
                     <TextView
                         android:id="@+id/change_account_tv"
                         android:layout_width="wrap_content"
