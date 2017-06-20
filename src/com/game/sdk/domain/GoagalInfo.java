@@ -78,6 +78,8 @@ public class GoagalInfo {
 	
 	public static int bindMobileFrom = 0;//绑定手机界面来源,0从主界面进入，1，从账号安全界面进入
 	
+	public static Activity tempActivity;
+	
 	/// < 获取渠道信息
 	/*public static void setGoagalInfo(Context context, String dir) {
 		String result1 = null;

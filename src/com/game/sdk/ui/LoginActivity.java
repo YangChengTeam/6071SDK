@@ -9,6 +9,7 @@ import com.game.sdk.ui.fragment.QuickRegisterFragment;
 import com.game.sdk.ui.fragment.SetNewPassWordFragment;
 import com.game.sdk.ui.fragment.ValidatePhoneFragment;
 import com.game.sdk.utils.DimensionUtil;
+import com.game.sdk.utils.Logger;
 import com.game.sdk.utils.MResource;
 import com.umeng.analytics.MobclickAgent;
 
@@ -55,6 +56,7 @@ public class LoginActivity extends BaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		Logger.msg("LoginActivity---onResume--->");
 		//MobclickAgent.onPageStart("LoginActivity");
 		MobclickAgent.onResume(this);
 		LoginActivity.this.setFinishOnTouchOutside(false);

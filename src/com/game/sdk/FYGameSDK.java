@@ -251,6 +251,8 @@ public class FYGameSDK {
 		if(isInitOk){
 			return;
 		}
+		
+		GoagalInfo.tempActivity = context;
 		acontext = context;
 		switchCallBack = switchAccountCallback;
 		alogout = logoutCallback;
@@ -718,7 +720,7 @@ public class FYGameSDK {
 	 * @return 返回游戏SDK版本号
 	 */
 	public String getVersion() {
-		return "2.2.17";
+		return "2.2.18";
 	}
 
 	/**
