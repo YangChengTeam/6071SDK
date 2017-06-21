@@ -251,6 +251,8 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 			case 3:
 				if(msg.obj != null && !msg.obj.toString().equals("")){
 					Util.toast(PayActivity.this, msg.obj.toString());
+				}else{
+					Util.toast(PayActivity.this, "支付成功");
 				}
 				break;
 			default:
@@ -711,8 +713,20 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 							}
 						}
 					} else {
-						Util.toast(PayActivity.this, "支付成功");
+						//Util.toast(PayActivity.this, "支付成功");
 						//finishSuccess();
+						
+						PaymentCallbackInfo pci = new PaymentCallbackInfo();
+						pci.money = amount;
+						pci.msg = "支付成功";
+						
+						//验证订单
+						new PayValidateTask().execute();
+						
+						if (GoagalInfo.paymentListener != null) {
+							GoagalInfo.paymentListener.paymentSuccess(pci);
+						}
+						
 						finish();
 					}
 				}
@@ -751,6 +765,8 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 				msg.obj = payValidateResult.pointMessage;
 				msg.what = 3;
 				handler.sendMessage(msg);
+			}else{
+				Util.toast(PayActivity.this, "支付成功");
 			}
 		}
 	}

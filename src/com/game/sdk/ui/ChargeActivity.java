@@ -151,7 +151,9 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 	private IpaynowPlugin mIpaynowplugin;
 
 	private ServiceDialog serviceDialog;
-
+	
+	private boolean isReturnMoney = false;
+	
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -194,11 +196,11 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 					}
 				}
 
-				if (realMoneyTvs != null && realMoneyTvs.length > 0) {
+				if (realMoneyTvs != null && realMoneyTvs.length > 0 && isReturnMoney) {
 					for (int i = 0; i < realMoneyTvs.length; i++) {
 						realMoneyTvs[i].setVisibility(View.VISIBLE);
-						realMoneyTvs[i].setText(findStringByResId("charge_to_text") + realMoneys[i]
-								+ findStringByResId("charge_unit_text"));
+						realMoneyTvs[i].setText(findStringByResId("return_game_money") + realMoneys[i]
+								+ findStringByResId("game_coin_list_text"));
 					}
 				}
 
@@ -350,6 +352,9 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 			super.onPostExecute(result);
 
 			if (result != null) {
+				//是否开启返利游戏币功能
+				isReturnMoney = result.isOpen;
+				
 				if (result.chargeMoneyList != null && result.chargeMoneyList.size() > 0) {
 					chargeMoneys = new float[result.chargeMoneyList.size()];
 
@@ -364,8 +369,8 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 						}
 
 						if (realMoneys != null && realMoneys.length > 0 && result.chargeMoneyList.get(i) != null
-								&& result.chargeMoneyList.get(i).realMoney != null) {
-							realMoneys[i] = Float.parseFloat(result.chargeMoneyList.get(i).realMoney);
+								&& result.chargeMoneyList.get(i).returnGameMoney != null) {
+							realMoneys[i] = Float.parseFloat(result.chargeMoneyList.get(i).returnGameMoney);
 						}
 					}
 				}

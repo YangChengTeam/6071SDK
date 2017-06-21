@@ -12,4 +12,10 @@ public class ChargeMoneyInfo {
 	@JSONField(name = "real_money")
 	public String realMoney;
 	
+	@JSONField(name = "percent")
+	public String percent;
+	
+	//返利游戏币数量
+	@JSONField(name = "return_game_money")
+	public String returnGameMoney;
 }
