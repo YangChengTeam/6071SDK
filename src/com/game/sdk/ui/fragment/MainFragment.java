@@ -57,6 +57,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -66,6 +67,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -130,12 +132,12 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 
 	private GridView moduleGridView1;
 
-	//private CheckBox autoLoginCk;
+	// private CheckBox autoLoginCk;
 
 	private SlideSwitchButton slideSwitchButton;
-	
+
 	private TextView autoLoginTv;
-	
+
 	private TextView changeAccountTv;
 
 	// 底部小点的图片
@@ -177,15 +179,23 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 	private List<MainModuleAdapter> adapters;
 
 	private GuideUtil guideUtil = null;
-	
+
 	private int[] images;
+
+	private PopupWindow guidePopWindow;
+
+	private int i = 0;
+	
+	private LinearLayout guideLayout;
+	
+	private boolean isShowGuide;
 	
 	@SuppressLint("HandlerLeak")
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case 1:
-				
+
 				if (adapters != null && adapters.size() > 0) {
 					for (int i = 0; i < adapters.size(); i++) {
 						adapters.get(i).addNewList(moduleInfoList);
@@ -193,12 +203,18 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 						// adapter.addNewList(moduleInfoList);
 						// adapter.notifyDataSetChanged();
 					}
-				}else{
+				} else {
 					initViewPager();
 				}
-				
+
 				break;
 			case 2:
+				
+				if (guidePopWindow != null && bgLayout != null && !isShowGuide) {
+					PreferenceUtil.getImpl(mainActivity).putBoolean(Constants.IS_SHOW_GUIDE, true);
+					guidePopWindow.showAtLocation(bgLayout, Gravity.CENTER, 0, 0);
+				}
+				
 				if (GoagalInfo.userInfo != null && !StringUtils.isEmpty(GoagalInfo.userInfo.face)) {
 					Picasso.with(mainActivity).load(GoagalInfo.userInfo.face).into(userHeadIv);
 				}
@@ -261,9 +277,9 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 		gameMoneyListIv = findImageViewByString("game_money_list_iv");
 		chargeBtn = findButtonByString("charge_btn");
 
-		//autoLoginCk = (CheckBox) findViewByString("auto_login_ck");
-		
-		slideSwitchButton = (SlideSwitchButton)findViewByString("is_auto_login_switch");
+		// autoLoginCk = (CheckBox) findViewByString("auto_login_ck");
+
+		slideSwitchButton = (SlideSwitchButton) findViewByString("is_auto_login_switch");
 		autoLoginTv = findTextViewByString("auto_login_tv");
 		changeAccountTv = findTextViewByString("change_account_tv");
 
@@ -294,62 +310,86 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 		changeAccountTv.setOnClickListener(this);
 
 		boolean isAutoLogin = PreferenceUtil.getImpl(mainActivity).getBoolean(Constants.isAutoLogin, true);
-		//autoLoginCk.setChecked(isAutoLogin);
+		// autoLoginCk.setChecked(isAutoLogin);
 		slideSwitchButton.setSwitchOpen(isAutoLogin);
 		PreferenceUtil.getImpl(mainActivity).putBoolean(Constants.isAutoLogin, isAutoLogin);
 
-		/*autoLoginCk.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		/*
+		 * autoLoginCk.setOnCheckedChangeListener(new OnCheckedChangeListener()
+		 * {
+		 * 
+		 * @Override public void onCheckedChanged(CompoundButton buttonView,
+		 * boolean isChecked) { // 保存是否自动登录
+		 * PreferenceUtil.getImpl(mainActivity).putBoolean(Constants.
+		 * isAutoLogin, isChecked); } });
+		 */
+
+		slideSwitchButton.setOnStateChangedListener(new OnStateChangedListener() {
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				// 保存是否自动登录
-				PreferenceUtil.getImpl(mainActivity).putBoolean(Constants.isAutoLogin, isChecked);
+			public void onStateChanged(boolean state) {
+				if (true == state) {
+					// Util.toast(mainActivity, "打开");
+					PreferenceUtil.getImpl(mainActivity).putBoolean(Constants.isAutoLogin, true);
+				} else {
+					// Util.toast(mainActivity, "关闭");
+					PreferenceUtil.getImpl(mainActivity).putBoolean(Constants.isAutoLogin, false);
+				}
 			}
-		});*/
-		
-		slideSwitchButton.setOnStateChangedListener(new OnStateChangedListener(){
-			@Override
-            public void onStateChanged(boolean state) {
-                if(true == state)
-                {
-                	//Util.toast(mainActivity, "打开");
-                	PreferenceUtil.getImpl(mainActivity).putBoolean(Constants.isAutoLogin, true);
-                }
-                else
-                {
-                	//Util.toast(mainActivity, "关闭");
-                	PreferenceUtil.getImpl(mainActivity).putBoolean(Constants.isAutoLogin, false);
-                }
-            }
 		});
+
+		// 判断是否展示用户操作引导页
+		isShowGuide = PreferenceUtil.getImpl(mainActivity).getBoolean(Constants.IS_SHOW_GUIDE, false);
 		
-		//判断是否展示用户操作引导页
-		boolean isShowGuide = PreferenceUtil.getImpl(mainActivity).getBoolean(Constants.IS_SHOW_GUIDE, false);
-		if(!isShowGuide){
+		if (!isShowGuide) {
 			int tempW = 0;
 			int tempH = 0;
-			
-			if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.vertical == 0){
+
+			if (GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.vertical == 0) {
 				tempW = DimensionUtil.dip2px(mainActivity, 510);
 				tempH = DimensionUtil.dip2px(mainActivity, 300);
-				images = new int[]{ MResource.getIdByName(mainActivity, "drawable", "horizontal_guide1"), MResource.getIdByName(mainActivity, "drawable", "horizontal_guide2") };
+				images = new int[] { MResource.getIdByName(mainActivity, "drawable", "horizontal_guide1"),
+						MResource.getIdByName(mainActivity, "drawable", "horizontal_guide2") };
 			}
-			
-			if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.vertical == 1){
+
+			if (GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.vertical == 1) {
 				tempW = DimensionUtil.dip2px(mainActivity, 300);
 				tempH = DimensionUtil.dip2px(mainActivity, 430);
-				images = new int[]{ MResource.getIdByName(mainActivity, "drawable", "vertical_guide1"), MResource.getIdByName(mainActivity, "drawable", "vertical_guide2") };
+				images = new int[] { MResource.getIdByName(mainActivity, "drawable", "vertical_guide1"),
+						MResource.getIdByName(mainActivity, "drawable", "vertical_guide2") };
 			}
 			
-			guideUtil = GuideUtil.getInstance();
-	        guideUtil.initGuide(mainActivity, images ,tempW,tempH);
+			View popView = mainActivity.getLayoutInflater()
+					.inflate(MResource.getIdByName(mainActivity, "layout", "horizontal_guide"), null);
+			
+			guideLayout = (LinearLayout) popView
+					.findViewById(MResource.getIdByName(mainActivity, "id", "guide_view"));
+			guideLayout.setBackgroundResource(images[i]);
+			i++;
+			guideLayout.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					if (i > 1) {
+						i = 0;
+						if (guidePopWindow != null && guidePopWindow.isShowing()) {
+							guidePopWindow.dismiss();
+						}
+					} else {
+						guideLayout.setBackgroundResource(images[i]);
+						i++;
+					}
+				}
+			});
+			
+			guidePopWindow = new PopupWindow(popView, tempW, tempH, true);
 		}
 	}
-	
+
 	@Override
 	public void initData() {
 		super.initData();
 		initTheme();
-		
+
 		if (GoagalInfo.inItInfo != null) {
 			if (GoagalInfo.inItInfo.isSpeedUp == 1) {
 				changeAccountTv.setVisibility(View.GONE);
@@ -392,117 +432,120 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 					int pos = position + curIndex * pageSize;
 					if (moduleInfoList != null && moduleInfoList.size() > 0) {
 						ModuleInfo moduleInfo = moduleInfoList.get(pos);
-						
-						if (moduleInfo.type == 0
-								&& moduleInfo.typeVal.equals(Constants.SERVER_CALL)) {
-							
-							//自定义事件
-							MobclickAgent.onEvent(mainActivity,"call_service");
-							
+
+						if (moduleInfo.type == 0 && moduleInfo.typeVal.equals(Constants.SERVER_CALL)) {
+
+							// 自定义事件
+							MobclickAgent.onEvent(mainActivity, "call_service");
+
 							callDialog = new ServiceDialog(mainActivity, 0.6f);
 							callDialog.setCanceledOnTouchOutside(true);
 							callDialog.show();
 						}
-						if (moduleInfo.type == 0
-								&& moduleInfo.typeVal.equals(Constants.COMPAIGN_CENTER)) {
-							//自定义事件
-							MobclickAgent.onEvent(mainActivity,"active_center");
+						if (moduleInfo.type == 0 && moduleInfo.typeVal.equals(Constants.COMPAIGN_CENTER)) {
+							// 自定义事件
+							MobclickAgent.onEvent(mainActivity, "active_center");
 							mainActivity.changeFragment(2);
 						}
-						if (moduleInfo.type == 0
-								&& moduleInfo.typeVal.equals(Constants.CHARGE_RECORD)) {
-							/*Intent intent = new Intent(mainActivity,
-									ChargeRecordActivity.class);
-							startActivity(intent);*/
-							
+						if (moduleInfo.type == 0 && moduleInfo.typeVal.equals(Constants.CHARGE_RECORD)) {
+							/*
+							 * Intent intent = new Intent(mainActivity,
+							 * ChargeRecordActivity.class);
+							 * startActivity(intent);
+							 */
+
 							mainActivity.changeFragment(9);
 						}
-						if (moduleInfo.type == 0
-								&& moduleInfo.typeVal.equals(Constants.SCORE_STORE)) {
-							/*Intent intent = new Intent(mainActivity,
-									ScoreStoreActivity.class);
-							startActivity(intent);*/
-							//mainActivity.changeFragment(10);
-							
+						if (moduleInfo.type == 0 && moduleInfo.typeVal.equals(Constants.SCORE_STORE)) {
+							/*
+							 * Intent intent = new Intent(mainActivity,
+							 * ScoreStoreActivity.class); startActivity(intent);
+							 */
+							// mainActivity.changeFragment(10);
+
 							if (CheckUtil.isInstallGameBox(mainActivity)) {
-								
-								//自定义事件
-								MobclickAgent.onEvent(mainActivity,"score_open_game_box");
-								
+
+								// 自定义事件
+								MobclickAgent.onEvent(mainActivity, "score_open_game_box");
+
 								String pwd = Base64.encode(Encrypt.encode(GoagalInfo.userInfo.password).getBytes());
 
-								String mobile = StringUtils.isEmpty(GoagalInfo.userInfo.mobile) ? GoagalInfo.userInfo.username: GoagalInfo.userInfo.mobile;
-								
-								Uri uri = Uri.parse("gamebox://?act=GoodTypeActivity&pwd=" + pwd + "&phone="
-										+ mobile + "&username=" + GoagalInfo.userInfo.username +"&data="+GoagalInfo.gameid);
-								
+								String mobile = StringUtils.isEmpty(GoagalInfo.userInfo.mobile)
+										? GoagalInfo.userInfo.username : GoagalInfo.userInfo.mobile;
+
+								Uri uri = Uri.parse("gamebox://?act=GoodTypeActivity&pwd=" + pwd + "&phone=" + mobile
+										+ "&username=" + GoagalInfo.userInfo.username + "&data=" + GoagalInfo.gameid);
+
 								Logger.msg("积分商城URI---" + uri.toString());
 								Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 								mainActivity.startActivity(intent);
 							} else {
 								gameBoxDown(1);
 							}
-							
+
 						}
-						if (moduleInfo.type == 0
-								&& moduleInfo.typeVal.equals(Constants.GAME_PACKAGE)) {
+						if (moduleInfo.type == 0 && moduleInfo.typeVal.equals(Constants.GAME_PACKAGE)) {
 							// Intent intent = new Intent(mainActivity,
 							// GamePackageActivity.class);
 							// startActivity(intent);
-							
-							/*Intent intent = new Intent(mainActivity,
-									GamePackageDetailActivity.class);
-							intent.putExtra("gameId", GoagalInfo.gameid);
-							startActivity(intent);*/
-							
-							//mainActivity.changeFragment(11);
-							
+
+							/*
+							 * Intent intent = new Intent(mainActivity,
+							 * GamePackageDetailActivity.class);
+							 * intent.putExtra("gameId", GoagalInfo.gameid);
+							 * startActivity(intent);
+							 */
+
+							// mainActivity.changeFragment(11);
+
 							if (CheckUtil.isInstallGameBox(mainActivity)) {
-								
-								//自定义事件
-								MobclickAgent.onEvent(mainActivity,"package_open_game_box");
-								
+
+								// 自定义事件
+								MobclickAgent.onEvent(mainActivity, "package_open_game_box");
+
 								String pwd = Base64.encode(Encrypt.encode(GoagalInfo.userInfo.password).getBytes());
-								
-								String mobile = StringUtils.isEmpty(GoagalInfo.userInfo.mobile) ? GoagalInfo.userInfo.username: GoagalInfo.userInfo.mobile;
-								
-								String tempData = Base64.encode(("{\"game_id\":\""+ GoagalInfo.gameid + "\", \"game_name\":\"\"}").getBytes());
-								Uri uri = Uri.parse("gamebox://?act=GiftListActivity&pwd=" + pwd + "&phone="
-										+ mobile + "&username=" + GoagalInfo.userInfo.username+"&data="+tempData);
-								
+
+								String mobile = StringUtils.isEmpty(GoagalInfo.userInfo.mobile)
+										? GoagalInfo.userInfo.username : GoagalInfo.userInfo.mobile;
+
+								String tempData = Base64.encode(
+										("{\"game_id\":\"" + GoagalInfo.gameid + "\", \"game_name\":\"\"}").getBytes());
+								Uri uri = Uri.parse("gamebox://?act=GiftListActivity&pwd=" + pwd + "&phone=" + mobile
+										+ "&username=" + GoagalInfo.userInfo.username + "&data=" + tempData);
+
 								Logger.msg("游戏礼包URI---" + uri.toString());
 								Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 								mainActivity.startActivity(intent);
-								
-							}else {
+
+							} else {
 								gameBoxDown(2);
 							}
 						}
-						
-						if (moduleInfo.type == 0
-								&& moduleInfo.typeVal.equals(Constants.ACCOUNT_SAFETY)) {
-							MobclickAgent.onEvent(mainActivity,"account_safety");
+
+						if (moduleInfo.type == 0 && moduleInfo.typeVal.equals(Constants.ACCOUNT_SAFETY)) {
+							MobclickAgent.onEvent(mainActivity, "account_safety");
 							mainActivity.changeFragment(6);
 						}
-						
-						//游戏中心
+
+						// 游戏中心
 						if (moduleInfo.type == 0 && moduleInfo.typeVal.equals(Constants.GAME_CENTER)) {
 							if (CheckUtil.isInstallGameBox(mainActivity)) {
-								
-								//自定义事件
-								MobclickAgent.onEvent(mainActivity,"gamecenter_open_game_box");
-								
+
+								// 自定义事件
+								MobclickAgent.onEvent(mainActivity, "gamecenter_open_game_box");
+
 								String pwd = Base64.encode(Encrypt.encode(GoagalInfo.userInfo.password).getBytes());
-								
-								String mobile = StringUtils.isEmpty(GoagalInfo.userInfo.mobile) ? GoagalInfo.userInfo.username: GoagalInfo.userInfo.mobile;
-								
-								Uri uri = Uri.parse("gamebox://?act=MainActivity&pwd=" + pwd + "&phone="
-										+ mobile + "&username=" + GoagalInfo.userInfo.username);
-								
+
+								String mobile = StringUtils.isEmpty(GoagalInfo.userInfo.mobile)
+										? GoagalInfo.userInfo.username : GoagalInfo.userInfo.mobile;
+
+								Uri uri = Uri.parse("gamebox://?act=MainActivity&pwd=" + pwd + "&phone=" + mobile
+										+ "&username=" + GoagalInfo.userInfo.username);
+
 								Logger.msg("游戏中心---" + uri.toString());
 								Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 								mainActivity.startActivity(intent);
-							}else{
+							} else {
 								gameBoxDown(3);
 							}
 						}
@@ -529,6 +572,7 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 	@Override
 	public void onResume() {
 		super.onResume();
+
 		// MobclickAgent.onResume(mainActivity);
 		MobclickAgent.onPageStart("MainFragment");
 		// 获取用户信息
@@ -668,13 +712,12 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 				stateDrawable.addState(new int[] { focused }, gdPressed);
 				stateDrawable.addState(new int[] { -selected, -focused, -pressed }, gdNormal);
 				chargeBtn.setBackgroundDrawable(stateDrawable);
-				
-				//设置自动登录开关颜色
+
+				// 设置自动登录开关颜色
 				slideSwitchButton.setLineColor(btnColor);
 			}
 		}
-		
-		
+
 	}
 
 	@Override
@@ -745,7 +788,7 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 			((Activity) mainActivity).finish();
 			return;
 		}
-		
+
 		if (v.getId() == findIdByString("auto_login_tv")) {
 			slideSwitchButton.setClickSwitchOpen();
 		}
@@ -798,7 +841,7 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 		@Override
 		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
-			//更新用户信息
+			// 更新用户信息
 			if (result) {
 				Message msg = new Message();
 				msg.what = 2;
@@ -806,7 +849,7 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 			}
 		}
 	}
-	
+
 	/**
 	 * 主页模块信息
 	 * 

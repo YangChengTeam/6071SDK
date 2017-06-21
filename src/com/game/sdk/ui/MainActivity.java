@@ -1,15 +1,5 @@
 package com.game.sdk.ui;
 
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
-import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.view.Gravity;
-import android.view.Window;
-import android.view.WindowManager;
-
 import com.game.sdk.FYGameSDK;
 import com.game.sdk.domain.GoagalInfo;
 import com.game.sdk.ui.fragment.AccountSafetyFragment;
@@ -30,6 +20,16 @@ import com.game.sdk.utils.Logger;
 import com.game.sdk.utils.MResource;
 import com.umeng.analytics.MobclickAgent;
 
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.view.Gravity;
+import android.view.Window;
+import android.view.WindowManager;
+
 public class MainActivity extends BaseActivity {
 
 	private FragmentManager fm;
@@ -37,13 +37,13 @@ public class MainActivity extends BaseActivity {
 	private FragmentTransaction transaction;
 
 	private BaseFragment currentFragment;
-	
-	public interface PayResultListener{
+
+	public interface PayResultListener {
 		void payResult(int arg0, int arg1, Intent arg2);
 	}
-	
+
 	private PayResultListener payResultListener;
-	
+
 	public PayResultListener getPayResultListener() {
 		return payResultListener;
 	}
@@ -60,7 +60,7 @@ public class MainActivity extends BaseActivity {
 	@Override
 	public void initVars() {
 		super.initVars();
-		
+
 		setOrientation();
 	}
 
@@ -69,47 +69,50 @@ public class MainActivity extends BaseActivity {
 		super.initViews();
 		defaultFragment();
 		MainActivity.this.setFinishOnTouchOutside(true);
+
 	}
 
 	@Override
 	public void initData() {
 		super.initData();
-		//MobclickAgent.openActivityDurationTrack(false);
-		
-		//自定义事件,统计SDK主页面打开的次数
-		MobclickAgent.onEvent(MainActivity.this,"fysdk_main_activity",FYGameSDK.defaultSDK().getVersion() != null ? FYGameSDK.defaultSDK().getVersion() : "");
+		// MobclickAgent.openActivityDurationTrack(false);
+
+		// 自定义事件,统计SDK主页面打开的次数
+		MobclickAgent.onEvent(MainActivity.this, "fysdk_main_activity",
+				FYGameSDK.defaultSDK().getVersion() != null ? FYGameSDK.defaultSDK().getVersion() : "");
 	}
 
 	public void setOrientation() {
-		if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.vertical == 0){
+		
+		if (GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.vertical == 0) {
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		}
-		
-		if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.vertical == 1){
+
+		if (GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.vertical == 1) {
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		}
-		
+
 		Window dialogWindow = getWindow();
 		WindowManager.LayoutParams params = dialogWindow.getAttributes();
 		params.width = (int) (DimensionUtil.getWidth(MainActivity.this) * 0.9);
 		params.gravity = Gravity.CENTER;
 		dialogWindow.setAttributes(params);
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
-		//MobclickAgent.onPageStart("MainActivity");
+		// MobclickAgent.onPageStart("MainActivity");
 		MobclickAgent.onResume(this);
-		//setOrientation();
+		// setOrientation();
 	}
-	
+
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		setOrientation();
 	}
-	
+
 	public void defaultFragment() {
 		fm = getSupportFragmentManager();
 		transaction = fm.beginTransaction();
@@ -157,7 +160,7 @@ public class MainActivity extends BaseActivity {
 			break;
 		case 11:
 			currentFragment = new GamePackageFragment();
-			Bundle bundle = new Bundle();  
+			Bundle bundle = new Bundle();
 			bundle.putString("gameId", GoagalInfo.gameid);
 			currentFragment.setArguments(bundle);
 			break;
@@ -184,19 +187,19 @@ public class MainActivity extends BaseActivity {
 		transaction.replace(MResource.getIdByName(this, "id", "main_content"), currentFragment);
 		transaction.commit();
 	}
-	
+
 	@Override
 	protected void onPause() {
 		super.onPause();
-		//MobclickAgent.onPageEnd("MainActivity");
+		// MobclickAgent.onPageEnd("MainActivity");
 		MobclickAgent.onPause(this);
 	}
-	
+
 	@Override
 	protected void onActivityResult(int arg0, int arg1, Intent arg2) {
 		super.onActivityResult(arg0, arg1, arg2);
 		payResultListener.payResult(arg0, arg1, arg2);
 		Logger.msg("mainActivity---onActivityResult--->");
 	}
-	
+
 }
