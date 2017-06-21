@@ -159,6 +159,9 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 
 	private IpaynowPlugin mIpaynowplugin;
 
+	//验证订单执行的次数，如果失败一次，再执行一次
+	private int validateCount = 1;
+	
 	@SuppressLint("HandlerLeak")
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -254,6 +257,11 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 				}else{
 					Util.toast(PayActivity.this, "支付成功");
 				}
+				break;
+			case 4:
+				validateCount++;
+				//再次验证订单(因为网络延迟问题，多请求一次)
+				new PayValidateTask().execute();
 				break;
 			default:
 				break;
@@ -766,7 +774,13 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 				msg.what = 3;
 				handler.sendMessage(msg);
 			}else{
-				Util.toast(PayActivity.this, "支付成功");
+				if(validateCount == 1){
+					Message msg = new Message();
+					msg.what = 4;
+					handler.sendMessage(msg);
+				}else{					
+					Util.toast(PayActivity.this, "支付成功");
+				}
 			}
 		}
 	}
