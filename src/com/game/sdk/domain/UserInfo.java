@@ -68,4 +68,7 @@ public class UserInfo {
 	@JSONField(name = "share_content")
 	public String shareContent;
 	
+	//是否开启游戏返利(true：是,false：否)
+	@JSONField(name = "game_return")
+	public boolean isGameReturn;
 }

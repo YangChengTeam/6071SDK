@@ -209,6 +209,7 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 
 				break;
 			case 2:
+				initGuidePop();
 				
 				if (guidePopWindow != null && bgLayout != null && !isShowGuide) {
 					PreferenceUtil.getImpl(mainActivity).putBoolean(Constants.IS_SHOW_GUIDE, true);
@@ -336,7 +337,10 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 				}
 			}
 		});
-
+	}
+	
+	//初始化引导窗口
+	public void initGuidePop(){
 		// 判断是否展示用户操作引导页
 		isShowGuide = PreferenceUtil.getImpl(mainActivity).getBoolean(Constants.IS_SHOW_GUIDE, false);
 		
@@ -349,13 +353,21 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 				tempH = DimensionUtil.dip2px(mainActivity, 300);
 				images = new int[] { MResource.getIdByName(mainActivity, "drawable", "horizontal_guide1"),
 						MResource.getIdByName(mainActivity, "drawable", "horizontal_guide2") };
+				//是否打开了返利开关
+				if(GoagalInfo.userInfo.isGameReturn && images != null && images.length > 0){
+					images[0] = MResource.getIdByName(mainActivity, "drawable", "horizontal_guide3");
+				}
 			}
-
+			
 			if (GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.vertical == 1) {
 				tempW = DimensionUtil.dip2px(mainActivity, 300);
 				tempH = DimensionUtil.dip2px(mainActivity, 430);
 				images = new int[] { MResource.getIdByName(mainActivity, "drawable", "vertical_guide1"),
 						MResource.getIdByName(mainActivity, "drawable", "vertical_guide2") };
+				//是否打开了返利开关
+				if(GoagalInfo.userInfo.isGameReturn && images != null && images.length > 0){
+					images[0] = MResource.getIdByName(mainActivity, "drawable", "vertical_guide3");
+				}
 			}
 			
 			View popView = mainActivity.getLayoutInflater()
@@ -384,7 +396,8 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 			guidePopWindow = new PopupWindow(popView, tempW, tempH, true);
 		}
 	}
-
+	
+	
 	@Override
 	public void initData() {
 		super.initData();

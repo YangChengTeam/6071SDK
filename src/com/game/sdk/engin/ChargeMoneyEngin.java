@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
 import com.game.sdk.domain.ChargeMoneyList;
+import com.game.sdk.domain.GoagalInfo;
 import com.game.sdk.domain.ResultInfo;
 import com.game.sdk.net.constans.HttpConfig;
 import com.game.sdk.net.constans.ServerConfig;
@@ -30,6 +31,7 @@ public class ChargeMoneyEngin extends BaseEngin<ChargeMoneyList> {
 		ChargeMoneyList chargeMoneyList = null;
 		try {
 			Map<String, String> params = new HashMap<String, String>();
+			params.put("user_id", GoagalInfo.userInfo != null ? GoagalInfo.userInfo.userId : "");
 			ResultInfo<ChargeMoneyList> resultInfo = getResultInfo(true, ChargeMoneyList.class, params);
 
 			if (resultInfo != null && resultInfo.code == HttpConfig.STATUS_OK) {

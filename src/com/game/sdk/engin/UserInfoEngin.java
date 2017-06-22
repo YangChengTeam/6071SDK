@@ -93,6 +93,7 @@ public class UserInfoEngin extends BaseEngin<UserInfo> {
 		GoagalInfo.userInfo.kefuQQ = userInfo.kefuQQ;
 		GoagalInfo.userInfo.vipLevel = userInfo.vipLevel;
 		GoagalInfo.userInfo.shareContent = userInfo.shareContent;
+		GoagalInfo.userInfo.isGameReturn = userInfo.isGameReturn;
 	}
 
 }

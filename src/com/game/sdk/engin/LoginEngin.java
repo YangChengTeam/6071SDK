@@ -103,7 +103,6 @@ public class LoginEngin extends BaseEngin<QuickLoginInfo> {
 		GoagalInfo.userInfo.sign = quickLoginInfo.sign;
 		GoagalInfo.userInfo.validateMobile = quickLoginInfo.isValiMobile;
 		GoagalInfo.userInfo.agentId = quickLoginInfo.agentId;
-		
 		PreferenceUtil.getImpl(context).putString(Constants.LAST_AGENT_ID, GoagalInfo.userInfo.agentId);
 		
 		GoagalInfo.isLogin = true;

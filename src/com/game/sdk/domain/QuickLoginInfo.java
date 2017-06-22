@@ -36,5 +36,4 @@ public class QuickLoginInfo {
 	
 	@JSONField(name = "agent_id")
 	public String agentId;
-	
 }
