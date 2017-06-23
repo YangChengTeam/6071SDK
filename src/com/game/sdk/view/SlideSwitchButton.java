@@ -159,18 +159,18 @@ public class SlideSwitchButton extends View {
 		mPaint.setColor(Color.parseColor("#"+lineColor));
 		canvas.drawLine(lineStart, centerY, curX, centerY, mPaint);
 		/* 右边部分的线，灰色 */
-		mPaint.setColor(Color.parseColor("#d0d0d0"));
+		mPaint.setColor(Color.parseColor("#f2f5f5f5"));
 		canvas.drawLine(curX, centerY, lineEnd, centerY, mPaint);
 
 		/* 画圆 */
 		/* 画最左和最右的圆，直径为直线段宽度， 即在直线段两边分别再加上一个半圆 */
 		mPaint.setStyle(Paint.Style.FILL);
-		mPaint.setColor(Color.parseColor("#d0d0d0"));
+		mPaint.setColor(Color.parseColor("#f2f5f5f5"));
 		canvas.drawCircle(lineEnd, centerY, lineWidth / 2, mPaint);
 		mPaint.setColor(Color.parseColor("#"+lineColor));
 		canvas.drawCircle(lineStart, centerY, lineWidth / 2, mPaint);
 		/* 圆形滑块 */
-		mPaint.setColor(Color.parseColor("#bdbdbd"));
+		mPaint.setColor(Color.parseColor("#e1e1e1"));
 		canvas.drawCircle(curX, centerY, radius, mPaint);
 
 	}
