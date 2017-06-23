@@ -155,6 +155,10 @@
 	<string name="pay_way_text">支付方式：</string>
 	<string name="order_money_text">总额：</string>
 	<string name="order_real_money_text">实付：</string>
+	<string name="have_money_text">获得</string>
+	<string name="platform_money_hint_text">平台币</string>
+	<string name="money_add_hint_text"> + </string>
+	<string name="game_money_hint_text">游戏币</string>
 	
 	<string name="sdk_charge_success_text">充值成功</string>
 	<string name="sdk_charge_fail_text">充值失败</string>

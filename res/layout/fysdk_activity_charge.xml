@@ -53,7 +53,7 @@
             <LinearLayout
                 android:id="@+id/charge_10_layout"
                 android:layout_width="0dp"
-                android:layout_height="58dp"
+                android:layout_height="45dp"
                 android:layout_margin="6dp"
                 android:layout_weight="1"
                 android:background="@drawable/charge_item_selector"
@@ -75,13 +75,13 @@
                     android:gravity="center"
                     android:textColor="@color/test_play_account_color"
                     android:textSize="10sp"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/charge_50_layout"
                 android:layout_width="0dp"
-                android:layout_height="58dp"
+                android:layout_height="45dp"
                 android:layout_margin="6dp"
                 android:layout_weight="1"
                 android:background="@drawable/charge_item_selector"
@@ -109,7 +109,7 @@
             <LinearLayout
                 android:id="@+id/charge_100_layout"
                 android:layout_width="0dp"
-                android:layout_height="58dp"
+                android:layout_height="45dp"
                 android:layout_margin="6dp"
                 android:layout_weight="1"
                 android:background="@drawable/charge_item_selector"
@@ -143,7 +143,7 @@
             <LinearLayout
                 android:id="@+id/charge_200_layout"
                 android:layout_width="0dp"
-                android:layout_height="58dp"
+                android:layout_height="45dp"
                 android:layout_margin="6dp"
                 android:layout_weight="1"
                 android:background="@drawable/charge_item_selector"
@@ -171,7 +171,7 @@
             <LinearLayout
                 android:id="@+id/charge_500_layout"
                 android:layout_width="0dp"
-                android:layout_height="58dp"
+                android:layout_height="45dp"
                 android:layout_margin="6dp"
                 android:layout_weight="1"
                 android:background="@drawable/charge_item_selector"
@@ -199,58 +199,155 @@
             <LinearLayout
                 android:id="@+id/charge_1000_layout"
                 android:layout_width="0dp"
-                android:layout_height="58dp"
+                android:layout_height="45dp"
                 android:layout_margin="6dp"
                 android:layout_weight="1"
-                android:background="@drawable/charge_item_selector"
-                android:gravity="center"
-                android:orientation="vertical" >
+                android:gravity="left|center"
+                android:orientation="horizontal" >
+
+                <EditText
+                    android:id="@+id/custom_money_ev"
+                    android:layout_width="85dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/charge_item_selector"
+                    android:focusable="false"
+                    android:gravity="left|center"
+                    android:hint="@string/custom_money_text"
+                    android:inputType="numberDecimal"
+                    android:paddingLeft="8dp"
+                    android:maxLength="6"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/charge_1000_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/charge_1000_text" />
-
-                <TextView
-                    android:id="@+id/real_money_1000_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:gravity="center"
-                    android:textColor="@color/test_play_account_color"
-                    android:textSize="10sp"
-                    android:visibility="gone" />
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="4dp"
+                    android:text="@string/charge_unit_text"
+                    android:textColor="@color/feiyou_service" />
             </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/common_input_bg"
+        android:gravity="left|center"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:id="@+id/pingtaibi_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/have_money_text"
+                android:textColor="@color/black1"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/real_money_hint_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="0"
+                android:textColor="@color/test_play_account_color"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/platform_money_hint_text"
+                android:textColor="@color/black1"
+                android:textSize="14sp" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:gravity="center"
+            android:id="@+id/give_game_money_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_toRightOf="@+id/pingtaibi_layout"
+            android:visibility="invisible"
+            android:layout_centerVertical="true"
             android:orientation="horizontal" >
 
-            <EditText
-                android:id="@+id/custom_money_ev"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
-                android:background="@drawable/charge_item_selector"
-                android:hint="@string/custom_money_text"
-                android:paddingLeft="5dp"
-                android:inputType="numberDecimal"
-                android:textColor="@color/black"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:text="@string/money_add_hint_text"
+                android:textColor="@color/feiyou_service"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/give_game_money_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="0"
+                android:textColor="@color/test_play_account_color"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/game_money_hint_text"
+                android:textColor="@color/black1"
                 android:textSize="14sp" />
         </LinearLayout>
-    </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="6dp"
+            android:gravity="center"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/order_real_money_text"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/real_pay_amount_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="@color/pay_recommend_color"
+                android:textSize="14sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="4dp"
+                android:text="@string/charge_unit_text"
+                android:textColor="@color/black" />
+        </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="6dp"
         android:background="@drawable/common_input_bg"
         android:gravity="center"
         android:orientation="vertical" >
