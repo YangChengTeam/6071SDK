@@ -381,6 +381,7 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 
 				@Override
 				public void onClick(View v) {
+					isShowGuide = true;
 					if (i > 1) {
 						i = 0;
 						if (guidePopWindow != null && guidePopWindow.isShowing()) {
