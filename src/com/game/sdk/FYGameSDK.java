@@ -448,6 +448,14 @@ public class FYGameSDK {
 					Logger.msg("登录成功----");
 					GoagalInfo.isLogin = true;
 					// Util.toast(acontext, "登录成功");
+					
+					if(GoagalInfo.userInfo != null && !StringUtils.isEmpty(GoagalInfo.userInfo.agentId)){
+						if(!GoagalInfo.userInfo.agentId.equals(GoagalInfo.agentid)){
+							GoagalInfo.agentid = GoagalInfo.userInfo.agentId;
+							new ReInitInfoTaskByUserId().execute();
+						}
+					}
+					
 					if (!StringUtils.isEmpty(GoagalInfo.noticeMsg)) {
 						AutoNoticeDialog noticeDialog = new AutoNoticeDialog(acontext, GoagalInfo.noticeMsg);
 						noticeDialog.show();
@@ -472,6 +480,25 @@ public class FYGameSDK {
 		}
 	}
 
+	private class ReInitInfoTaskByUserId extends AsyncTask<String, Integer, Boolean> {
+		
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+		}
+		
+		@Override
+		protected Boolean doInBackground(String... params) {
+			InitEngin initEngin = new InitEngin(acontext);
+			return initEngin.run();
+		}
+		
+		@Override
+		protected void onPostExecute(Boolean result) {
+			super.onPostExecute(result);
+		}
+	}
+	
 	public void loginSuccess() {
 
 		LogincallBack logincallBack = new LogincallBack();
