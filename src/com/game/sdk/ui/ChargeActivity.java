@@ -40,6 +40,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -177,6 +178,12 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 	//是否自定义金额
 	private boolean isCustomMoney = false;
 	
+	private LinearLayout serviceLayout;
+	
+	private LinearLayout explainLayout;
+	
+	private TextView explainTv;
+	
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -230,7 +237,22 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 
 					giveGameMoneyLayout.setVisibility(View.VISIBLE);
 				}
-
+				
+				//根据是否返利，显示不用的内容
+				if(isReturnMoney){
+					serviceLayout.setVisibility(View.GONE);
+					explainLayout.setVisibility(View.VISIBLE);
+					
+					String html = "<body><div><font color=\"#8a8a8a\">1：充值金额≥30元才可享受充值福利。</font></div>"
+							+ "<div><font color=\"#8a8a8a\">2：只有带返利标签的游戏才可享受充值福利。</font></div>"
+							+ "<div><font color=\"#8a8a8a\">3：充值比例：1元=1平台币+1游戏币。</font></div>"
+							+ "<div><font color=\"#8a8a8a\">4：平台币、游戏币区别:平台币可用于平台所有游戏，游戏币用于单款指定游戏。</font></div></body>";
+					explainTv.setText(Html.fromHtml(html));
+				}else{
+					serviceLayout.setVisibility(View.VISIBLE);
+					explainLayout.setVisibility(View.GONE);
+				}
+				
 				break;
 			default:
 				break;
@@ -295,8 +317,12 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 		alipayLayout = (RelativeLayout) findViewByString("alipay_layout");
 		wxpayLayout = (RelativeLayout) findViewByString("wxpay_layout");
 
+		serviceLayout = (LinearLayout) findViewByString("service_layout");
+		explainLayout = (LinearLayout) findViewByString("charge_explain_layout");
+		
 		callServiceTv = findTextViewByString("call_service_tv");
-
+		explainTv = findTextViewByString("explain_tv");
+		
 		alipaySelectedIcon = findImageViewByString("alipay_selected_icon");
 		wxpaySelectedIcon = findImageViewByString("wxpay_selected_icon");
 
@@ -487,7 +513,7 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 	@Override
 	public void initData() {
 		super.initData();
-		initTheme();
+		initTheme();	
 	}
 
 	/**

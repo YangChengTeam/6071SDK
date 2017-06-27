@@ -89,7 +89,8 @@
 	<string name="charge_to_text">到账</string>
 	<string name="charge_unit_text"> 元</string>
 	<string name="return_game_money">送</string>
-		
+	<string name="charge_explain_text">充值说明：</string>
+	
 	<string name="update_ps_text">修改密码</string>
 	<string name="bind_text">绑定手机</string>
 	<string name="again_bind_text">重新绑定手机</string>
