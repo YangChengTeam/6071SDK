@@ -243,10 +243,10 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 					serviceLayout.setVisibility(View.GONE);
 					explainLayout.setVisibility(View.VISIBLE);
 					
-					String html = "<body><div><font color=\"#8a8a8a\">1：充值金额≥30元才可享受充值福利。</font></div>"
-							+ "<div><font color=\"#8a8a8a\">2：只有带返利标签的游戏才可享受充值福利。</font></div>"
-							+ "<div><font color=\"#8a8a8a\">3：充值比例：1元=1平台币+1游戏币。</font></div>"
-							+ "<div><font color=\"#8a8a8a\">4：平台币、游戏币区别:平台币可用于平台所有游戏，游戏币用于单款指定游戏。</font></div></body>";
+					String html = "<div><font color=\"#8a8a8a\">1：充值金额≥30元才可享受充值福利。<br>"
+							+ "<font>2：只有带返利标签的游戏才可享受充值福利。<br>"
+							+ "<font>3：充值比例：1元=1平台币+1游戏币。<br>"
+							+ "<font>4：平台币、游戏币区别:平台币可用于平台所有游戏,游戏币用于单款指定游戏。</font></div>";
 					explainTv.setText(Html.fromHtml(html));
 				}else{
 					serviceLayout.setVisibility(View.VISIBLE);

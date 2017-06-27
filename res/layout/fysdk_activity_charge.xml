@@ -485,20 +485,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left|center_vertical"
-                android:layout_marginLeft="10dp"
-                android:drawableLeft="@drawable/charge_explain_icon"
+                android:layout_marginLeft="12dp"
                 android:drawablePadding="6dp"
                 android:gravity="center"
                 android:text="@string/charge_explain_text"
-                android:textColor="@color/test_play_account_color"
+                android:textColor="#ffb244"
                 android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/explain_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:lineSpacingExtra="6dp"
                 android:layout_marginTop="6dp"
                 android:gravity="center_vertical" />
         </LinearLayout>
