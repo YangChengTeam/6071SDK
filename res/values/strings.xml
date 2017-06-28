@@ -160,6 +160,8 @@
 	<string name="platform_money_hint_text">平台币</string>
 	<string name="money_add_hint_text"> + </string>
 	<string name="game_money_hint_text">游戏币</string>
+	<string name="net_error_hint_text">网络连接异常，请检查网络后刷新重试</string>
+	<string name="refresh_text">刷新</string>
 	
 	<string name="sdk_charge_success_text">充值成功</string>
 	<string name="sdk_charge_fail_text">充值失败</string>

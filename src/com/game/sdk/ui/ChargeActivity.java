@@ -119,9 +119,9 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 
 	public LinearLayout[] chargeLayouts;
 
-	public float[] chargeMoneys;
+	public int[] chargeMoneys;
 
-	public float[] realMoneys;
+	public int[] realMoneys;
 
 	private String payWay = Constants.ALIPAY_CR;
 
@@ -133,6 +133,8 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 
 	CustomDialog payDialog;
 
+	CustomDialog reloadPayInfoDialog;
+	
 	private String orderid;
 
 	private String productname;// 支付游戏名称
@@ -184,6 +186,15 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 	
 	private TextView explainTv;
 	
+	
+	private LinearLayout chargeInfoLayout;
+	
+	private LinearLayout netErrorLayout;
+	
+	private Button refreshBtn;
+	
+	private boolean isPayInitOk = false;
+	
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -220,39 +231,39 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 				Logger.msg("result:" + result);
 				break;
 			case 1:
-				if (chargeMoneys != null && chargeMoneys.length > 0) {
-					for (int i = 0; i < tvs.length; i++) {
-						tvs[i].setText(chargeMoneys[i] + findStringByResId("charge_unit_text"));
-					}
-				}
-
-				if (realMoneyTvs != null && realMoneyTvs.length > 0 && isReturnMoney) {
-					/*
-					 * for (int i = 0; i < realMoneyTvs.length; i++) {
-					 * realMoneyTvs[i].setVisibility(View.GONE);
-					 * realMoneyTvs[i].setText(findStringByResId(
-					 * "return_game_money") + realMoneys[i] +
-					 * findStringByResId("game_coin_list_text")); }
-					 */
-
-					giveGameMoneyLayout.setVisibility(View.VISIBLE);
-				}
 				
-				//根据是否返利，显示不用的内容
-				if(isReturnMoney){
-					serviceLayout.setVisibility(View.GONE);
-					explainLayout.setVisibility(View.VISIBLE);
+				if(isPayInitOk){
+					chargeInfoLayout.setVisibility(View.VISIBLE);
+					netErrorLayout.setVisibility(View.GONE);
 					
-					String html = "<div><font color=\"#8a8a8a\">1：充值金额≥30元才可享受充值福利。<br>"
-							+ "<font>2：只有带返利标签的游戏才可享受充值福利。<br>"
-							+ "<font>3：充值比例：1元=1平台币+1游戏币。<br>"
-							+ "<font>4：平台币、游戏币区别:平台币可用于平台所有游戏,游戏币用于单款指定游戏。</font></div>";
-					explainTv.setText(Html.fromHtml(html));
+					if (chargeMoneys != null && chargeMoneys.length > 0) {
+						for (int i = 0; i < tvs.length; i++) {
+							tvs[i].setText(chargeMoneys[i] + findStringByResId("charge_unit_text"));
+						}
+					}
+
+					if (isReturnMoney) {
+						giveGameMoneyLayout.setVisibility(View.VISIBLE);
+					}
+					
+					//根据是否返利，显示不用的内容
+					if(isReturnMoney){
+						serviceLayout.setVisibility(View.GONE);
+						explainLayout.setVisibility(View.VISIBLE);
+						
+						String html = "<div><font color=\"#8a8a8a\">1：充值金额≥30元才可享受充值福利。<br>"
+								+ "<font>2：只有带返利标签的游戏才可享受充值福利。<br>"
+								+ "<font>3：充值比例：1元=1平台币+1游戏币。<br>"
+								+ "<font>4：平台币、游戏币区别:平台币可用于平台所有游戏,游戏币用于单款指定游戏。</font></div>";
+						explainTv.setText(Html.fromHtml(html));
+					}else{
+						serviceLayout.setVisibility(View.VISIBLE);
+						explainLayout.setVisibility(View.GONE);
+					}
 				}else{
-					serviceLayout.setVisibility(View.VISIBLE);
-					explainLayout.setVisibility(View.GONE);
+					chargeInfoLayout.setVisibility(View.GONE);
+					netErrorLayout.setVisibility(View.VISIBLE);
 				}
-				
 				break;
 			default:
 				break;
@@ -280,6 +291,7 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 		attach = "{\"gameid\" :" + 0 + "}";
 		serviceDialog = new ServiceDialog(this, 0.8f);
 		payDialog = new CustomDialog(this, "正在充值");
+		reloadPayInfoDialog = new CustomDialog(this, "重新加载中");
 		backIv = findImageViewByString("back_iv");
 		rightBtn = findButtonByString("right_btn");
 		rightBtn.setVisibility(View.VISIBLE);
@@ -326,10 +338,15 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 		alipaySelectedIcon = findImageViewByString("alipay_selected_icon");
 		wxpaySelectedIcon = findImageViewByString("wxpay_selected_icon");
 
+		chargeInfoLayout = (LinearLayout) findViewByString("charge_info_layout");
+		netErrorLayout = (LinearLayout) findViewByString("net_error_layout");
+		refreshBtn = findButtonByString("refresh_net_btn");
+		
 		chargeBtn = findButtonByString("charge_btn");
 		backIv.setOnClickListener(this);
 		rightBtn.setOnClickListener(this);
-
+		refreshBtn.setOnClickListener(this);
+		
 		charge10Layout.setOnClickListener(this);
 		charge50Layout.setOnClickListener(this);
 		charge100Layout.setOnClickListener(this);
@@ -440,6 +457,11 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 			} else {
 				gameMoney = cMoney * Float.parseFloat(rateHigh);
 			}
+			
+			//30以下，不返利游戏币
+			if(cMoney < 30){
+				gameMoney = 0;
+			}
 		}
 
 		return (int) gameMoney;
@@ -465,7 +487,11 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 		@Override
 		protected void onPostExecute(ChargeMoneyList result) {
 			super.onPostExecute(result);
-
+			
+			if(reloadPayInfoDialog != null && reloadPayInfoDialog.isShowing()){
+				reloadPayInfoDialog.dismiss();
+			}
+			
 			if (result != null) {
 				// 是否开启返利游戏币功能
 				isReturnMoney = result.isOpen;
@@ -474,36 +500,43 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 				rateHigh = result.rateHigh;
 
 				if (result.chargeMoneyList != null && result.chargeMoneyList.size() > 0) {
-					chargeMoneys = new float[result.chargeMoneyList.size()];
+					chargeMoneys = new int[result.chargeMoneyList.size()];
 
 					// if (result.isOpen) {
-					realMoneys = new float[result.chargeMoneyList.size()];
+					realMoneys = new int[result.chargeMoneyList.size()];
 					// }
+					
+					try{
+						for (int i = 0; i < result.chargeMoneyList.size(); i++) {
+							if (result.chargeMoneyList.get(i) != null
+									&& result.chargeMoneyList.get(i).chargeMoney != null) {
+								chargeMoneys[i] = Integer.parseInt(result.chargeMoneyList.get(i).chargeMoney);
+								isPayInitOk = true;
+							}
 
-					for (int i = 0; i < result.chargeMoneyList.size(); i++) {
-						if (result.chargeMoneyList.get(i) != null
-								&& result.chargeMoneyList.get(i).chargeMoney != null) {
-							chargeMoneys[i] = Float.parseFloat(result.chargeMoneyList.get(i).chargeMoney);
+							if (realMoneys != null && realMoneys.length > 0 && result.chargeMoneyList.get(i) != null
+									&& result.chargeMoneyList.get(i).returnGameMoney != null) {
+								realMoneys[i] = Integer.parseInt(result.chargeMoneyList.get(i).returnGameMoney);
+								isPayInitOk = true;
+							}
 						}
-
-						if (realMoneys != null && realMoneys.length > 0 && result.chargeMoneyList.get(i) != null
-								&& result.chargeMoneyList.get(i).returnGameMoney != null) {
-							realMoneys[i] = Float.parseFloat(result.chargeMoneyList.get(i).returnGameMoney);
-						}
+					}catch(NumberFormatException e){
+						Logger.msg("pay init NumberFormatException --->");
+						e.printStackTrace();
 					}
 				}
 			}
 
-			// 如果从服务器未获取到值，使用默认值
+			/*// 如果从服务器未获取到值，使用默认值
 			if (chargeMoneys == null || chargeMoneys.length == 0) {
-				chargeMoneys = new float[] { 10, 50, 100, 200, 500, 1000 };
+				chargeMoneys = new int[] { 10, 50, 100, 200, 500, 1000 };
 			}
 
 			// 如果从服务器未获取到值，使用默认值
 			if (realMoneys == null || realMoneys.length == 0) {
-				realMoneys = new float[] { 10, 50, 100, 200, 500, 1000 };
-			}
-
+				realMoneys = new int[] { 10, 50, 100, 200, 500, 1000 };
+			}*/
+			
 			Message msg = new Message();
 			msg.what = 1;
 			handler.sendMessage(msg);
@@ -513,7 +546,7 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 	@Override
 	public void initData() {
 		super.initData();
-		initTheme();	
+		initTheme();
 	}
 
 	/**
@@ -635,7 +668,7 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 
 		if (v.getId() != findIdByString("charge_btn") && v.getId() != findIdByString("alipay_layout")
 				&& v.getId() != findIdByString("wxpay_layout") && v.getId() != findIdByString("back_iv")
-				&& v.getId() != findIdByString("custom_money_ev")) {
+				&& v.getId() != findIdByString("custom_money_ev") && v.getId() != findIdByString("refresh_net_btn")) {
 			selectText(v.getId());
 			// 隐藏键盘
 			inputManager.hideSoftInputFromWindow(customMoneyEv.getWindowToken(), 0);
@@ -676,6 +709,19 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 			Intent intent = new Intent(ChargeActivity.this, ChargeRecordActivity.class);
 			startActivity(intent);
 		}
+		
+		//网络错误，重新刷新
+		if (v.getId() == findIdByString("refresh_net_btn")) {
+			
+			if (!NetworkImpl.isNetWorkConneted(ChargeActivity.this)) {
+				Util.toast(ChargeActivity.this, "网络不给力，请检查网络设置");
+				return;
+			}
+			
+			reloadPayInfoDialog.show();
+			
+			new ChargeMoneyInitTask().execute();
+		}
 	}
 
 	public void selectText(int selectId) {
@@ -685,8 +731,8 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 			if (chargeLayouts[i].getId() == selectId) {
 				chargeMoney = chargeMoneys[i];
 				// customMoneyEv.setText(chargeMoney + "");
-				realMoneyHintTv.setText(chargeMoney + "");
-				realPayAmountTv.setText(chargeMoney + "");// 实付
+				realMoneyHintTv.setText((int)chargeMoney + "");
+				realPayAmountTv.setText((int)chargeMoney + "");// 实付
 				if (realMoneys != null && i < realMoneys.length) {
 					giveGameMoneyTv.setText((int) realMoneys[i] + "");
 				}

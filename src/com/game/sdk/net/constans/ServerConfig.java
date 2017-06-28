@@ -6,7 +6,7 @@ import android.os.Environment;
 
 public class ServerConfig {
 
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 
 	public static final String PATH = Environment.getExternalStorageDirectory() + "/6071GAME";
 	

@@ -74,52 +74,41 @@ public class AccountInfoUtil {
 	
 	//修改用户密码时，如果用户对应的手机号也登录过，则同时修改账号/手机号对应的密码
 	public static void updateUsersInfo(Context context, UserInfo userInfo) {
-		List<UserInfo> userInfos = loadAllUserInfo(context);
-		
-		if(userInfos == null){
-			userInfos = new ArrayList<UserInfo>();
-		}
-		
-		int len = userInfos.size();
-		
-		//修改密码的用户是否存在用户列表中
-		int isAdd = 0;
-		
-		for (int i = 0; i < len; i++) {
-			UserInfo _userInfo = userInfos.get(i);
-			
-			if(!StringUtils.isEmpty(userInfo.mobile) && !StringUtils.isEmpty(_userInfo.username) && _userInfo.username.equals(userInfo.mobile)){
-				isAdd ++;
-				userInfos.remove(i);
-				
-				UserInfo nUser = new UserInfo();
-				nUser.username = userInfo.mobile;
-				nUser.mobile = userInfo.mobile;
-				nUser.password = userInfo.password;
-				
-				if (userInfos != null) {
-					userInfos.add(i,nUser);
-					continue;
-				}
-			}
-			
-			if (!StringUtils.isEmpty(userInfo.username) && !StringUtils.isEmpty(_userInfo.mobile) && _userInfo.mobile.equals(userInfo.mobile)) {
-				isAdd ++;
-				userInfos.remove(i);
-				if (userInfos != null) {
-					userInfo.username = _userInfo.username;
-					userInfos.add(i,userInfo);
-					continue;
-				}
-			}
-		}
-		
-		if(isAdd == 0 && !StringUtils.isEmpty(userInfo.username)){
-			userInfos.add(0,userInfo);
-		}
-		
-		saveUserInfos(context, userInfos);
-	}
+        if (StringUtils.isEmpty(userInfo.username) && StringUtils.isEmpty(userInfo.mobile)) {
+            return;
+        }
+
+        List<UserInfo> userInfos = loadAllUserInfo(context);
+        if (userInfos == null) {
+            userInfos = new ArrayList<UserInfo>();
+        }
+
+        int len = userInfos.size();
+        boolean isExistMobile = false;
+
+        for (int i = 0; i < len; i++) {
+            UserInfo _userInfo = userInfos.get(i);
+
+            if (_userInfo.username.equals(userInfo.username + "") || (userInfo.mobile+"").equals(_userInfo
+                    .mobile+"")) {
+                _userInfo.password = userInfo.password;
+            }
+
+            if (StringUtils.isEmpty(userInfo.mobile) || _userInfo.username.equals(userInfo.mobile + "")) {
+                isExistMobile = true;
+            }
+        }
+
+        if (!isExistMobile) {
+            UserInfo aUserInfo = new UserInfo();
+            aUserInfo.username = userInfo.mobile;
+            aUserInfo.mobile = userInfo.mobile;
+            aUserInfo.password = userInfo.password;
+            userInfos.add(0, aUserInfo);
+        }
+
+        saveUserInfos(context, userInfos);
+    }
 	
 	
 	public static void deleteUserInfo(Context context, UserInfo userInfo) {
