@@ -19,9 +19,13 @@ public class ChargeMoneyList {
 	//低于mix_money的返利比例
 	@JSONField(name = "rate_low")
 	public String rateLow;
-
+	
 	//高于mix_money的返利比例
 	@JSONField(name = "rate_high")
 	public String rateHigh;
 
+	//充值返利最低限额
+	@JSONField(name = "return_range_money")
+	public String returnRangeMoney;
+	
 }

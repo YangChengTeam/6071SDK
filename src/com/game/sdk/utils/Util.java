@@ -183,7 +183,7 @@ public class Util {
 			}
 			PreferenceUtil.getImpl(context).putString(Constants.LAST_AGENT_ID, GoagalInfo.agentid);
 		}
-		GoagalInfo.agentid = "67";
+		
 		GoagalInfo.publicKey = results[1];
 		
 		getFromId(context);

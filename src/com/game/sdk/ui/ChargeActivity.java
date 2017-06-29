@@ -175,6 +175,8 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 
 	private String rateHigh;
 
+	private String returnRangeMoney;
+	
 	InputMethodManager inputManager ;
 	
 	//是否自定义金额
@@ -251,10 +253,13 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 						serviceLayout.setVisibility(View.GONE);
 						explainLayout.setVisibility(View.VISIBLE);
 						
-						String html = "<div><font color=\"#8a8a8a\">1：充值金额≥30元才可享受充值福利。<br>"
+						if(StringUtils.isEmpty(returnRangeMoney)){
+							returnRangeMoney = "0";
+						}
+						
+						String html = "<div><font color=\"#8a8a8a\">1：充值金额≥"+returnRangeMoney+"元才可享受充值福利。<br>"
 								+ "<font>2：只有带返利标签的游戏才可享受充值福利。<br>"
-								+ "<font>3：充值比例：1元=1平台币+1游戏币。<br>"
-								+ "<font>4：平台币、游戏币区别:平台币可用于平台所有游戏,游戏币用于单款指定游戏。</font></div>";
+								+ "<font>3：平台币、游戏币区别:平台币可用于平台所有游戏,游戏币用于单款指定游戏。</font></div>";
 						explainTv.setText(Html.fromHtml(html));
 					}else{
 						serviceLayout.setVisibility(View.VISIBLE);
@@ -459,7 +464,7 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 			}
 			
 			//30以下，不返利游戏币
-			if(cMoney < 30){
+			if(returnRangeMoney != null && cMoney < Integer.parseInt(returnRangeMoney)){
 				gameMoney = 0;
 			}
 		}
@@ -498,7 +503,8 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 				mixMoney = result.mixMoney;
 				rateLow = result.rateLow;
 				rateHigh = result.rateHigh;
-
+				returnRangeMoney = result.returnRangeMoney;
+				
 				if (result.chargeMoneyList != null && result.chargeMoneyList.size() > 0) {
 					chargeMoneys = new int[result.chargeMoneyList.size()];
 

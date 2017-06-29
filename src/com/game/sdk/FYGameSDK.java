@@ -315,7 +315,7 @@ public class FYGameSDK {
 		}
 		
 		//第一步:如果安装过游戏盒子,从游戏盒子/或者本地的数据库文件中获取当前登录用户信息
-		boolean isFirst = PreferenceUtil.getImpl(context).getBoolean(Constants.isFirstAccount, true);
+		/*boolean isFirst = PreferenceUtil.getImpl(context).getBoolean(Constants.isFirstAccount, true);
 		if(isFirst){
 	        try{
 	        	ContentResolver contentResolver = context.getContentResolver();
@@ -347,7 +347,7 @@ public class FYGameSDK {
 	        }
 	        
 	        PreferenceUtil.getImpl(context).putBoolean(Constants.isFirstAccount, false);
-		}
+		}*/
 		
         //第二步:从本地保存的账户中获取一个账号
         //if(GoagalInfo.userInfo == null){
@@ -747,7 +747,7 @@ public class FYGameSDK {
 	 * @return 返回游戏SDK版本号
 	 */
 	public String getVersion() {
-		return "2.2.19";
+		return "2.2.20";
 	}
 
 	/**
