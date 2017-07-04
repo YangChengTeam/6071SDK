@@ -63,7 +63,7 @@ public class LoginInDialog extends Dialog implements android.view.View.OnClickLi
 		WindowManager.LayoutParams params = dialogWindow.getAttributes();
 		params.width = (int) (DimensionUtil.getWidth(mContext) * 0.8);
 		params.gravity = Gravity.TOP | Gravity.CENTER;
-		params.y = DimensionUtil.dip2px(mContext, 40);
+		params.y = DimensionUtil.dip2px(mContext, 30);
 
 	}
 

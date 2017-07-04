@@ -19,7 +19,10 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.http.HttpResponseCache;
+import android.os.Build;
 import android.os.Handler;
+import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
@@ -43,9 +46,32 @@ public class InitActivity extends BaseActivity implements InitCloseListener {
 	@Override
 	public void initVars() {
 		super.initVars();
+		hideBottomUIMenu();
 		fyGmaeSDk = FYGameSDK.defaultSDK();
 	};
 
+	/**  
+	 * 隐藏虚拟按键，并且设置成全屏  
+	 */  
+	@SuppressLint("InlinedApi")
+	protected void hideBottomUIMenu(){  
+	    if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api  
+	        View v = this.getWindow().getDecorView();  
+	        v.setSystemUiVisibility(View.GONE);  
+	    } else if (Build.VERSION.SDK_INT >= 19) {
+	        //for new api versions.  
+	        View decorView = getWindow().getDecorView();
+	        int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+	                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+	                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN  
+	                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar  
+	                  | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar  
+	                | View.SYSTEM_UI_FLAG_IMMERSIVE;  
+	        decorView.setSystemUiVisibility(uiOptions);  
+	        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+	    }  
+	}  
+	
 	@SuppressLint("NewApi")
 	@Override
 	public void initViews() {

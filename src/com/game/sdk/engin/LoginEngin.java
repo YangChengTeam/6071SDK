@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
-import com.game.sdk.FYGameSDK;
 import com.game.sdk.db.impl.UserLoginInfodao;
 import com.game.sdk.domain.GoagalInfo;
 import com.game.sdk.domain.LoginResult;

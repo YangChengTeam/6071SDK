@@ -2,6 +2,8 @@ package com.game.sdk.ui;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.math.NumberUtils;
 
@@ -121,7 +123,7 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 
 	public int[] chargeMoneys;
 
-	public int[] realMoneys;
+	public float[] realMoneys;
 
 	private String payWay = Constants.ALIPAY_CR;
 
@@ -258,8 +260,8 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 						}
 						
 						String html = "<div><font color=\"#8a8a8a\">1：充值金额≥"+returnRangeMoney+"元才可享受充值福利。<br>"
-								+ "<font>2：只有带返利标签的游戏才可享受充值福利。<br>"
-								+ "<font>3：平台币、游戏币区别:平台币可用于平台所有游戏,游戏币用于单款指定游戏。</font></div>";
+								+ "2：平台币、游戏币区别:平台币可用于平台所有游戏,游戏币用于单款指定游戏。<br>"
+								+ "3：虚拟充值货币概不退款。</font></div>";
 						explainTv.setText(Html.fromHtml(html));
 					}else{
 						serviceLayout.setVisibility(View.VISIBLE);
@@ -397,8 +399,8 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 					realPayAmountTv.setText(s.toString());
 
 					if (isReturnMoney) {
-						int gameMoney = countGameMoney(s.toString(), mixMoney, rateLow, rateHigh);
-						giveGameMoneyTv.setText(gameMoney + "");
+						float gameMoney = countGameMoney(s.toString(), mixMoney, rateLow, rateHigh);
+						giveGameMoneyTv.setText(gameMoney+"");
 					}
 				} else {
 					if (StringUtils.isEmpty(customMoneyEv.getText()) && isCustomMoney) {
@@ -439,8 +441,8 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 	 *            阈值上比例
 	 * @return
 	 */
-	public int countGameMoney(String customMoney, String mixMoney, String rateLow, String rateHigh) {
-		float gameMoney = 0;
+	public float countGameMoney(String customMoney, String mixMoney, String rateLow, String rateHigh) {
+		double gameMoney = 0;
 
 		if (StringUtils.isEmpty(mixMoney)) {
 			return 0;
@@ -454,8 +456,8 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 
 		if (!StringUtils.isEmpty(customMoney)) {
 
-			float cMoney = Float.parseFloat(customMoney);// 充值金额
-			float mMoney = Float.parseFloat(mixMoney);// 返利游戏币阈值
+			double cMoney = Float.parseFloat(customMoney);// 充值金额
+			double mMoney = Float.parseFloat(mixMoney);// 返利游戏币阈值
 
 			if (cMoney < mMoney) {
 				gameMoney = cMoney * Float.parseFloat(rateLow);
@@ -468,10 +470,17 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 				gameMoney = 0;
 			}
 		}
-
-		return (int) gameMoney;
+		
+		DecimalFormat df = new DecimalFormat("#.#");
+		return Float.parseFloat(df.format(gameMoney));
 	}
-
+	
+	//判断一个字符串是否是整数
+	public boolean isInteger(String str){
+        Pattern pattern=Pattern.compile("^[-\\+]?[\\d]*\\.?[\\d]{1}$");
+        return pattern.matcher(str).matches();
+    }
+	
 	// 设置平台币
 	public void setPlatformMoney() {
 		platformMoneyTv.setText(!StringUtils.isEmpty(GoagalInfo.userInfo.ttb) ? GoagalInfo.userInfo.ttb : "0");
@@ -509,7 +518,7 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 					chargeMoneys = new int[result.chargeMoneyList.size()];
 
 					// if (result.isOpen) {
-					realMoneys = new int[result.chargeMoneyList.size()];
+					realMoneys = new float[result.chargeMoneyList.size()];
 					// }
 					
 					try{
@@ -522,7 +531,7 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 
 							if (realMoneys != null && realMoneys.length > 0 && result.chargeMoneyList.get(i) != null
 									&& result.chargeMoneyList.get(i).returnGameMoney != null) {
-								realMoneys[i] = Integer.parseInt(result.chargeMoneyList.get(i).returnGameMoney);
+								realMoneys[i] = Float.parseFloat(result.chargeMoneyList.get(i).returnGameMoney);
 								isPayInitOk = true;
 							}
 						}
@@ -740,7 +749,7 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 				realMoneyHintTv.setText((int)chargeMoney + "");
 				realPayAmountTv.setText((int)chargeMoney + "");// 实付
 				if (realMoneys != null && i < realMoneys.length) {
-					giveGameMoneyTv.setText((int) realMoneys[i] + "");
+					giveGameMoneyTv.setText(realMoneys[i] + "");
 				}
 				chargeLayouts[i].setSelected(true);
 			} else {
