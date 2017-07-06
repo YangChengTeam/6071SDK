@@ -99,12 +99,25 @@ public class SystemUtil {
 	 * 获取手机IMEI码
 	 */
 	public static String getPhoneIMEI(Context cxt) {
-		TelephonyManager tm = (TelephonyManager) cxt.getSystemService(Context.TELEPHONY_SERVICE);
+		
+		boolean flag = false;
+		String imei = "";
+		
+		if(cxt == null){
+			flag = true;
+		}
+		
+		if(!flag){
+			TelephonyManager tm = (TelephonyManager) cxt.getSystemService(Context.TELEPHONY_SERVICE);
+			imei = tm.getDeviceId();
 
-		String imei = tm.getDeviceId();
-
+			if (imei == null || imei.length() == 0) {
+				flag = true;
+			}
+		}
+		
 		// 获取不到IMEI时，通过这个方式来获取
-		if (imei == null || imei.length() == 0) {
+		if (flag) {
 			imei = "35" + Build.BOARD.length() % 10 + Build.BRAND.length() % 10 + Build.CPU_ABI.length() % 10
 					+ Build.DEVICE.length() % 10 + Build.DISPLAY.length() % 10 + Build.HOST.length() % 10
 					+ Build.ID.length() % 10 + Build.MANUFACTURER.length() % 10 + Build.MODEL.length() % 10
