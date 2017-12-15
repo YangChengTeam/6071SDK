@@ -56,6 +56,13 @@ public class LoginEngin extends BaseEngin<QuickLoginInfo> {
 				if (GoagalInfo.userInfo == null) {
 					GoagalInfo.userInfo = new UserInfo();
 				}
+				
+				if(resultInfo.data != null){
+					loginResult.newSdkReg = resultInfo.data.newSdkReg;
+					loginResult.fixName = resultInfo.data.fixName;
+					loginResult.cpNotice = resultInfo.data.cpNotice;
+				}
+				
 				// 保存用户信息
 				saveUserInfo(resultInfo.data);
 				
@@ -102,6 +109,10 @@ public class LoginEngin extends BaseEngin<QuickLoginInfo> {
 		GoagalInfo.userInfo.sign = quickLoginInfo.sign;
 		GoagalInfo.userInfo.validateMobile = quickLoginInfo.isValiMobile;
 		GoagalInfo.userInfo.agentId = quickLoginInfo.agentId;
+		
+		GoagalInfo.userInfo.newSdkReg = quickLoginInfo.newSdkReg;
+		GoagalInfo.userInfo.fixName = quickLoginInfo.fixName;
+		GoagalInfo.userInfo.cpNotice = quickLoginInfo.cpNotice;
 		PreferenceUtil.getImpl(context).putString(Constants.LAST_AGENT_ID, GoagalInfo.userInfo.agentId);
 		
 		GoagalInfo.isLogin = true;

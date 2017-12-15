@@ -294,11 +294,11 @@ public class AccountInfoUtil {
 
 	private static String getUid(Context context) {
 		String uid = "";
-		if (uid.isEmpty()) {
+		if (StringUtils.isEmpty(uid)) {
 			TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 			uid = telephonyManager.getDeviceId();
 		}
-		if (uid.isEmpty()) {
+		if (StringUtils.isEmpty(uid)) {
 			uid = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
 		}
 		return uid;

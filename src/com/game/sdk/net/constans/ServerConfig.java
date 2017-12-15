@@ -14,6 +14,10 @@ public class ServerConfig {
 
 	public static final String DEBUG_BASE_URL = "http://test.6071.com/api/index2/";
 
+	public static final String BASE3_URL = "http://api.6071.com/index3/";
+	
+	public static final String DEBUG_BASE3_URL = "http://test.6071.com/api/index3/";
+	
 	public static final String INIT_URL = getBaseUrl() + "init";
 	
 	public static final String QUICK_LOGIN_URL = getBaseUrl() + "mobile_regORlogin";
@@ -82,7 +86,7 @@ public class ServerConfig {
 	public static final String PAY_VALIDATE_URL = getBaseUrl() + "orders_chk";
 	
 	public static String getBaseUrl() {
-		return DEBUG ? DEBUG_BASE_URL : BASE_URL;
+		return DEBUG ? DEBUG_BASE3_URL : BASE3_URL;
 	}
 
 	public static String getPayCallUrl(String payWay) {

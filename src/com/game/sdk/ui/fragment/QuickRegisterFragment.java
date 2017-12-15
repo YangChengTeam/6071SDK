@@ -3,6 +3,7 @@ package com.game.sdk.ui.fragment;
 import java.util.regex.Pattern;
 
 import com.game.sdk.domain.GoagalInfo;
+import com.game.sdk.domain.LoginResult;
 import com.game.sdk.engin.RegisterAccountEngin;
 import com.game.sdk.ui.LoginActivity;
 import com.game.sdk.utils.Constants;
@@ -287,7 +288,7 @@ public class QuickRegisterFragment extends BaseFragment implements OnClickListen
 	 * @author admin
 	 *
 	 */
-	private class RegisterTask extends AsyncTask<String, Integer, Boolean> {
+	private class RegisterTask extends AsyncTask<String, Integer, LoginResult> {
 
 		private String userName;
 
@@ -304,19 +305,19 @@ public class QuickRegisterFragment extends BaseFragment implements OnClickListen
 		}
 
 		@Override
-		protected Boolean doInBackground(String... params) {
+		protected LoginResult doInBackground(String... params) {
 			Util.reInitChannel(loginActivity);
 			RegisterAccountEngin loginEngin = new RegisterAccountEngin(loginActivity, userName, password);
 			return loginEngin.run();
 		}
 
 		@Override
-		protected void onPostExecute(Boolean result) {
-			super.onPostExecute(result);
+		protected void onPostExecute(LoginResult loginResult) {
+			super.onPostExecute(loginResult);
 
 			registerDialog.dismiss();
 
-			if (result) {
+			if (loginResult.result) {
 				//将logo图及启动图恢复为渠道对应的值
 				if (Util.getInitLogoFileBitmap(loginActivity, Constants.AGENT_LOGO_IMAGE) != null) {
 					GoagalInfo.inItInfo.logoBitmp = Util.getInitLogoFileBitmap(loginActivity,Constants.AGENT_LOGO_IMAGE);
@@ -330,7 +331,7 @@ public class QuickRegisterFragment extends BaseFragment implements OnClickListen
 				
 				Logger.msg("注册账号成功----");
 				// Util.toast(loginActivity, "注册成功");
-
+				
 				loginActivity.changeFragment(4);
 
 			} else {

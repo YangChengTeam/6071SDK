@@ -502,7 +502,16 @@ public class FYGameSDK {
 	public void loginSuccess() {
 
 		LogincallBack logincallBack = new LogincallBack();
-		logincallBack.username = GoagalInfo.userInfo.username;
+		
+		if(GoagalInfo.userInfo.newSdkReg == 0){
+			logincallBack.username = GoagalInfo.userInfo.username;
+			if(GoagalInfo.userInfo.cpNotice == 0 && !StringUtils.isEmpty(GoagalInfo.userInfo.fixName)){
+				logincallBack.username = GoagalInfo.userInfo.fixName;
+			}
+		} else {
+			logincallBack.username = GoagalInfo.userInfo.userId;
+		}
+		
 		logincallBack.userId = GoagalInfo.userInfo.userId;
 		logincallBack.isBindPhone = GoagalInfo.userInfo.validateMobile == 1 ? true : false;
 		logincallBack.logintime = GoagalInfo.userInfo.logintime;
@@ -747,7 +756,7 @@ public class FYGameSDK {
 	 * @return 返回游戏SDK版本号
 	 */
 	public String getVersion() {
-		return "2.2.21";
+		return "2.3";
 	}
 
 	/**

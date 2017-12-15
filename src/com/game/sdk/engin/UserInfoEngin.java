@@ -94,6 +94,10 @@ public class UserInfoEngin extends BaseEngin<UserInfo> {
 		GoagalInfo.userInfo.vipLevel = userInfo.vipLevel;
 		GoagalInfo.userInfo.shareContent = userInfo.shareContent;
 		GoagalInfo.userInfo.isGameReturn = userInfo.isGameReturn;
+		
+		GoagalInfo.userInfo.newSdkReg = userInfo.newSdkReg;
+		GoagalInfo.userInfo.fixName = userInfo.fixName;
+		GoagalInfo.userInfo.cpNotice = userInfo.cpNotice;
 	}
 
 }

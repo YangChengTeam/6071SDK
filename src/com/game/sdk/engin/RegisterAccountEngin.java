@@ -6,6 +6,7 @@ import java.util.Map;
 import com.alibaba.fastjson.JSON;
 import com.game.sdk.db.impl.UserLoginInfodao;
 import com.game.sdk.domain.GoagalInfo;
+import com.game.sdk.domain.LoginResult;
 import com.game.sdk.domain.QuickLoginInfo;
 import com.game.sdk.domain.ResultInfo;
 import com.game.sdk.domain.UserInfo;
@@ -47,8 +48,9 @@ public class RegisterAccountEngin extends BaseEngin<QuickLoginInfo> {
 		return ServerConfig.REGISTER_ACCOUNT_URL;
 	}
 
-	public boolean run() {
-		boolean result = false;
+	public LoginResult run() {
+		LoginResult loginResult = new LoginResult();
+		loginResult.result = false;
 		try {
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("n", userName);
@@ -66,17 +68,17 @@ public class RegisterAccountEngin extends BaseEngin<QuickLoginInfo> {
 				// 保存用户信息
 				saveUserInfo(resultInfo.data);
 				
-				result = true;
+				loginResult.result = true;
 			} else {
-				result = false;
+				loginResult.result = false;
 			}
 			
 		} catch (Exception e) {
-			result = false;
+			loginResult.result = false;
 		}
 
-		Logger.msg("result---" + result);
-		return result;
+		Logger.msg("result---" + loginResult.result);
+		return loginResult;
 	}
 	
 	/**
@@ -98,6 +100,10 @@ public class RegisterAccountEngin extends BaseEngin<QuickLoginInfo> {
 		GoagalInfo.userInfo.sign = quickLoginInfo.sign;
 		GoagalInfo.userInfo.validateMobile = quickLoginInfo.isValiMobile;
 		GoagalInfo.userInfo.agentId = quickLoginInfo.agentId;
+		
+		GoagalInfo.userInfo.newSdkReg = quickLoginInfo.newSdkReg;
+		GoagalInfo.userInfo.fixName = quickLoginInfo.fixName;
+		GoagalInfo.userInfo.cpNotice = quickLoginInfo.cpNotice;
 		
 		//TODO,注册成功后，不需要设置为已登录
 		//1.如果点击"进入游戏"，则回调标记已登录成功，直接进入游戏

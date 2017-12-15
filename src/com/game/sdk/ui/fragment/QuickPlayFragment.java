@@ -220,7 +220,8 @@ public class QuickPlayFragment extends BaseFragment implements OnClickListener {
 			if (GoagalInfo.userInfo != null) {
 				GoagalInfo.isLogin = true;
 				LogincallBack logincallBack = new LogincallBack();
-				logincallBack.username = GoagalInfo.userInfo.username;
+				
+				logincallBack.username = GoagalInfo.userInfo.userId;
 				logincallBack.userId = GoagalInfo.userInfo.userId;
 				logincallBack.isBindPhone = GoagalInfo.userInfo.validateMobile == 1 ? true : false;
 				logincallBack.logintime = GoagalInfo.userInfo.logintime;

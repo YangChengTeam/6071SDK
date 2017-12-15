@@ -48,7 +48,7 @@ public abstract class BaseActivity extends FragmentActivity {
 	protected void onResume() {
 		super.onResume();
 		Logger.msg("onresume---start--->");
-		callOnResume(GoagalInfo.tempActivity);
+		//callOnResume(GoagalInfo.tempActivity);
 		Logger.msg("onresume---end--->");
 	}
 	

@@ -644,8 +644,16 @@ public class PhoneLoginFragment extends BaseFragment implements OnClickListener,
 				}
 
 				LogincallBack logincallBack = new LogincallBack();
-
-				logincallBack.username = GoagalInfo.userInfo.username;
+				
+				if(loginResult.newSdkReg == 0){
+					logincallBack.username = GoagalInfo.userInfo.username;
+					if(loginResult.cpNotice == 0 && !StringUtils.isEmpty(loginResult.fixName)){
+						logincallBack.username = loginResult.fixName;
+					}
+				} else {
+					logincallBack.username = GoagalInfo.userInfo.userId;
+				}
+				
 				logincallBack.userId = GoagalInfo.userInfo.userId;
 				logincallBack.isBindPhone = GoagalInfo.userInfo.validateMobile == 1 ? true : false;
 				logincallBack.logintime = GoagalInfo.userInfo.logintime;
@@ -737,7 +745,16 @@ public class PhoneLoginFragment extends BaseFragment implements OnClickListener,
 				PreferenceUtil.getImpl(loginActivity).putBoolean(mobileNumber, false);
 
 				LogincallBack logincallBack = new LogincallBack();
-				logincallBack.username = GoagalInfo.userInfo.username;
+				
+				if(loginResult.newSdkReg == 0){
+					logincallBack.username = GoagalInfo.userInfo.username;
+					if(loginResult.cpNotice == 0 && !StringUtils.isEmpty(loginResult.fixName)){
+						logincallBack.username = loginResult.fixName;
+					}
+				} else {
+					logincallBack.username = GoagalInfo.userInfo.userId;
+				}
+				
 				logincallBack.userId = GoagalInfo.userInfo.userId;
 				logincallBack.isBindPhone = GoagalInfo.userInfo.validateMobile == 1 ? true : false;
 				logincallBack.logintime = GoagalInfo.userInfo.logintime;

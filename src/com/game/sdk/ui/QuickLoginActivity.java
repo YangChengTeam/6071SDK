@@ -285,7 +285,16 @@ public class QuickLoginActivity extends BaseActivity implements OnClickListener 
 
 				if (GoagalInfo.userInfo != null) {
 					LogincallBack logincallBack = new LogincallBack();
-					logincallBack.username = GoagalInfo.userInfo.username;
+					
+					if(loginResult.newSdkReg == 0){
+						logincallBack.username = GoagalInfo.userInfo.username;
+						if(loginResult.cpNotice == 0 && !StringUtils.isEmpty(loginResult.fixName)){
+							logincallBack.username = loginResult.fixName;
+						}
+					} else {
+						logincallBack.username = GoagalInfo.userInfo.userId;
+					}
+					
 					logincallBack.userId = GoagalInfo.userInfo.userId;
 					logincallBack.isBindPhone = GoagalInfo.userInfo.validateMobile == 1 ? true : false;
 					logincallBack.logintime = GoagalInfo.userInfo.logintime;
@@ -400,7 +409,7 @@ public class QuickLoginActivity extends BaseActivity implements OnClickListener 
 	 * @author admin
 	 *
 	 */
-	private class RegisterTask extends AsyncTask<String, Integer, Boolean> {
+	private class RegisterTask extends AsyncTask<String, Integer, LoginResult> {
 
 		private String userName;
 
@@ -417,21 +426,21 @@ public class QuickLoginActivity extends BaseActivity implements OnClickListener 
 		}
 
 		@Override
-		protected Boolean doInBackground(String... params) {
+		protected LoginResult doInBackground(String... params) {
 			Util.reInitChannel(QuickLoginActivity.this);
 			RegisterAccountEngin loginEngin = new RegisterAccountEngin(QuickLoginActivity.this, userName, password);
 			return loginEngin.run();
 		}
 
 		@Override
-		protected void onPostExecute(Boolean result) {
-			super.onPostExecute(result);
+		protected void onPostExecute(LoginResult loginResult) {
+			super.onPostExecute(loginResult);
 
 			if (loginDialog != null && loginDialog.isShowing()) {
 				loginDialog.dismiss();
 			}
 
-			if (result) {
+			if (loginResult.result) {
 				// 将logo图及启动图恢复为渠道对应的值
 				if (Util.getInitLogoFileBitmap(QuickLoginActivity.this, Constants.AGENT_LOGO_IMAGE) != null) {
 					GoagalInfo.inItInfo.logoBitmp = Util.getInitLogoFileBitmap(QuickLoginActivity.this,
@@ -456,7 +465,8 @@ public class QuickLoginActivity extends BaseActivity implements OnClickListener 
 					GoagalInfo.isLogin = true;
 
 					LogincallBack logincallBack = new LogincallBack();
-					logincallBack.username = GoagalInfo.userInfo.username;
+					
+					logincallBack.username = GoagalInfo.userInfo.userId;
 					logincallBack.userId = GoagalInfo.userInfo.userId;
 					logincallBack.isBindPhone = GoagalInfo.userInfo.validateMobile == 1 ? true : false;
 					logincallBack.logintime = GoagalInfo.userInfo.logintime;

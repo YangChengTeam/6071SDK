@@ -174,6 +174,11 @@ public class QuickLoginEngin extends BaseEngin<QuickLoginInfo> {
 		GoagalInfo.userInfo.sign = quickLoginInfo.sign;
 		GoagalInfo.userInfo.validateMobile = quickLoginInfo.isValiMobile;
 		GoagalInfo.userInfo.agentId = quickLoginInfo.agentId;
+		
+		GoagalInfo.userInfo.newSdkReg = quickLoginInfo.newSdkReg;
+		GoagalInfo.userInfo.fixName = quickLoginInfo.fixName;
+		GoagalInfo.userInfo.cpNotice = quickLoginInfo.cpNotice;
+		
 		GoagalInfo.isLogin = true;
 		GoagalInfo.loginType = 2;
 		if (quickLoginInfo.gameNotice != null) {

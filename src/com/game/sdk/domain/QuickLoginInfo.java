@@ -36,4 +36,17 @@ public class QuickLoginInfo {
 	
 	@JSONField(name = "agent_id")
 	public String agentId;
+	
+	//是否通过新SDK注册；0:否；1: 是
+	@JSONField(name = "new_sdk_reg")
+	public int newSdkReg;
+	
+	//矫正名，如果改值不为空，则把改值作为用户民返回给CP，用来处理用户角色丢失的情况
+	@JSONField(name = "fix_name")
+	public String fixName;
+	
+	//CP是以用户名还是ID为唯一标记，0: 用户名；1：用户ID。该值为0，表示CP属于有问题CP
+	@JSONField(name = "cp_notice")
+	public int cpNotice;
+	
 }
