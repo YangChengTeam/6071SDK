@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -73,8 +74,11 @@ public class FloatViewImpl {
     }
 
     protected void init(Context context) {
+    	if(context == null){
+    		return;
+    	}
+    	
         this.mContext = context;
-
         try {
             dragBitmap = Util.getLogoFileBitmap(context, Constants.DRAG_IMAGE);
 
@@ -100,11 +104,11 @@ public class FloatViewImpl {
     }
 
     private void createFloatView() {
-
+    	
         if (wmParams == null) {
             xfor = 0;
             wmParams = new WindowManager.LayoutParams();
-            wmParams.type = GoagalInfo.isEmulator ? LayoutParams.TYPE_PHONE : LayoutParams.TYPE_TOAST;
+            wmParams.type = (GoagalInfo.isEmulator || Build.VERSION.SDK_INT >= 24) ? LayoutParams.TYPE_PHONE : LayoutParams.TYPE_TOAST;
             // 设置图片格式，效果为背景透明
             wmParams.format = PixelFormat.RGBA_8888;
             // 设置浮动窗口不可聚焦（实现操作除浮动窗口外的其他可见窗口的操作）
@@ -124,7 +128,7 @@ public class FloatViewImpl {
 
         if (wmParams2 == null) {
             wmParams2 = new WindowManager.LayoutParams();
-            wmParams2.type = GoagalInfo.isEmulator ? LayoutParams.TYPE_PHONE : LayoutParams.TYPE_TOAST;
+            wmParams2.type = (GoagalInfo.isEmulator || Build.VERSION.SDK_INT >= 24) ? LayoutParams.TYPE_PHONE : LayoutParams.TYPE_TOAST;
             // 设置图片格式，效果为背景透明
             wmParams2.format = PixelFormat.RGBA_8888;
             // 设置浮动窗口不可聚焦（实现操作除浮动窗口外的其他可见窗口的操作）

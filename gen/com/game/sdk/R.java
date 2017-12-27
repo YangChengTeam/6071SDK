@@ -630,6 +630,8 @@ public final class R {
         public static final int hint_update_info_text=0x7f06007b;
         public static final int into_game_text=0x7f060010;
         public static final int is_bind_text=0x7f06005c;
+        public static final int is_open_confirm=0x7f0600a8;
+        public static final int is_open_window_text=0x7f0600a7;
         public static final int kefu1_text=0x7f060027;
         public static final int kefu2_text=0x7f060028;
         public static final int line_text=0x7f060082;
@@ -649,6 +651,7 @@ public final class R {
         public static final int old_ps_hint_text=0x7f060064;
         public static final int old_ps_text=0x7f060061;
         public static final int open_game_box_text=0x7f060085;
+        public static final int open_window_text=0x7f0600a6;
         public static final int order_amount_text=0x7f060080;
         public static final int order_id_text=0x7f060053;
         public static final int order_money_text=0x7f06008b;

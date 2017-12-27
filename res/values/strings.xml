@@ -189,4 +189,8 @@
 	
 	<string name="sdk_version_text">版本：</string>
 	<string name="default_version_text">2.1</string>
+	
+	<string name="open_window_text">打开悬浮窗</string>
+	<string name="is_open_window_text">是否打开悬浮窗权限?</string>
+	<string name="is_open_confirm">立即开启</string>
 </resources>

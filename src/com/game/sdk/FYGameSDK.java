@@ -51,8 +51,10 @@ import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.Toast;
 
 /**
  * author zhangkai 2016年7月22日上午9:45:18
@@ -712,6 +714,18 @@ public class FYGameSDK {
 		if (!GoagalInfo.isLogin) {
 			return;
 		}
+		
+		boolean isShow = PreferenceUtil.getImpl(acontext).getBoolean("IS_SHOW_OPEN_WINDOW", true);
+		if(isShow && Build.VERSION.SDK_INT >= 24){
+			acontext.runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(acontext, "请手动开启悬浮窗权限",Toast.LENGTH_LONG).show();
+				}
+			});
+			PreferenceUtil.getImpl(acontext).putBoolean("IS_SHOW_OPEN_WINDOW", false);
+		}
+		
 		Logger.msg("悬浮按钮启动");
 		FloatViewImpl.getInstance(acontext).ShowFloat();
 	}

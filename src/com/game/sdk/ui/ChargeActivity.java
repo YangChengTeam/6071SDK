@@ -21,6 +21,7 @@ import com.game.sdk.utils.DimensionUtil;
 import com.game.sdk.utils.Logger;
 import com.game.sdk.utils.NetworkImpl;
 import com.game.sdk.utils.StringUtils;
+import com.game.sdk.utils.SystemUtil;
 import com.game.sdk.utils.ThreadPoolManager;
 import com.game.sdk.utils.Util;
 import com.game.sdk.view.CustomDialog;
@@ -136,7 +137,7 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 	CustomDialog payDialog;
 
 	CustomDialog reloadPayInfoDialog;
-	
+
 	private String orderid;
 
 	private String productname;// 支付游戏名称
@@ -178,27 +179,26 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 	private String rateHigh;
 
 	private String returnRangeMoney;
-	
-	InputMethodManager inputManager ;
-	
-	//是否自定义金额
+
+	InputMethodManager inputManager;
+
+	// 是否自定义金额
 	private boolean isCustomMoney = false;
-	
+
 	private LinearLayout serviceLayout;
-	
+
 	private LinearLayout explainLayout;
-	
+
 	private TextView explainTv;
-	
-	
+
 	private LinearLayout chargeInfoLayout;
-	
+
 	private LinearLayout netErrorLayout;
-	
+
 	private Button refreshBtn;
-	
+
 	private boolean isPayInitOk = false;
-	
+
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -235,11 +235,11 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 				Logger.msg("result:" + result);
 				break;
 			case 1:
-				
-				if(isPayInitOk){
+
+				if (isPayInitOk) {
 					chargeInfoLayout.setVisibility(View.VISIBLE);
 					netErrorLayout.setVisibility(View.GONE);
-					
+
 					if (chargeMoneys != null && chargeMoneys.length > 0) {
 						for (int i = 0; i < tvs.length; i++) {
 							tvs[i].setText(chargeMoneys[i] + findStringByResId("charge_unit_text"));
@@ -249,25 +249,24 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 					if (isReturnMoney) {
 						giveGameMoneyLayout.setVisibility(View.VISIBLE);
 					}
-					
-					//根据是否返利，显示不用的内容
-					if(isReturnMoney){
+
+					// 根据是否返利，显示不用的内容
+					if (isReturnMoney) {
 						serviceLayout.setVisibility(View.GONE);
 						explainLayout.setVisibility(View.VISIBLE);
-						
-						if(StringUtils.isEmpty(returnRangeMoney)){
+
+						if (StringUtils.isEmpty(returnRangeMoney)) {
 							returnRangeMoney = "0";
 						}
-						
-						String html = "<div><font color=\"#8a8a8a\">1：充值金额≥"+returnRangeMoney+"元才可享受充值福利。<br>"
-								+ "2：平台币、游戏币区别:平台币可用于平台所有游戏,游戏币用于单款指定游戏。<br>"
-								+ "3：虚拟充值货币概不退款。</font></div>";
+
+						String html = "<div><font color=\"#8a8a8a\">1：充值金额≥" + returnRangeMoney + "元才可享受充值福利。<br>"
+								+ "2：平台币、游戏币区别:平台币可用于平台所有游戏,游戏币用于单款指定游戏。<br>" + "3：虚拟充值货币概不退款。</font></div>";
 						explainTv.setText(Html.fromHtml(html));
-					}else{
+					} else {
 						serviceLayout.setVisibility(View.VISIBLE);
 						explainLayout.setVisibility(View.GONE);
 					}
-				}else{
+				} else {
 					chargeInfoLayout.setVisibility(View.GONE);
 					netErrorLayout.setVisibility(View.VISIBLE);
 				}
@@ -338,22 +337,22 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 
 		serviceLayout = (LinearLayout) findViewByString("service_layout");
 		explainLayout = (LinearLayout) findViewByString("charge_explain_layout");
-		
+
 		callServiceTv = findTextViewByString("call_service_tv");
 		explainTv = findTextViewByString("explain_tv");
-		
+
 		alipaySelectedIcon = findImageViewByString("alipay_selected_icon");
 		wxpaySelectedIcon = findImageViewByString("wxpay_selected_icon");
 
 		chargeInfoLayout = (LinearLayout) findViewByString("charge_info_layout");
 		netErrorLayout = (LinearLayout) findViewByString("net_error_layout");
 		refreshBtn = findButtonByString("refresh_net_btn");
-		
+
 		chargeBtn = findButtonByString("charge_btn");
 		backIv.setOnClickListener(this);
 		rightBtn.setOnClickListener(this);
 		refreshBtn.setOnClickListener(this);
-		
+
 		charge10Layout.setOnClickListener(this);
 		charge50Layout.setOnClickListener(this);
 		charge100Layout.setOnClickListener(this);
@@ -372,9 +371,8 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 		chargeLayouts = new LinearLayout[] { charge10Layout, charge50Layout, charge100Layout, charge200Layout,
 				charge500Layout };
 
-		inputManager = (InputMethodManager) customMoneyEv.getContext()
-				.getSystemService(Context.INPUT_METHOD_SERVICE);
-		
+		inputManager = (InputMethodManager) customMoneyEv.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+
 		customMoneyEv.addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -400,7 +398,7 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 
 					if (isReturnMoney) {
 						float gameMoney = countGameMoney(s.toString(), mixMoney, rateLow, rateHigh);
-						giveGameMoneyTv.setText(gameMoney+"");
+						giveGameMoneyTv.setText(gameMoney + "");
 					}
 				} else {
 					if (StringUtils.isEmpty(customMoneyEv.getText()) && isCustomMoney) {
@@ -464,23 +462,23 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 			} else {
 				gameMoney = cMoney * Float.parseFloat(rateHigh);
 			}
-			
-			//30以下，不返利游戏币
-			if(returnRangeMoney != null && cMoney < Integer.parseInt(returnRangeMoney)){
+
+			// 30以下，不返利游戏币
+			if (returnRangeMoney != null && cMoney < Integer.parseInt(returnRangeMoney)) {
 				gameMoney = 0;
 			}
 		}
-		
+
 		DecimalFormat df = new DecimalFormat("#.#");
 		return Float.parseFloat(df.format(gameMoney));
 	}
-	
-	//判断一个字符串是否是整数
-	public boolean isInteger(String str){
-        Pattern pattern=Pattern.compile("^[-\\+]?[\\d]*\\.?[\\d]{1}$");
-        return pattern.matcher(str).matches();
-    }
-	
+
+	// 判断一个字符串是否是整数
+	public boolean isInteger(String str) {
+		Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*\\.?[\\d]{1}$");
+		return pattern.matcher(str).matches();
+	}
+
 	// 设置平台币
 	public void setPlatformMoney() {
 		platformMoneyTv.setText(!StringUtils.isEmpty(GoagalInfo.userInfo.ttb) ? GoagalInfo.userInfo.ttb : "0");
@@ -501,11 +499,11 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 		@Override
 		protected void onPostExecute(ChargeMoneyList result) {
 			super.onPostExecute(result);
-			
-			if(reloadPayInfoDialog != null && reloadPayInfoDialog.isShowing()){
-				reloadPayInfoDialog.dismiss();
+			if (SystemUtil.isValidContext(ChargeActivity.this)) {
+				if (reloadPayInfoDialog != null && reloadPayInfoDialog.isShowing()) {
+					reloadPayInfoDialog.dismiss();
+				}
 			}
-			
 			if (result != null) {
 				// 是否开启返利游戏币功能
 				isReturnMoney = result.isOpen;
@@ -513,15 +511,15 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 				rateLow = result.rateLow;
 				rateHigh = result.rateHigh;
 				returnRangeMoney = result.returnRangeMoney;
-				
+
 				if (result.chargeMoneyList != null && result.chargeMoneyList.size() > 0) {
 					chargeMoneys = new int[result.chargeMoneyList.size()];
 
 					// if (result.isOpen) {
 					realMoneys = new float[result.chargeMoneyList.size()];
 					// }
-					
-					try{
+
+					try {
 						for (int i = 0; i < result.chargeMoneyList.size(); i++) {
 							if (result.chargeMoneyList.get(i) != null
 									&& result.chargeMoneyList.get(i).chargeMoney != null) {
@@ -535,23 +533,22 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 								isPayInitOk = true;
 							}
 						}
-					}catch(NumberFormatException e){
+					} catch (NumberFormatException e) {
 						Logger.msg("pay init NumberFormatException --->");
 						e.printStackTrace();
 					}
 				}
 			}
 
-			/*// 如果从服务器未获取到值，使用默认值
-			if (chargeMoneys == null || chargeMoneys.length == 0) {
-				chargeMoneys = new int[] { 10, 50, 100, 200, 500, 1000 };
-			}
+			/*
+			 * // 如果从服务器未获取到值，使用默认值 if (chargeMoneys == null ||
+			 * chargeMoneys.length == 0) { chargeMoneys = new int[] { 10, 50,
+			 * 100, 200, 500, 1000 }; }
+			 * 
+			 * // 如果从服务器未获取到值，使用默认值 if (realMoneys == null || realMoneys.length
+			 * == 0) { realMoneys = new int[] { 10, 50, 100, 200, 500, 1000 }; }
+			 */
 
-			// 如果从服务器未获取到值，使用默认值
-			if (realMoneys == null || realMoneys.length == 0) {
-				realMoneys = new int[] { 10, 50, 100, 200, 500, 1000 };
-			}*/
-			
 			Message msg = new Message();
 			msg.what = 1;
 			handler.sendMessage(msg);
@@ -613,7 +610,7 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		
+
 		// 充值
 		if (v.getId() == findIdByString("charge_btn")) {
 
@@ -625,22 +622,22 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 				Util.toast(this, "请先登录");
 				return;
 			}
-			
-			if(isCustomMoney){
+
+			if (isCustomMoney) {
 				if (null == customMoneyEv.getText() || "".equals(customMoneyEv.getText().toString())
 						|| !NumberUtils.isNumber(customMoneyEv.getText().toString())) {
 					Util.toast(this, "请输入金额，金额为数字");
 					return;
 				}
-				
+
 				chargeMoney = Float.parseFloat(customMoneyEv.getText().toString());
-			}else{
-				if(chargeMoney == 0){
+			} else {
+				if (chargeMoney == 0) {
 					Util.toast(this, "请选择充值金额");
 					return;
 				}
 			}
-			
+
 			if (payWay.equals(Constants.ALIPAY_CR)) {
 				/*
 				 * if (chargeMoney > 2000) { Util.toast(this,
@@ -665,8 +662,9 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 				new PayInfoTask(ChargeActivity.this, GoagalInfo.userInfo.userId, 0, payWay, chargeMoney, preSignStr)
 						.execute();
 			}
-
-			payDialog.show();
+			if (SystemUtil.isValidContext(ChargeActivity.this)) {
+				payDialog.show();
+			}
 		}
 
 		if (v.getId() == findIdByString("alipay_layout")) {
@@ -707,7 +705,7 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 			customMoneyEv.setFocusable(true);
 			customMoneyEv.setClickable(true);
 			customMoneyEv.requestFocus();
-			
+
 			inputManager.showSoftInput(customMoneyEv, 0);
 		}
 
@@ -716,25 +714,27 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 		}
 
 		if (v.getId() == findIdByString("call_service_tv")) {
-			serviceDialog.setCanceledOnTouchOutside(true);
-			serviceDialog.show();
+			if (SystemUtil.isValidContext(ChargeActivity.this)) {
+				serviceDialog.setCanceledOnTouchOutside(true);
+				serviceDialog.show();
+			}
 		}
 
 		if (v.getId() == findIdByString("right_btn")) {
 			Intent intent = new Intent(ChargeActivity.this, ChargeRecordActivity.class);
 			startActivity(intent);
 		}
-		
-		//网络错误，重新刷新
+
+		// 网络错误，重新刷新
 		if (v.getId() == findIdByString("refresh_net_btn")) {
-			
+
 			if (!NetworkImpl.isNetWorkConneted(ChargeActivity.this)) {
 				Util.toast(ChargeActivity.this, "网络不给力，请检查网络设置");
 				return;
 			}
-			
-			reloadPayInfoDialog.show();
-			
+			if (SystemUtil.isValidContext(ChargeActivity.this)) {
+				reloadPayInfoDialog.show();
+			}
 			new ChargeMoneyInitTask().execute();
 		}
 	}
@@ -746,8 +746,8 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 			if (chargeLayouts[i].getId() == selectId) {
 				chargeMoney = chargeMoneys[i];
 				// customMoneyEv.setText(chargeMoney + "");
-				realMoneyHintTv.setText((int)chargeMoney + "");
-				realPayAmountTv.setText((int)chargeMoney + "");// 实付
+				realMoneyHintTv.setText((int) chargeMoney + "");
+				realPayAmountTv.setText((int) chargeMoney + "");// 实付
 				if (realMoneys != null && i < realMoneys.length) {
 					giveGameMoneyTv.setText(realMoneys[i] + "");
 				}
@@ -798,7 +798,9 @@ public class ChargeActivity extends BaseActivity implements OnClickListener {
 		@Override
 		protected void onPostExecute(PayInfo result) {
 			super.onPostExecute(result);
-			payDialog.dismiss();
+			if (SystemUtil.isValidContext(ChargeActivity.this)) {
+				payDialog.dismiss();
+			}
 			if (result != null) {
 				Logger.msg("支付信息获取成功----");
 				orderid = result.orderSn;

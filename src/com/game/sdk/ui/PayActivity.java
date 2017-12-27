@@ -118,9 +118,9 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 	private List<CouponInfo> couponInfoList;
 
 	private PayCoinEngin payCoinEngin;
-	
+
 	private PayValidateEngin payValidateEngin;
-	
+
 	private String payWay = Constants.ALIPAY_CR;
 
 	private ChargeEngin chargeEngin;
@@ -159,9 +159,9 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 
 	private IpaynowPlugin mIpaynowplugin;
 
-	//验证订单执行的次数，如果失败一次，再执行一次
+	// 验证订单执行的次数，如果失败一次，再执行一次
 	private int validateCount = 1;
-	
+
 	@SuppressLint("HandlerLeak")
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -182,16 +182,16 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 						pci.money = amount;
 						pci.msg = memo;
 						// Util.toast(PayActivity.this, "支付成功");
-						
-						//验证订单
+
+						// 验证订单
 						new PayValidateTask().execute();
-						
+
 						if (GoagalInfo.paymentListener != null) {
 							GoagalInfo.paymentListener.paymentSuccess(pci);
 						}
 
 						finish();
-						//finishSuccess();
+						// finishSuccess();
 					} else {
 						PaymentErrorMsg msg_e = new PaymentErrorMsg();
 						msg_e.code = resultStatus;
@@ -252,15 +252,15 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 
 				break;
 			case 3:
-				if(msg.obj != null && !msg.obj.toString().equals("")){
+				if (msg.obj != null && !msg.obj.toString().equals("")) {
 					Util.toast(PayActivity.this, msg.obj.toString());
-				}else{
+				} else {
 					Util.toast(PayActivity.this, "支付成功");
 				}
 				break;
 			case 4:
 				validateCount++;
-				//再次验证订单(因为网络延迟问题，多请求一次)
+				// 再次验证订单(因为网络延迟问题，多请求一次)
 				new PayValidateTask().execute();
 				break;
 			default:
@@ -316,7 +316,7 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 		gameMoneyTv = findTextViewByString("game_money_tv");
 		payGameBtn = findTextViewByString("pay_game_btn");
 		payGameBtn.setOnClickListener(new NoDoubleClickListener() {
-			
+
 			@Override
 			public void onNoDoubleClick(View v) {
 				pay();
@@ -454,34 +454,30 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 			wxpayLayout.setSelected(true);
 			payWay = Constants.WXPAY_CR;
 		}
-		/*int cc = 0;
-		if (v.getId() == findIdByString("pay_game_btn")) {
-			cc++;
-			Logger.msg("点击支付" + cc);
-			Util.toast(this, "点击支付" + cc);
-			pay();
-		}*/
+		/*
+		 * int cc = 0; if (v.getId() == findIdByString("pay_game_btn")) { cc++;
+		 * Logger.msg("点击支付" + cc); Util.toast(this, "点击支付" + cc); pay(); }
+		 */
 	}
-	
-	 public abstract class NoDoubleClickListener implements OnClickListener {
-		 
-		 public abstract void onNoDoubleClick(View v);
-		 
-         public static final int MIN_CLICK_DELAY_TIME = 5000;
-         private long lastClickTime = 0;
-         
-         @Override
-         public void onClick(View v) {
-             long currentTime = Calendar.getInstance().getTimeInMillis();
-             if (currentTime - lastClickTime > MIN_CLICK_DELAY_TIME) {
-            	 Logger.msg("点击触发支付--->" + currentTime);
-                 lastClickTime = currentTime;
-                 onNoDoubleClick(v);
-             }
-         }   
-     }
-	
-	
+
+	public abstract class NoDoubleClickListener implements OnClickListener {
+
+		public abstract void onNoDoubleClick(View v);
+
+		public static final int MIN_CLICK_DELAY_TIME = 5000;
+		private long lastClickTime = 0;
+
+		@Override
+		public void onClick(View v) {
+			long currentTime = Calendar.getInstance().getTimeInMillis();
+			if (currentTime - lastClickTime > MIN_CLICK_DELAY_TIME) {
+				Logger.msg("点击触发支付--->" + currentTime);
+				lastClickTime = currentTime;
+				onNoDoubleClick(v);
+			}
+		}
+	}
+
 	/**
 	 * 支付方法
 	 */
@@ -553,108 +549,113 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 			Logger.msg("pay params -->" + params.toString());
 			new PayGameTask(params).execute();
 		}
-
-		if (payGameDialog != null && !payGameDialog.isShowing()) {
-			payGameDialog.show();
+		if (SystemUtil.isValidContext(PayActivity.this)) {
+			if (payGameDialog != null && !payGameDialog.isShowing()) {
+				payGameDialog.show();
+			}
 		}
 
 	}
 
 	public void showCouponList() {
+		if (SystemUtil.isValidContext(PayActivity.this)) {
+			if (pwCoupon != null && pwCoupon.isShowing()) {
+				pwCoupon.dismiss();
+			} else {
+				// couponInfoList = getCouponInfoList(payCoinEngin.getUrl());
 
-		if (pwCoupon != null && pwCoupon.isShowing()) {
-			pwCoupon.dismiss();
-		} else {
-			// couponInfoList = getCouponInfoList(payCoinEngin.getUrl());
+				List<CouponInfo> tempList = new ArrayList<CouponInfo>();
 
-			List<CouponInfo> tempList = new ArrayList<CouponInfo>();
+				if (GoagalInfo.couponList != null && GoagalInfo.couponList.size() > 0) {
+					tempList.addAll(GoagalInfo.couponList);
+				}
 
-			if (GoagalInfo.couponList != null && GoagalInfo.couponList.size() > 0) {
-				tempList.addAll(GoagalInfo.couponList);
-			}
+				couponInfoList = tempList;
 
-			couponInfoList = tempList;
+				if (null == couponInfoList) {
+					return;
+				}
+				if (null == adapter) {
+					adapter = new CouponListAdapter(this, couponInfoList);
+				}
 
-			if (null == couponInfoList) {
-				return;
-			}
-			if (null == adapter) {
-				adapter = new CouponListAdapter(this, couponInfoList);
-			}
+				int pwidth = DimensionUtil.dip2px(this, 340);
+				if (pwCoupon == null) {
+					View view = inflater.inflate(MResource.getIdByName(this, "layout", "coupon_list"), null);
+					ListView lv_pw = (ListView) view
+							.findViewById(MResource.getIdByName(this, "id", "coupon_list_view"));
+					lv_pw.setCacheColorHint(0x000000);
+					lv_pw.setAdapter(adapter);
+					lv_pw.setOnItemClickListener(new OnItemClickListener() {
 
-			int pwidth = DimensionUtil.dip2px(this, 340);
-			if (pwCoupon == null) {
-				View view = inflater.inflate(MResource.getIdByName(this, "layout", "coupon_list"), null);
-				ListView lv_pw = (ListView) view.findViewById(MResource.getIdByName(this, "id", "coupon_list_view"));
-				lv_pw.setCacheColorHint(0x000000);
-				lv_pw.setAdapter(adapter);
-				lv_pw.setOnItemClickListener(new OnItemClickListener() {
+						@Override
+						public void onItemClick(AdapterView<?> adapterview, View view, int position, long row) {
+							pwCoupon.dismiss();
+							// Util.toast(PayActivity.this, "pos---" +
+							// position);
+							if (couponInfoList.get(position) != null) {
 
-					@Override
-					public void onItemClick(AdapterView<?> adapterview, View view, int position, long row) {
-						pwCoupon.dismiss();
-						// Util.toast(PayActivity.this, "pos---" + position);
-						if (couponInfoList.get(position) != null) {
-
-							if (!StringUtils.isEmpty(couponInfoList.get(position).goods_uc_money)) {
-								if (totalPrice < Float.parseFloat(couponInfoList.get(position).goods_uc_money)) {
-									Toast.makeText(PayActivity.this, "不满足优惠券使用条件,请选择其他优惠", Toast.LENGTH_LONG).show();
-									return;
+								if (!StringUtils.isEmpty(couponInfoList.get(position).goods_uc_money)) {
+									if (totalPrice < Float.parseFloat(couponInfoList.get(position).goods_uc_money)) {
+										Toast.makeText(PayActivity.this, "不满足优惠券使用条件,请选择其他优惠", Toast.LENGTH_LONG)
+												.show();
+										return;
+									}
 								}
-							}
 
-							currentCoupon = couponInfoList.get(position);
+								currentCoupon = couponInfoList.get(position);
 
-							if (lastCoupon != null) {
-								if (!lastCoupon.cardId.equals(currentCoupon.cardId)) {
+								if (lastCoupon != null) {
+									if (!lastCoupon.cardId.equals(currentCoupon.cardId)) {
+										float goodsWorth = currentCoupon.goodsWorth != null
+												? Float.parseFloat(currentCoupon.goodsWorth) : 0;
+
+										float lastGoodsWorth = lastCoupon.goodsWorth != null
+												? Float.parseFloat(lastCoupon.goodsWorth) : 0;
+
+										String temp = currentCoupon.goodsName + goodsWorth + "元";
+										couponUseInfoTv.setText(temp);
+										couponCheckBox.setChecked(true);
+										couponCheckBox.setClickable(true);
+
+										if (goodsWorth > 0 && lastGoodsWorth > 0) {
+											amount = amount + lastGoodsWorth - goodsWorth;
+
+											amount = (float) Math.round(amount * 100) / 100;
+
+											realPayAmountTv.setText(amount >= 0 ? amount + "" : "0");
+										}
+										lastCoupon = currentCoupon;
+									}
+								} else {
+									lastCoupon = currentCoupon;
 									float goodsWorth = currentCoupon.goodsWorth != null
 											? Float.parseFloat(currentCoupon.goodsWorth) : 0;
-
-									float lastGoodsWorth = lastCoupon.goodsWorth != null
-											? Float.parseFloat(lastCoupon.goodsWorth) : 0;
 
 									String temp = currentCoupon.goodsName + goodsWorth + "元";
 									couponUseInfoTv.setText(temp);
 									couponCheckBox.setChecked(true);
 									couponCheckBox.setClickable(true);
 
-									if (goodsWorth > 0 && lastGoodsWorth > 0) {
-										amount = amount + lastGoodsWorth - goodsWorth;
-
+									if (goodsWorth > 0) {
+										amount = amount - goodsWorth;
 										amount = (float) Math.round(amount * 100) / 100;
-
 										realPayAmountTv.setText(amount >= 0 ? amount + "" : "0");
 									}
-									lastCoupon = currentCoupon;
-								}
-							} else {
-								lastCoupon = currentCoupon;
-								float goodsWorth = currentCoupon.goodsWorth != null
-										? Float.parseFloat(currentCoupon.goodsWorth) : 0;
-
-								String temp = currentCoupon.goodsName + goodsWorth + "元";
-								couponUseInfoTv.setText(temp);
-								couponCheckBox.setChecked(true);
-								couponCheckBox.setClickable(true);
-
-								if (goodsWorth > 0) {
-									amount = amount - goodsWorth;
-									amount = (float) Math.round(amount * 100) / 100;
-									realPayAmountTv.setText(amount >= 0 ? amount + "" : "0");
 								}
 							}
 						}
-					}
-				});
+					});
 
-				pwCoupon = new PopupWindow(view, pwidth, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-				pwCoupon.setBackgroundDrawable(new ColorDrawable(0x00000000));
-				pwCoupon.setContentView(view);
-			} else {
-				adapter.initDataList(tempList);
-				adapter.notifyDataSetChanged();
+					pwCoupon = new PopupWindow(view, pwidth, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+					pwCoupon.setBackgroundDrawable(new ColorDrawable(0x00000000));
+					pwCoupon.setContentView(view);
+				} else {
+					adapter.initDataList(tempList);
+					adapter.notifyDataSetChanged();
+				}
+				pwCoupon.showAsDropDown(moreCouponLayout, -pwidth + (int) DimensionUtil.dip2px(this, 48), 0);
 			}
-			pwCoupon.showAsDropDown(moreCouponLayout, -pwidth + (int) DimensionUtil.dip2px(this, 48), 0);
 		}
 	}
 
@@ -686,11 +687,11 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 		@Override
 		protected void onPostExecute(PayInfo result) {
 			super.onPostExecute(result);
-
-			if (payGameDialog != null && payGameDialog.isShowing()) {
-				payGameDialog.dismiss();
+			if (SystemUtil.isValidContext(PayActivity.this)) {
+				if (payGameDialog != null && payGameDialog.isShowing()) {
+					payGameDialog.dismiss();
+				}
 			}
-
 			if (result != null && result.code == HttpConfig.STATUS_OK) {
 				orderid = result.orderSn;
 				amount = result.rmbMoney != null ? Float.parseFloat(result.rmbMoney) : 0;
@@ -721,34 +722,33 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 							}
 						}
 					} else {
-						//Util.toast(PayActivity.this, "支付成功");
-						//finishSuccess();
-						
+						// Util.toast(PayActivity.this, "支付成功");
+						// finishSuccess();
+
 						PaymentCallbackInfo pci = new PaymentCallbackInfo();
 						pci.money = amount;
 						pci.msg = "支付成功";
-						
-						//验证订单
+
+						// 验证订单
 						new PayValidateTask().execute();
-						
+
 						if (GoagalInfo.paymentListener != null) {
 							GoagalInfo.paymentListener.paymentSuccess(pci);
 						}
-						
+
 						finish();
 					}
 				}
 			} else if (result != null && result.code == HttpConfig.ORDER_ERROR) {
 				Util.toast(PayActivity.this, result.errorMsg != null ? result.errorMsg : "订单错误，请关闭后重试");
-				//finishSuccess();
+				// finishSuccess();
 				finish();
 			} else {
 				Util.toast(PayActivity.this, result.errorMsg);
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * 支付成功后验证订单
 	 * 
@@ -773,18 +773,18 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 				msg.obj = payValidateResult.pointMessage;
 				msg.what = 3;
 				handler.sendMessage(msg);
-			}else{
-				if(validateCount == 1){
+			} else {
+				if (validateCount == 1) {
 					Message msg = new Message();
 					msg.what = 4;
 					handler.sendMessage(msg);
-				}else{					
+				} else {
 					Util.toast(PayActivity.this, "支付成功");
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * 支付前获取的支付信息
 	 * 
@@ -920,7 +920,7 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 	public void setOrientation() {
 		Window dialogWindow = getWindow();
 		WindowManager.LayoutParams params = dialogWindow.getAttributes();
-		
+
 		if (GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.vertical == 0) {
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 			Logger.msg("onresume width land ---" + DimensionUtil.getWidth(PayActivity.this));
@@ -942,15 +942,15 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 		super.onResume();
 		MobclickAgent.onPageStart("PayActivity");
 		MobclickAgent.onResume(this);
-		
-		MobclickAgent.onEvent(this,"game_open_charge");
-		
+
+		MobclickAgent.onEvent(this, "game_open_charge");
+
 		Logger.msg("Payactivity onResume---");
 		// setOrientation();
 
 		if (isnowpay.equals("2")) {
 			if (nowpayCode.equals("00")) {
-				//Util.toast(this, "支付成功");
+				// Util.toast(this, "支付成功");
 				Logger.msg("支付成功--->");
 				// new PayInitTask().execute();
 
@@ -958,19 +958,19 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 				pci.money = amount;
 				pci.msg = "支付成功";
 				// Util.toast(PayActivity.this, "支付成功");
-				
-				//验证订单
+
+				// 验证订单
 				new PayValidateTask().execute();
-				
+
 				if (GoagalInfo.paymentListener != null) {
 					GoagalInfo.paymentListener.paymentSuccess(pci);
 				}
 
-				//finishSuccess();
+				// finishSuccess();
 				finish();
 			}
 			if (nowpayCode.equals("02")) {
-				//Util.toast(this, "支付取消");
+				// Util.toast(this, "支付取消");
 				Logger.msg("支付取消--->");
 
 				PaymentErrorMsg msg_e = new PaymentErrorMsg();
@@ -1045,8 +1045,10 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
 			// setOrientation();
-			if (payResultDialog != null && payResultDialog.isShowing()) {
-				payResultDialog.dismiss();
+			if (SystemUtil.isValidContext(PayActivity.this)) {
+				if (payResultDialog != null && payResultDialog.isShowing()) {
+					payResultDialog.dismiss();
+				}
 			}
 		}
 	}
@@ -1063,8 +1065,10 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 
 	@Override
 	public void paySuccess() {
-		if (payResultDialog != null && payResultDialog.isShowing()) {
-			payResultDialog.dismiss();
+		if (SystemUtil.isValidContext(PayActivity.this)) {
+			if (payResultDialog != null && payResultDialog.isShowing()) {
+				payResultDialog.dismiss();
+			}
 		}
 		finish();
 	}
@@ -1082,29 +1086,20 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 		Logger.msg("Pay----onDestroy--->");
 	}
 
-	/*public void finishSuccess() {
-		super.finish();
-		Logger.msg("正常支付成功后finishSuccess--->");
-	}
-
-	@Override
-	public void finish() {
-		super.finish();
-		Logger.msg("Pay----finish--->");
-
-		try {
-			// 将取消支付移动到onDestroy方法中
-			PaymentCancelMsg msg_c = new PaymentCancelMsg();
-			msg_c.code = 2;
-			msg_c.msg = "取消支付";
-			msg_c.money = amount;
-			
-			if (GoagalInfo.paymentListener != null) {
-				GoagalInfo.paymentListener.paymentCancel(msg_c);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}*/
+	/*
+	 * public void finishSuccess() { super.finish();
+	 * Logger.msg("正常支付成功后finishSuccess--->"); }
+	 * 
+	 * @Override public void finish() { super.finish();
+	 * Logger.msg("Pay----finish--->");
+	 * 
+	 * try { // 将取消支付移动到onDestroy方法中 PaymentCancelMsg msg_c = new
+	 * PaymentCancelMsg(); msg_c.code = 2; msg_c.msg = "取消支付"; msg_c.money =
+	 * amount;
+	 * 
+	 * if (GoagalInfo.paymentListener != null) {
+	 * GoagalInfo.paymentListener.paymentCancel(msg_c); } } catch (Exception e)
+	 * { e.printStackTrace(); } }
+	 */
 
 }
