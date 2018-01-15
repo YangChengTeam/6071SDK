@@ -15,6 +15,7 @@ import com.game.sdk.domain.PayInfo;
 import com.game.sdk.domain.PayRequestParams;
 import com.game.sdk.domain.PayValidateResult;
 import com.game.sdk.domain.PaymentCallbackInfo;
+import com.game.sdk.domain.PaymentCancelMsg;
 import com.game.sdk.domain.PaymentErrorMsg;
 import com.game.sdk.engin.ChargeEngin;
 import com.game.sdk.engin.PayCancelEngin;
@@ -190,8 +191,8 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 							GoagalInfo.paymentListener.paymentSuccess(pci);
 						}
 
-						finish();
-						// finishSuccess();
+						// finish();
+						finishSuccess();
 					} else {
 						PaymentErrorMsg msg_e = new PaymentErrorMsg();
 						msg_e.code = resultStatus;
@@ -723,7 +724,7 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 						}
 					} else {
 						// Util.toast(PayActivity.this, "支付成功");
-						// finishSuccess();
+						
 
 						PaymentCallbackInfo pci = new PaymentCallbackInfo();
 						pci.money = amount;
@@ -735,14 +736,14 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 						if (GoagalInfo.paymentListener != null) {
 							GoagalInfo.paymentListener.paymentSuccess(pci);
 						}
-
-						finish();
+						finishSuccess();
+						//finish();
 					}
 				}
 			} else if (result != null && result.code == HttpConfig.ORDER_ERROR) {
 				Util.toast(PayActivity.this, result.errorMsg != null ? result.errorMsg : "订单错误，请关闭后重试");
-				// finishSuccess();
-				finish();
+				 finishSuccess();
+				//finish();
 			} else {
 				Util.toast(PayActivity.this, result.errorMsg);
 			}
@@ -966,8 +967,8 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 					GoagalInfo.paymentListener.paymentSuccess(pci);
 				}
 
-				// finishSuccess();
-				finish();
+				 finishSuccess();
+				//finish();
 			}
 			if (nowpayCode.equals("02")) {
 				// Util.toast(this, "支付取消");
@@ -1086,20 +1087,28 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 		Logger.msg("Pay----onDestroy--->");
 	}
 
-	/*
-	 * public void finishSuccess() { super.finish();
-	 * Logger.msg("正常支付成功后finishSuccess--->"); }
-	 * 
-	 * @Override public void finish() { super.finish();
-	 * Logger.msg("Pay----finish--->");
-	 * 
-	 * try { // 将取消支付移动到onDestroy方法中 PaymentCancelMsg msg_c = new
-	 * PaymentCancelMsg(); msg_c.code = 2; msg_c.msg = "取消支付"; msg_c.money =
-	 * amount;
-	 * 
-	 * if (GoagalInfo.paymentListener != null) {
-	 * GoagalInfo.paymentListener.paymentCancel(msg_c); } } catch (Exception e)
-	 * { e.printStackTrace(); } }
-	 */
+	public void finishSuccess() {
+		super.finish();
+		Logger.msg("正常支付成功后finishSuccess--->");
+	}
+
+	@Override
+	public void finish() {
+		super.finish();
+		Logger.msg("Pay----finish--->");
+
+		try { // 将取消支付移动到onDestroy方法中
+			PaymentCancelMsg msg_c = new PaymentCancelMsg();
+			msg_c.code = 2;
+			msg_c.msg = "取消支付";
+			msg_c.money = amount;
+
+			if (GoagalInfo.paymentListener != null) {
+				GoagalInfo.paymentListener.paymentCancel(msg_c);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 }
