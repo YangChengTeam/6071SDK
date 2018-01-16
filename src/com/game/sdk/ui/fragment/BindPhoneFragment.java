@@ -82,7 +82,7 @@ public class BindPhoneFragment extends BaseFragment implements OnClickListener {
 		
 		getValidateBtn = findButtonByString("get_validate_btn");
 		submitBtn = findButtonByString("submit_btn");
-		titleTv.setText(findStringByResId("account_safety_text"));
+		titleTv.setText(findStringByResId("bind_text"));
 		backIv.setOnClickListener(this);
 		getValidateBtn.setOnClickListener(this);
 		submitBtn.setOnClickListener(this);

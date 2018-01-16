@@ -14,6 +14,7 @@ import com.game.sdk.ui.fragment.MainFragment;
 import com.game.sdk.ui.fragment.QuickPlayFragment;
 import com.game.sdk.ui.fragment.QuickRegisterFragment;
 import com.game.sdk.ui.fragment.ScoreStoreFragment;
+import com.game.sdk.ui.fragment.UnBindValidatePhoneFragment;
 import com.game.sdk.ui.fragment.UpdatePassWordFragment;
 import com.game.sdk.utils.DimensionUtil;
 import com.game.sdk.utils.Logger;
@@ -187,6 +188,9 @@ public class MainActivity extends BaseActivity {
 			Bundle bundle = new Bundle();
 			bundle.putString("gameId", GoagalInfo.gameid);
 			currentFragment.setArguments(bundle);
+			break;
+		case 12:
+			currentFragment = new UnBindValidatePhoneFragment();
 			break;
 		default:
 			break;

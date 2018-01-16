@@ -27,15 +27,15 @@ public class AccountSafetyFragment extends BaseFragment implements OnClickListen
 	private ImageView backIv;
 
 	private TextView titleTv;
-	
+
 	private TextView isBindTv;
-	
+
 	private TextView versionCodeTv;
-	
+
 	private RelativeLayout updatePassWordLayout;
 
 	private RelativeLayout bindLayout;
-	
+
 	@SuppressLint("HandlerLeak")
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -77,20 +77,20 @@ public class AccountSafetyFragment extends BaseFragment implements OnClickListen
 		// initTheme();
 		versionCodeTv.setText(FYGameSDK.defaultSDK().getVersion() != null ? FYGameSDK.defaultSDK().getVersion() : "");
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
-		//MobclickAgent.onResume(mainActivity);
+		// MobclickAgent.onResume(mainActivity);
 		MobclickAgent.onPageStart("AccountSafetyFragment");
-		
-		if(GoagalInfo.userInfo.validateMobile == 1){
+
+		if (GoagalInfo.userInfo.validateMobile == 1) {
 			isBindTv.setText(findStringByResId("is_bind_text"));
-		}else{
+		} else {
 			isBindTv.setText(findStringByResId("un_bind_text"));
 		}
 	}
-	
+
 	/**
 	 * 初始化主题颜色
 	 */
@@ -106,15 +106,19 @@ public class AccountSafetyFragment extends BaseFragment implements OnClickListen
 			mainActivity.changeFragment(7);
 		}
 		if (v.getId() == findIdByString("bind_layout")) {
-			GoagalInfo.bindMobileFrom = 1;
-			mainActivity.changeFragment(8);
+			if (GoagalInfo.userInfo.validateMobile == 1) {
+				mainActivity.changeFragment(12);
+			} else {
+				GoagalInfo.bindMobileFrom = 1;
+				mainActivity.changeFragment(8);
+			}
 		}
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		//MobclickAgent.onPause(mainActivity);
+		// MobclickAgent.onPause(mainActivity);
 		MobclickAgent.onPageEnd("AccountSafetyFragment");
 	}
 }

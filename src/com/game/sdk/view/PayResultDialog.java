@@ -24,7 +24,7 @@ public class PayResultDialog extends Dialog implements android.view.View.OnClick
 	
 	public interface PayResultListener{
 		public void continuePay();
-		public void paySuccess();
+		public void payExit();
 	}
 	
 	public PayResultListener getPayResultListener() {
@@ -75,7 +75,7 @@ public class PayResultDialog extends Dialog implements android.view.View.OnClick
 		}
 		
 		if (v.getId() == MResource.getIdByName(mContext, "id", "pay_exit_btn")) {
-			payResultListener.paySuccess();
+			payResultListener.payExit();
 		}
 	}
 

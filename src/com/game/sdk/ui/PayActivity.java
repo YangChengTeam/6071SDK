@@ -44,6 +44,8 @@ import com.umeng.analytics.MobclickAgent;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.ColorDrawable;
@@ -162,6 +164,8 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 
 	// 验证订单执行的次数，如果失败一次，再执行一次
 	private int validateCount = 1;
+
+	private int cancelType;
 
 	@SuppressLint("HandlerLeak")
 	private Handler handler = new Handler() {
@@ -408,6 +412,14 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 		payGameDialog = new CustomDialog(this, "正在创建订单");
 		payResultDialog = new PayResultDialog(PayActivity.this);
 		payResultDialog.setPayResultListener(this);
+		payResultDialog.setOnDismissListener(new OnDismissListener() {
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				if (cancelType == 1) {
+					payExit();
+				}
+			}
+		});
 		new PayInitTask().execute();
 	}
 
@@ -724,7 +736,6 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 						}
 					} else {
 						// Util.toast(PayActivity.this, "支付成功");
-						
 
 						PaymentCallbackInfo pci = new PaymentCallbackInfo();
 						pci.money = amount;
@@ -737,13 +748,13 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 							GoagalInfo.paymentListener.paymentSuccess(pci);
 						}
 						finishSuccess();
-						//finish();
+						// finish();
 					}
 				}
 			} else if (result != null && result.code == HttpConfig.ORDER_ERROR) {
 				Util.toast(PayActivity.this, result.errorMsg != null ? result.errorMsg : "订单错误，请关闭后重试");
-				 finishSuccess();
-				//finish();
+				finishSuccess();
+				// finish();
 			} else {
 				Util.toast(PayActivity.this, result.errorMsg);
 			}
@@ -967,8 +978,8 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 					GoagalInfo.paymentListener.paymentSuccess(pci);
 				}
 
-				 finishSuccess();
-				//finish();
+				finishSuccess();
+				// finish();
 			}
 			if (nowpayCode.equals("02")) {
 				// Util.toast(this, "支付取消");
@@ -1026,9 +1037,12 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 
 	private class PayCancelTask extends AsyncTask<String, Integer, Boolean> {
 		public String orderId;
+		// 0,继续支付取消，1，确认退出取消
+		public int mType;
 
-		public PayCancelTask(String orderId) {
+		public PayCancelTask(String orderId, int type) {
 			this.orderId = orderId;
+			this.mType = type;
 		}
 
 		@Override
@@ -1046,10 +1060,24 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
 			// setOrientation();
-			if (SystemUtil.isValidContext(PayActivity.this)) {
-				if (payResultDialog != null && payResultDialog.isShowing()) {
-					payResultDialog.dismiss();
+
+			// 0,继续支付取消，1，确认退出取消
+			Logger.msg("mType --->" + mType);
+			if (mType == 0) {
+				if (SystemUtil.isValidContext(PayActivity.this)) {
+					if (payResultDialog != null && payResultDialog.isShowing()) {
+						cancelType = 0;
+						payResultDialog.dismiss();
+					}
 				}
+			} else {
+				if (SystemUtil.isValidContext(PayActivity.this)) {
+					if (payResultDialog != null && payResultDialog.isShowing()) {
+						cancelType = 1;
+						payResultDialog.dismiss();
+					}
+				}
+				finish();
 			}
 		}
 	}
@@ -1058,20 +1086,19 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 	public void continuePay() {
 		// pay();
 		if (orderid != null) {
-			new PayCancelTask(orderid).execute();
+			new PayCancelTask(orderid, 0).execute();
 		} else {
-			Util.toast(this, "订单有误，请稍后重试!");
+			Util.toast(this, "数据异常，请稍后重试!");
 		}
 	}
 
 	@Override
-	public void paySuccess() {
-		if (SystemUtil.isValidContext(PayActivity.this)) {
-			if (payResultDialog != null && payResultDialog.isShowing()) {
-				payResultDialog.dismiss();
-			}
+	public void payExit() {
+		if (orderid != null) {
+			new PayCancelTask(orderid, 1).execute();
+		} else {
+			Util.toast(this, "数据异常，请稍后重试!");
 		}
-		finish();
 	}
 
 	@Override
@@ -1094,7 +1121,6 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 
 	@Override
 	public void finish() {
-		super.finish();
 		Logger.msg("Pay----finish--->");
 
 		try { // 将取消支付移动到onDestroy方法中
@@ -1109,6 +1135,7 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		super.finish();
 	}
 
 }

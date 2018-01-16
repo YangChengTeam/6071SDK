@@ -99,6 +99,7 @@
 	<string name="account_safety_text">账号安全</string>
 	<string name="validate_phone_text">验证手机-重置密码</string>
 	<string name="set_new_ps_text">设置新密码</string>
+	<string name="unbind_validate_phone_text">请验证原手机号</string>
 	
 	<string name="old_ps_text">旧密码</string>
 	<string name="new_ps_text">新密码</string>

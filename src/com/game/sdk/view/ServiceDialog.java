@@ -55,7 +55,7 @@ public class ServiceDialog extends Dialog implements android.view.View.OnClickLi
 		super.onCreate(savedInstanceState);
 		initView();
 		kefu = kefuQQ(GoagalInfo.userInfo.kefuQQ);
-
+		Logger.msg("kefuqq--->" + GoagalInfo.userInfo.kefuQQ);
 		Drawable drawable = mContext.getResources()
 				.getDrawable(MResource.getIdByName(mContext, "drawable", "no_qq_service_num_icon"));
 		drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
@@ -72,8 +72,15 @@ public class ServiceDialog extends Dialog implements android.view.View.OnClickLi
 			if (kefu.length == 1) {
 				secondQQTv.setCompoundDrawables(drawable, null, null, null);
 			}
+			
+			if(!StringUtils.isEmpty(kefu[0]) && kefu[0].length() > 16){
+				firstQQTv.setText("客服QQ群1");
+			}
+			
+			if(!StringUtils.isEmpty(kefu[1]) && kefu[1].length() > 16){
+				secondQQTv.setText("客服QQ群2");
+			}
 		}
-
 	}
 
 	public void initView() {
@@ -172,12 +179,44 @@ public class ServiceDialog extends Dialog implements android.view.View.OnClickLi
 	}
 
 	public void startQQ(String qqNum) {
+		if (StringUtils.isEmpty(qqNum)) {
+			return;
+		}
+		
 		CheckUtil.setPackageNames(mContext);
 		if (!CheckUtil.isQQAvilible(mContext)) {
 			Util.toast(mContext, "请安装QQ");
 		} else {
-			String url = "mqqwpa://im/chat?chat_type=wpa&uin=" + qqNum;
-			mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+			// 加入QQ群
+			if (qqNum.length() > 16) {
+				joinQQGroup(qqNum);
+			} else {
+				String url = "mqqwpa://im/chat?chat_type=wpa&uin=" + qqNum;
+				mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+			}
+		}
+	}
+	
+	/****************
+	 * 发起添加群流程。群号：XXX 的 key 为：xxxxx 调用 joinQQGroup(xxxx) 即可发起手Q客户端申请加群XXX
+	 *
+	 * @param key
+	 *            由官网生成的key
+	 * @return 返回true表示呼起手Q成功，返回fals表示呼起失败
+	 ******************/
+	public boolean joinQQGroup(String key) {
+		Intent intent = new Intent();
+		intent.setData(Uri
+				.parse("mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26k%3D"
+						+ key));
+		// 此Flag可根据具体产品需要自定义，如设置，则在加群界面按返回，返回手Q主界面，不设置，按返回会返回到呼起产品界面
+		// //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+		try {
+			mContext.startActivity(intent);
+			return true;
+		} catch (Exception e) {
+			// 未安装手Q或安装的版本不支持
+			return false;
 		}
 	}
 }

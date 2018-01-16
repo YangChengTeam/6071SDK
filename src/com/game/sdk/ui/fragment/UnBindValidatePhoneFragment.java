@@ -4,9 +4,11 @@ import com.game.sdk.domain.GoagalInfo;
 import com.game.sdk.domain.LoginResult;
 import com.game.sdk.domain.ResultInfo;
 import com.game.sdk.engin.QuickLoginEngin;
+import com.game.sdk.engin.UnBindPhoneEngin;
+import com.game.sdk.engin.UnBindSendCodeEngin;
 import com.game.sdk.engin.ValidateEngin;
 import com.game.sdk.net.constans.HttpConfig;
-import com.game.sdk.ui.LoginActivity;
+import com.game.sdk.ui.MainActivity;
 import com.game.sdk.utils.Logger;
 import com.game.sdk.utils.MResource;
 import com.game.sdk.utils.NetworkImpl;
@@ -28,15 +30,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class ValidatePhoneFragment extends BaseFragment implements OnClickListener {
+public class UnBindValidatePhoneFragment extends BaseFragment implements OnClickListener {
 
-	private LoginActivity loginActivity;
+	private MainActivity mainActivity;
 
 	private ImageView backIv;
 
 	private TextView titleTv;
 	
-	private EditText phoneNumberEt;
+	private TextView phoneNumberEt;
 
 	private EditText validateCodeEt;
 
@@ -63,28 +65,31 @@ public class ValidatePhoneFragment extends BaseFragment implements OnClickListen
 
 	@Override
 	public String getLayoutId() {
-		return "fysdk_validate_phone_fragment";
+		return "fysdk_unbind_validate_phone_fragment";
 	}
 
 	@Override
 	public void initViews() {
 		super.initViews();
-		loginActivity = (LoginActivity) getActivity();
-		sendDialog = new CustomDialog(loginActivity, "正在发送");
-		validateDialog = new CustomDialog(loginActivity, "正在验证");
+		mainActivity = (MainActivity) getActivity();
+		sendDialog = new CustomDialog(mainActivity, "正在发送");
+		validateDialog = new CustomDialog(mainActivity, "正在验证");
 		backIv = findImageViewByString("back_iv");
 		titleTv = findTextViewByString("title_tv");
 		
-		phoneNumberEt = findEditTextByString("phone_number_et");
+		phoneNumberEt = findTextViewByString("phone_number_et");
 		validateCodeEt = findEditTextByString("validate_code_et");
 		
 		getValidateBtn = findButtonByString("get_validate_btn");
 		submitBtn = findButtonByString("submit_btn");
-		titleTv.setText(findStringByResId("validate_phone_text"));
+		titleTv.setText(findStringByResId("unbind_validate_phone_text"));
+		
+		phoneNumberEt.setText(GoagalInfo.userInfo != null ? GoagalInfo.userInfo.mobile :"");
 		
 		backIv.setOnClickListener(this);
 		getValidateBtn.setOnClickListener(this);
 		submitBtn.setOnClickListener(this);
+		
 	}
 
 	@Override
@@ -102,30 +107,30 @@ public class ValidatePhoneFragment extends BaseFragment implements OnClickListen
 	@Override
 	public void onResume() {
 		super.onResume();
-		//MobclickAgent.onResume(loginActivity);
-		MobclickAgent.onPageStart("ValidatePhoneFragment");
+		//MobclickAgent.onResume(mainActivity);
+		MobclickAgent.onPageStart("UnBindValidatePhoneFragment");
 	}
 	
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == findIdByString("back_iv")) {
-			loginActivity.changeFragment(2);
+			mainActivity.changeFragment(1);
 		}
 
 		if (v.getId() == findIdByString("get_validate_btn")) {
 			String phoneNumber = phoneNumberEt.getText().toString().trim();
 			if (TextUtils.isEmpty(phoneNumber)) {
-				Util.toast(loginActivity, "请输入手机号");
+				Util.toast(mainActivity, "手机号为空，不能操作");
 				return;
 			}
 
 			sendDialog.showDialog();
-			new ValidateCodeTask(phoneNumber).execute();
+			new SendCodeTask(GoagalInfo.userInfo != null ? GoagalInfo.userInfo.username :"",phoneNumber).execute();
 		}
 
 		if (v.getId() == findIdByString("submit_btn")) {
-			if (!NetworkImpl.isNetWorkConneted(loginActivity)) {
-				Util.toast(loginActivity, "网络不给力，请检查网络设置");
+			if (!NetworkImpl.isNetWorkConneted(mainActivity)) {
+				Util.toast(mainActivity, "网络不给力，请检查网络设置");
 				return;
 			}
 
@@ -133,19 +138,18 @@ public class ValidatePhoneFragment extends BaseFragment implements OnClickListen
 			String validateCode = validateCodeEt.getText().toString().trim();
 
 			if (TextUtils.isEmpty(phoneNumber)) {
-				Util.toast(loginActivity, "请输入手机号");
+				Util.toast(mainActivity, "请输入手机号");
 				return;
 			}
 			if (TextUtils.isEmpty(validateCode)) {
-				Util.toast(loginActivity, "请输入验证码");
+				Util.toast(mainActivity, "请输入验证码");
 				return;
 			}
 
 			validateDialog.show();
-			//new BindPhoneTask(phoneNumber, GoagalInfo.userInfo.username, validateCode).execute();
 			
 			GoagalInfo.validateCode = validateCode;
-			new PhoneValidateTask(phoneNumber).execute();
+			new UnBindPhoneTask(GoagalInfo.userInfo != null ? GoagalInfo.userInfo.username :"",phoneNumber,validateCode).execute();
 		}
 	}
 
@@ -155,11 +159,14 @@ public class ValidatePhoneFragment extends BaseFragment implements OnClickListen
 	 * @author admin
 	 *
 	 */
-	private class ValidateCodeTask extends AsyncTask<String, Integer, ResultInfo<String>> {
-
+	private class SendCodeTask extends AsyncTask<String, Integer, ResultInfo<String>> {
+		
+		String userName;
+		
 		String mobileNumber;
 
-		public ValidateCodeTask(String mobileNumber) {
+		public SendCodeTask(String userName,String mobileNumber) {
+			this.userName = userName;
 			this.mobileNumber = mobileNumber;
 		}
 
@@ -170,8 +177,8 @@ public class ValidatePhoneFragment extends BaseFragment implements OnClickListen
 
 		@Override
 		protected ResultInfo<String> doInBackground(String... params) {
-			ValidateEngin validateEngin = new ValidateEngin(loginActivity, mobileNumber);
-			return validateEngin.run();
+			UnBindSendCodeEngin unBindSendCodeEngin = new UnBindSendCodeEngin(mainActivity, userName,mobileNumber);
+			return unBindSendCodeEngin.run();
 		}
 
 		@Override
@@ -180,27 +187,19 @@ public class ValidatePhoneFragment extends BaseFragment implements OnClickListen
 			sendDialog.dismiss();
 			if (resultInfo != null && resultInfo.code == HttpConfig.STATUS_OK) {
 
-				Util.toast(loginActivity, "验证码已发送");
+				Util.toast(mainActivity, "验证码已发送");
 				Logger.msg("验证码发送成功----");
 				codeRefresh();
 				GoagalInfo.isGetValidate = 1;
 				// 清空验证码输入框
 				validateCodeEt.setText("");
-			} else if (resultInfo != null && resultInfo.code == HttpConfig.VALIDATE_CODE_IS_SEND) {
-				Util.toast(loginActivity, resultInfo.message);
-				GoagalInfo.isGetValidate = 1;
-				// 清空验证码输入框
-				validateCodeEt.setText("");
-			} else if (resultInfo != null && resultInfo.code == HttpConfig.PHONE_IS_NOT_BIND) {//手机未绑定账号
-				Util.toast(loginActivity, resultInfo.message);
-				GoagalInfo.isGetValidate = 0;
 			} else {
-				Util.toast(loginActivity, resultInfo.message);
+				Util.toast(mainActivity, resultInfo.message);
 				GoagalInfo.isGetValidate = 0;
 			}
 			if (GoagalInfo.isGetValidate == 1) {
 				// 存储是否发送过验证码
-				PreferenceUtil.getImpl(loginActivity).putBoolean(mobileNumber, true);
+				PreferenceUtil.getImpl(mainActivity).putBoolean(mobileNumber, true);
 			}
 		}
 	}
@@ -220,17 +219,17 @@ public class ValidatePhoneFragment extends BaseFragment implements OnClickListen
 					getValidateBtn.setEnabled(true);
 					getValidateBtn.setText("获取验证码");
 					getValidateBtn
-							.setBackgroundResource(MResource.getIdByName(loginActivity, "drawable", "border_line_btn"));
-					getValidateBtn.setTextColor(loginActivity.getResources()
-							.getColor(MResource.getIdByName(loginActivity, "color", "border_line_color")));
+							.setBackgroundResource(MResource.getIdByName(mainActivity, "drawable", "border_line_btn"));
+					getValidateBtn.setTextColor(mainActivity.getResources()
+							.getColor(MResource.getIdByName(mainActivity, "color", "border_line_color")));
 					return;
 				}
 				getValidateBtn.setEnabled(false);
 				getValidateBtn.setText("重新发送(" + secondes + ")");
 				getValidateBtn
-						.setBackgroundResource(MResource.getIdByName(loginActivity, "drawable", "border_line_gray"));
-				getValidateBtn.setTextColor(loginActivity.getResources()
-						.getColor(MResource.getIdByName(loginActivity, "color", "line_color")));
+						.setBackgroundResource(MResource.getIdByName(mainActivity, "drawable", "border_line_gray"));
+				getValidateBtn.setTextColor(mainActivity.getResources()
+						.getColor(MResource.getIdByName(mainActivity, "color", "line_color")));
 				handler.postDelayed(this, 1000);
 			}
 		};
@@ -240,23 +239,29 @@ public class ValidatePhoneFragment extends BaseFragment implements OnClickListen
 	@Override
 	public void onPause() {
 		super.onPause();
-		//MobclickAgent.onPause(loginActivity);
-		MobclickAgent.onPageEnd("ValidatePhoneFragment");
+		//MobclickAgent.onPause(mainActivity);
+		MobclickAgent.onPageEnd("UnBindValidatePhoneFragment");
 	}
 	
 	
 	/**
-	 * (手机号-验证码方式)进入游戏登录
+	 * 解绑手机号
 	 * 
 	 * @author admin
 	 *
 	 */
-	private class PhoneValidateTask extends AsyncTask<String, Integer, LoginResult> {
-
+	private class UnBindPhoneTask extends AsyncTask<String, Integer, ResultInfo<String>> {
+		
+		String userName;
+		
 		String mobileNumber;
 
-		public PhoneValidateTask(String mobileNumber) {
+		String code;
+		
+		public UnBindPhoneTask(String userName,String mobileNumber,String code) {
+			this.userName = userName;
 			this.mobileNumber = mobileNumber;
+			this.code = code;
 		}
 
 		@Override
@@ -265,20 +270,21 @@ public class ValidatePhoneFragment extends BaseFragment implements OnClickListen
 		}
 
 		@Override
-		protected LoginResult doInBackground(String... params) {
-			QuickLoginEngin quickLoginEngin = new QuickLoginEngin(loginActivity, false, mobileNumber);
-			return quickLoginEngin.run();
+		protected ResultInfo<String> doInBackground(String... params) {
+			UnBindPhoneEngin unBindPhoneEngin = new UnBindPhoneEngin(mainActivity,userName,mobileNumber,code);
+			return unBindPhoneEngin.run();
 		}
 
 		@Override
-		protected void onPostExecute(LoginResult loginResult) {
-			super.onPostExecute(loginResult);
+		protected void onPostExecute(ResultInfo<String> resultInfo) {
+			super.onPostExecute(resultInfo);
 			validateDialog.dismiss();
-			if (loginResult.result) {
-				loginActivity.changeFragment(7);
+			if (resultInfo != null && resultInfo.code == HttpConfig.STATUS_OK) {
+				GoagalInfo.bindMobileFrom = 1;
+				mainActivity.changeFragment(8);
 			} else {
-				Logger.msg("手机号-验证失败----");
-				Util.toast(loginActivity, StringUtils.isEmpty(loginResult.message) ? "手机号验证失败" : loginResult.message);
+				Logger.msg("解绑失败----");
+				Util.toast(mainActivity, "解绑失败，请稍后重试");
 			}
 		}
 	}

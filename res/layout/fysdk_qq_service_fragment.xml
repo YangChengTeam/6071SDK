@@ -47,6 +47,7 @@
                     android:background="@drawable/contact_qq" />
 
                 <TextView
+                    android:id="@+id/first_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
@@ -67,6 +68,7 @@
                     android:background="@drawable/contact_qq" />
 
                 <TextView
+                    android:id="@+id/second_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"

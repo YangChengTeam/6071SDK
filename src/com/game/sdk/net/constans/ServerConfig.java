@@ -85,6 +85,12 @@ public class ServerConfig {
 	//验证订单
 	public static final String PAY_VALIDATE_URL = getBaseUrl() + "orders_chk";
 	
+	//解绑手机发送验证码
+	public static final String UNBIND_SEND_CODE_URL = getBaseUrl() + "unbind_mobile_code";
+	
+	//解除绑定手机
+	public static final String UNBIND_PHONE_NUMBER_URL = getBaseUrl() + "unbind_mobile_check";
+	
 	public static String getBaseUrl() {
 		return DEBUG ? DEBUG_BASE3_URL : BASE3_URL;
 	}
