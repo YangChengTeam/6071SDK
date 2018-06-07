@@ -12,6 +12,8 @@ import com.game.sdk.utils.Util;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -25,8 +27,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ServiceDialog extends Dialog implements android.view.View.OnClickListener {
 
@@ -43,7 +47,11 @@ public class ServiceDialog extends Dialog implements android.view.View.OnClickLi
 	private TextView firstQQTv;
 
 	private TextView secondQQTv;
-
+	
+	private TextView weixinTv;
+	
+	private Button copyWeixinBtn;
+	
 	public ServiceDialog(Activity context, float scale) {
 		super(context, MResource.getIdByName(context, "style", "CustomSdkDialog"));
 		this.mContext = context;
@@ -54,6 +62,7 @@ public class ServiceDialog extends Dialog implements android.view.View.OnClickLi
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		initView();
+		
 		kefu = kefuQQ(GoagalInfo.userInfo.kefuQQ);
 		Logger.msg("kefuqq--->" + GoagalInfo.userInfo.kefuQQ);
 		Drawable drawable = mContext.getResources()
@@ -94,7 +103,11 @@ public class ServiceDialog extends Dialog implements android.view.View.OnClickLi
 		firstQQTv = (TextView) view.findViewById(MResource.getIdByName(mContext, "id", "kefu_qq_num1_tv"));
 
 		secondQQTv = (TextView) view.findViewById(MResource.getIdByName(mContext, "id", "kefu_qq_num2_tv"));
-
+		
+		weixinTv = (TextView) view.findViewById(MResource.getIdByName(mContext, "id", "weixin_number_tv"));
+		
+		copyWeixinBtn = (Button) view.findViewById(MResource.getIdByName(mContext, "id", "copy_weixin_btn"));
+		
 		setContentView(view);
 
 		if (!StringUtils.isEmpty(GoagalInfo.inItInfo.tel)) {
@@ -102,7 +115,14 @@ public class ServiceDialog extends Dialog implements android.view.View.OnClickLi
 		} else {
 			callPhoneTv.setText("客服电话：400-796-6071");
 		}
-
+		
+		if (GoagalInfo.inItInfo != null &&  !StringUtils.isBlank(GoagalInfo.inItInfo.weixin)) {
+			Logger.msg("weixin--->" + GoagalInfo.inItInfo.weixin);
+			weixinTv.setText("微信公众号：" + GoagalInfo.inItInfo.weixin);
+		}else {
+			weixinTv.setText("微信公众号：leqi_youxi");
+		}
+		
 		/*
 		 * NoUnderlineSpan mNoUnderlineSpan = new NoUnderlineSpan(); if
 		 * (callPhoneTv.getText() instanceof Spannable) { Spannable s =
@@ -129,7 +149,7 @@ public class ServiceDialog extends Dialog implements android.view.View.OnClickLi
 		callPhoneTv.setOnClickListener(this);
 		firstQQTv.setOnClickListener(this);
 		secondQQTv.setOnClickListener(this);
-
+		copyWeixinBtn.setOnClickListener(this);
 	}
 
 	@Override
@@ -158,6 +178,19 @@ public class ServiceDialog extends Dialog implements android.view.View.OnClickLi
 			if (kefu != null && kefu.length > 1) {
 				startQQ(kefu[1]);
 			}
+		}
+		if (v.getId() == MResource.getIdByName(mContext, "id", "copy_weixin_btn")) {
+			String weixinCode = "leqi_youxi";
+			if(GoagalInfo.inItInfo != null && !StringUtils.isBlank(GoagalInfo.inItInfo.weixin)) {
+				weixinCode = GoagalInfo.inItInfo.weixin;
+			}
+			//获取剪贴板管理器：  
+			ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);  
+			// 创建普通字符型ClipData  
+			ClipData mClipData = ClipData.newPlainText("Label", weixinCode);
+			// 将ClipData内容放到系统剪贴板里。  
+			cm.setPrimaryClip(mClipData);
+			Toast.makeText(mContext, "复制成功，请打开微信搜索公众号", Toast.LENGTH_LONG).show();
 		}
 	}
 
