@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alipay.sdk.app.PayTask;
 import com.game.sdk.domain.CouponInfo;
 import com.game.sdk.domain.GoagalInfo;
@@ -559,7 +560,7 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 			}
 			params.md5signstr = preSignStr;
 
-			Logger.msg("pay params -->" + params.toString());
+			Logger.msg("pay params -->" + JSONObject.toJSONString(params));
 			new PayGameTask(params).execute();
 		}
 		if (SystemUtil.isValidContext(PayActivity.this)) {
