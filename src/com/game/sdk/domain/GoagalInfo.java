@@ -35,7 +35,7 @@ public class GoagalInfo {
 	
 	public static boolean isLogin = false;// 判断用户是否登录
 	
-	public static String channel = "default";
+	public static String channel = "1673";
 	public static ChannelInfo channelInfo = null;
 	public static InItInfo inItInfo = null;
 	public static PackageInfo packageInfo = null;
@@ -47,6 +47,9 @@ public class GoagalInfo {
 	public static String agentid;
 	public static String imei;
 	public static String fromId;
+	
+	public static String teaAppId;
+	public static String teaAppName;
 	
 	public static String validateCode;// 上行验证码
 

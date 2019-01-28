@@ -16,6 +16,7 @@
 	<classpathentry kind="lib" path="libs/ipaynow_wechatwp_v2.0.0.jar"/>
 	<classpathentry kind="lib" path="libs/picasso-2.5.2.jar"/>
 	<classpathentry kind="lib" path="libs/umeng-analytics-v6.0.7.jar"/>
+	<classpathentry kind="lib" path="libs/tea.jar"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="src" path="src"/>

@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.game.sdk"
+    package="com.test.wzsj"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -271,7 +271,15 @@
             android:value="23" />
         <meta-data
             android:name="FY_AGENT"
-            android:value="default" />
+            android:value="1673" />
+        
+        <meta-data
+            android:name="TEA_APPID"
+            android:value="156276" />
+        
+        <meta-data
+            android:name="TEA_APP_NAME"
+            android:value="wangzheshuijing2" />
     </application>
 
 </manifest>

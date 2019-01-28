@@ -15,6 +15,7 @@ import com.game.sdk.utils.StringUtils;
 import com.game.sdk.utils.SystemUtil;
 import com.game.sdk.utils.Util;
 import com.game.sdk.view.CustomDialog;
+import com.ss.android.common.lib.EventUtils;
 import com.umeng.analytics.MobclickAgent;
 
 import android.content.Intent;
@@ -318,6 +319,9 @@ public class QuickRegisterFragment extends BaseFragment implements OnClickListen
 			registerDialog.dismiss();
 
 			if (loginResult.result) {
+				if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
+					EventUtils.setRegister("quick_register", true);
+				}
 				//将logo图及启动图恢复为渠道对应的值
 				if (Util.getInitLogoFileBitmap(loginActivity, Constants.AGENT_LOGO_IMAGE) != null) {
 					GoagalInfo.inItInfo.logoBitmp = Util.getInitLogoFileBitmap(loginActivity,Constants.AGENT_LOGO_IMAGE);
@@ -335,6 +339,9 @@ public class QuickRegisterFragment extends BaseFragment implements OnClickListen
 				loginActivity.changeFragment(4);
 
 			} else {
+				if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
+					EventUtils.setRegister("quick_register", false);
+				}
 				Logger.msg("注册账号失败----");
 				Util.toast(loginActivity, "注册失败");
 			}

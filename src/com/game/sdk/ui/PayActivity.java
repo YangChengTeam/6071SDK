@@ -40,6 +40,7 @@ import com.game.sdk.view.PayResultDialog;
 import com.game.sdk.view.PayResultDialog.PayResultListener;
 import com.ipaynow.plugin.api.IpaynowPlugin;
 import com.ipaynow.plugin.utils.PreSignMessageUtil;
+import com.ss.android.common.lib.EventUtils;
 import com.umeng.analytics.MobclickAgent;
 
 import android.annotation.SuppressLint;
@@ -183,7 +184,10 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 					memo = result_obj[1].substring(result_obj[1].indexOf("{") + 1, result_obj[1].lastIndexOf("}"));
 					if (resultStatus == 9000) {
 						// 支付成功
-
+						if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
+							EventUtils.setPurchase("","","",1,payWay,"rmb",true,(int)amount);
+					        Logger.msg("TeaAgent Pay True");
+						}
 						PaymentCallbackInfo pci = new PaymentCallbackInfo();
 						pci.money = amount;
 						pci.msg = memo;
@@ -199,6 +203,10 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 						// finish();
 						finishSuccess();
 					} else {
+						if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
+							EventUtils.setPurchase("","","",1,payWay,"rmb",false,(int)amount);
+					        Logger.msg("TeaAgent Pay False");
+						}
 						PaymentErrorMsg msg_e = new PaymentErrorMsg();
 						msg_e.code = resultStatus;
 						msg_e.msg = memo;
@@ -216,6 +224,10 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 						}
 					}
 				} else {
+					if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
+						EventUtils.setPurchase("","","",1,payWay,"rmb",false,(int)amount);
+						Logger.msg("-----支付成功");
+					}
 					// 如果msg为null 是支付宝那边返回数据为null
 					PaymentErrorMsg msg_e = new PaymentErrorMsg();
 					msg_e.code = 88888888;
@@ -963,6 +975,9 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 
 		if (isnowpay.equals("2")) {
 			if (nowpayCode.equals("00")) {
+				if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
+					EventUtils.setPurchase("","","",1,payWay,"rmb",true,(int)amount);
+				}
 				// Util.toast(this, "支付成功");
 				Logger.msg("支付成功--->");
 				// new PayInitTask().execute();
@@ -983,6 +998,9 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 				// finish();
 			}
 			if (nowpayCode.equals("02")) {
+				if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
+					EventUtils.setPurchase("","","",1,payWay,"rmb",false,(int)amount);
+				}
 				// Util.toast(this, "支付取消");
 				Logger.msg("支付取消--->");
 
@@ -1004,6 +1022,9 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 
 			}
 			if (nowpayCode.equals("01")) {
+				if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
+					EventUtils.setPurchase("","","",1,payWay,"rmb",false,(int)amount);
+				}
 				Util.toast(this, nowpayMsg);
 				PaymentErrorMsg msg_e = new PaymentErrorMsg();
 				msg_e.code = 1;

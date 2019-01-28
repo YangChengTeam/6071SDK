@@ -154,7 +154,10 @@ public class Util {
 			if (null != bundle) {
 				GoagalInfo.appid = bundle.getInt("FY_APPID") + "";
 				GoagalInfo.gameid = bundle.getInt("FY_GAMEID") + "";
-				GoagalInfo.agentid = bundle.getString("FY_AGENT");
+				GoagalInfo.agentid = bundle.getInt("FY_AGENT") + "";
+				
+				GoagalInfo.teaAppId = bundle.getInt("TEA_APPID")+"";
+				GoagalInfo.teaAppName = bundle.getString("TEA_APP_NAME");
 			}
 			Logger.msg(
 					"GoagalInfo.appid---" + GoagalInfo.appid + "---" + GoagalInfo.gameid + "---" + GoagalInfo.agentid);

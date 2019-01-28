@@ -102,6 +102,8 @@ public class InItInfo {
 	@JSONField(name = "sms_mobile_list")
 	public String smsMobileList;//后台接受短信的号码组
 	
+	public int isPostToToutiaoSdk;//1：提交，0：不提交
+	
 	public void setThemeColor() {
 		try {
 			color = Color.parseColor(GoagalInfo.inItInfo.themeColor);

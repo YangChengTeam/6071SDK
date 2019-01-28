@@ -17,6 +17,7 @@ import com.game.sdk.utils.StringUtils;
 import com.game.sdk.utils.Util;
 import com.game.sdk.view.CustomDialog;
 import com.game.sdk.view.NoticeDialog;
+import com.ss.android.common.lib.EventUtils;
 import com.umeng.analytics.MobclickAgent;
 
 import android.app.PendingIntent;
@@ -441,6 +442,9 @@ public class QuickLoginActivity extends BaseActivity implements OnClickListener 
 			}
 
 			if (loginResult.result) {
+				if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
+					EventUtils.setRegister("quick_sms_play_register", true);
+				}
 				// 将logo图及启动图恢复为渠道对应的值
 				if (Util.getInitLogoFileBitmap(QuickLoginActivity.this, Constants.AGENT_LOGO_IMAGE) != null) {
 					GoagalInfo.inItInfo.logoBitmp = Util.getInitLogoFileBitmap(QuickLoginActivity.this,
@@ -490,6 +494,9 @@ public class QuickLoginActivity extends BaseActivity implements OnClickListener 
 				}
 
 			} else {
+				if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
+					EventUtils.setRegister("quick_sms_play_register", false);
+				}
 				GoagalInfo.isLogin = false;
 				Logger.msg("极速试玩注册失败----");
 				Util.toast(QuickLoginActivity.this, "极速试玩注册失败");

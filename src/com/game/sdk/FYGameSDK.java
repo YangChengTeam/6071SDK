@@ -39,6 +39,8 @@ import com.game.sdk.utils.Util;
 import com.game.sdk.view.AutoNoticeDialog;
 import com.game.sdk.view.CustomDialog;
 import com.game.sdk.view.LoginInDialog;
+import com.ss.android.common.applog.TeaAgent;
+import com.ss.android.common.applog.TeaConfigBuilder;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.analytics.MobclickAgent.EScenarioType;
 import com.umeng.analytics.MobclickAgent.UMAnalyticsConfig;
@@ -105,6 +107,7 @@ public class FYGameSDK {
 
 		GoagalInfo.imei = SystemUtil.getPhoneIMEI(acontext);
 		GoagalInfo.validateCode = SystemUtil.getUpValidateCode(acontext);
+
 		Util.getGameInfo(acontext);
 		// GoagalInfo.setGoagalInfo(acontext, PathUtil.getGolgalDir());
 		OKHttpRequest.initPicasso(acontext);// 初始化picasso
@@ -123,6 +126,14 @@ public class FYGameSDK {
 		MobclickAgent.startWithConfigure(umConfig);
 		MobclickAgent.setScenarioType(acontext, EScenarioType.E_UM_NORMAL);
 		MobclickAgent.openActivityDurationTrack(false);//禁止默认的页面统计方式，这样将不会再自动统计Activity
+		
+		TeaAgent.setUserUniqueID(SystemUtil.getPhoneIMEI(acontext));
+        TeaAgent.init(TeaConfigBuilder.create(acontext)
+                .setAppName(GoagalInfo.teaAppName)
+                .setChannel(GoagalInfo.agentid)
+                .setAid(Integer.valueOf(GoagalInfo.teaAppId))
+                .createTeaConfig());
+        Logger.msg("TeaAgent Init");
 	}
 
 	/**
@@ -711,6 +722,10 @@ public class FYGameSDK {
 	 * 显示悬浮按钮
 	 */
 	public void createFloatButton() {
+		if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
+			TeaAgent.onResume(acontext);
+			Logger.msg("TeaAgent onResume");
+		}
 		if (!GoagalInfo.isLogin) {
 			return;
 		}
@@ -736,6 +751,11 @@ public class FYGameSDK {
 	public void removeFloatButton() {
 		// if (GoagalInfo.isLogin) {
 		Logger.msg("移除悬浮按钮");
+		if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
+			TeaAgent.onPause(acontext);
+			Logger.msg("TeaAgent onPause");
+
+		}
 		FloatViewImpl.getInstance(acontext).removeFloat();
 		// }
 	}
@@ -770,7 +790,7 @@ public class FYGameSDK {
 	 * @return 返回游戏SDK版本号
 	 */
 	public String getVersion() {
-		return "2.3.2";
+		return "2.3.3";
 	}
 
 	/**

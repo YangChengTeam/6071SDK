@@ -29,6 +29,7 @@ import com.game.sdk.utils.Util;
 import com.game.sdk.view.CustomDialog;
 import com.game.sdk.view.LoginInDialog;
 import com.game.sdk.view.NoticeDialog;
+import com.ss.android.common.lib.EventUtils;
 import com.umeng.analytics.MobclickAgent;
 
 import android.app.Activity;
@@ -543,6 +544,10 @@ public class AccountLoginFragment extends BaseFragment implements OnClickListene
 			}
 
 			if (loginResult.result) {
+				if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
+					EventUtils.setLogin("normal_login",true);
+				}
+				
 				Logger.msg("登录成功----");
 
 				if(GoagalInfo.userInfo != null && !StringUtils.isEmpty(GoagalInfo.userInfo.agentId)){
@@ -606,6 +611,9 @@ public class AccountLoginFragment extends BaseFragment implements OnClickListene
 				}
 				
 			} else {
+				if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
+					EventUtils.setLogin("normal_login",false);
+				}
 				Logger.msg("登录失败----");
 
 				Util.toast(loginActivity,
