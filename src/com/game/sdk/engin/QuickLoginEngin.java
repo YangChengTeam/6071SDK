@@ -58,30 +58,29 @@ public class QuickLoginEngin extends BaseEngin<QuickLoginInfo> {
 			params.put("code", GoagalInfo.validateCode);
 			params.put("f", GoagalInfo.gameid);
 			params.put("is_quick", GoagalInfo.isQuick + "");
-			
-			
+
 			if (!StringUtils.isEmpty(mobileNumber)) {
 				params.put("m", mobileNumber);
 			}
-			
+
 			ResultInfo<QuickLoginInfo> resultInfo = getResultInfo(true, QuickLoginInfo.class, params);
 			if (resultInfo != null && resultInfo.code == HttpConfig.STATUS_OK) {
 				Logger.msg("手机号-验证码方式-登录成功----" + JSON.toJSONString(resultInfo.data));
-				//Util.toast(mContext, "手机号-验证码方式-登录成功---");
+				// Util.toast(mContext, "手机号-验证码方式-登录成功---");
 				if (GoagalInfo.userInfo == null) {
 					GoagalInfo.userInfo = new UserInfo();
 				}
 				// 保存用户信息
 				saveUserInfo(resultInfo.data);
 				loginResult.result = true;
-			}else{
+			} else {
 				loginResult.result = false;
 				loginResult.message = resultInfo.message;
 			}
 		} catch (Exception e) {
 			loginResult.result = false;
 		}
-		
+
 		Logger.msg("result---" + loginResult.result);
 		return loginResult;
 	}
@@ -113,14 +112,15 @@ public class QuickLoginEngin extends BaseEngin<QuickLoginInfo> {
 					saveUserInfo(resultInfo.data);
 					loginResult.result = true;
 					loginCount = GoagalInfo.inItInfo.mqrNumLimit != null
-							? Integer.parseInt(GoagalInfo.inItInfo.mqrNumLimit) : 100;
+							? Integer.parseInt(GoagalInfo.inItInfo.mqrNumLimit)
+							: 100;
 					break;
 				} else {
 					if (!StringUtils.isEmpty(GoagalInfo.inItInfo.mqrNumLimit)) {
 						Logger.msg("当前请求的次数----" + loginCount);
 						if (loginCount < Integer.parseInt(GoagalInfo.inItInfo.mqrNumLimit)) {
-							//根据后台设置的延时时间，延时处理请求
-							if(GoagalInfo.inItInfo != null && !StringUtils.isEmpty(GoagalInfo.inItInfo.mqrDelay)){
+							// 根据后台设置的延时时间，延时处理请求
+							if (GoagalInfo.inItInfo != null && !StringUtils.isEmpty(GoagalInfo.inItInfo.mqrDelay)) {
 								Thread.sleep(Long.parseLong(GoagalInfo.inItInfo.mqrDelay));
 							}
 							loginCount++;
@@ -165,7 +165,7 @@ public class QuickLoginEngin extends BaseEngin<QuickLoginInfo> {
 			UserLoginInfodao.getInstance(mContext).saveUserLoginInfo(accountNumber, quickLoginInfo.passWord,
 					quickLoginInfo.isValiMobile, 0);
 		}
-		
+
 		GoagalInfo.userInfo.username = accountNumber;
 		GoagalInfo.userInfo.mobile = quickLoginInfo.mobile;
 		GoagalInfo.userInfo.password = quickLoginInfo.passWord;
@@ -174,11 +174,15 @@ public class QuickLoginEngin extends BaseEngin<QuickLoginInfo> {
 		GoagalInfo.userInfo.sign = quickLoginInfo.sign;
 		GoagalInfo.userInfo.validateMobile = quickLoginInfo.isValiMobile;
 		GoagalInfo.userInfo.agentId = quickLoginInfo.agentId;
-		
+
 		GoagalInfo.userInfo.newSdkReg = quickLoginInfo.newSdkReg;
 		GoagalInfo.userInfo.fixName = quickLoginInfo.fixName;
 		GoagalInfo.userInfo.cpNotice = quickLoginInfo.cpNotice;
-		
+
+		// 返回是否实名认证，生日
+		GoagalInfo.userInfo.isAuthenticated = quickLoginInfo.isAuthenticated;
+		GoagalInfo.userInfo.birthday = quickLoginInfo.birthday;
+
 		GoagalInfo.isLogin = true;
 		GoagalInfo.loginType = 2;
 		if (quickLoginInfo.gameNotice != null) {
@@ -189,6 +193,6 @@ public class QuickLoginEngin extends BaseEngin<QuickLoginInfo> {
 		PreferenceUtil.getImpl(this.context).putInt(SystemUtil.getPhoneIMEI(mContext), GoagalInfo.loginType);
 
 		// 保存用户信息到本地
-		//MobileInfoUtil.insertUserInfo(mContext, GoagalInfo.userInfo);
+		// MobileInfoUtil.insertUserInfo(mContext, GoagalInfo.userInfo);
 	}
 }

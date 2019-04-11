@@ -1,8 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.test.wzsj"
+    package="com.game.sdk"
     android:versionCode="1"
     android:versionName="1.0" >
-
     <uses-sdk
         android:minSdkVersion="17"
         android:targetSdkVersion="21" />
@@ -274,12 +273,12 @@
             android:value="1673" />
         
         <meta-data
-            android:name="TEA_APPID"
-            android:value="156276" />
+            android:name="TEA_APP_ID"
+            android:value="157357" />
         
         <meta-data
             android:name="TEA_APP_NAME"
-            android:value="wangzheshuijing2" />
+            android:value="msls" />
     </application>
 
 </manifest>

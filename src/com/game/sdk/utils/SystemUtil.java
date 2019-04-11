@@ -1,8 +1,10 @@
 package com.game.sdk.utils;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -13,8 +15,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
+import android.provider.Settings;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 
@@ -98,7 +100,7 @@ public class SystemUtil {
 	/**
 	 * 获取手机IMEI码
 	 */
-	public static String getPhoneIMEI(Context cxt) {
+	public static String getPhoneIMEI1(Context cxt) {
 		TelephonyManager tm = (TelephonyManager) cxt.getSystemService(Context.TELEPHONY_SERVICE);
 
 		String imei = tm.getDeviceId();
@@ -112,6 +114,105 @@ public class SystemUtil {
 					+ Build.USER.length() % 10;
 		}
 		return imei;
+	}
+
+	/**
+	 * 获取手机IMEI码
+	 */
+	public static String getPhoneIMEI(Context cxt) {
+		String imei = null;
+
+		boolean hasSimCard = true;
+
+		TelephonyManager tm = (TelephonyManager) cxt.getSystemService(Context.TELEPHONY_SERVICE);
+
+		int simState = tm.getSimState();
+
+		switch (simState) {
+		case TelephonyManager.SIM_STATE_ABSENT:
+			hasSimCard = false; // 没有SIM卡
+			break;
+		case TelephonyManager.SIM_STATE_UNKNOWN:
+			hasSimCard = false;
+			break;
+		}
+
+		imei = tm.getDeviceId();
+
+		if (hasSimCard) {
+			String subId = tm.getSubscriberId();
+			//判断是否为电信手机
+			if (!StringUtils.isBlank(subId) && subId.startsWith("46003")) {
+				try {
+					Method method = tm.getClass().getMethod("getDeviceId", int.class);
+
+					//暂无用到
+					//String imei1 = (String) method.invoke(tm, 0);
+
+					imei = (String) method.invoke(tm, 1);
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return imei;
+	}
+
+	// 如果是电信手机，通过反射的方式获取IMEI
+	public static String getMachineImei(Context context) {
+		TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+		Class clazz = manager.getClass();
+		String imei = "";
+		try {
+			Method method = manager.getClass().getMethod("getDeviceId", int.class);
+
+			String imei1 = (String) method.invoke(manager, 0);
+
+			String imei2 = (String) method.invoke(manager, 1);
+		} catch (Exception e) {
+		}
+		return imei;
+	}
+
+	public static String getPhoneIMEIALL(Context cxt) {
+		StringBuffer imeiALL = new StringBuffer();
+		try {
+			TelephonyManager manager = (TelephonyManager) cxt.getSystemService(Context.TELEPHONY_SERVICE);
+
+			Method method = manager.getClass().getMethod("getDeviceId", int.class);
+
+			String imei1 = (String) method.invoke(manager, 0);
+
+			String imei2 = (String) method.invoke(manager, 1);
+
+			imeiALL.append(imei1).append("+").append(imei2);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return imeiALL.toString();
+	}
+
+	public static String getAndroidId(Context context) {
+		String ANDROID_ID = Settings.System.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+		return ANDROID_ID;
+	}
+
+	/**
+	 * @param slotId
+	 *            slotId为卡槽Id，它的值为 0、1；
+	 * @return
+	 */
+	public static String getIMEI(Context context, int slotId) {
+		try {
+			TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+			Method method = manager.getClass().getMethod("getImei", int.class);
+			String imei = (String) method.invoke(manager, slotId);
+			return imei;
+		} catch (Exception e) {
+			return "";
+		}
 	}
 
 	/**

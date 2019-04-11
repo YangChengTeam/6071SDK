@@ -28,9 +28,9 @@ public class LoginEngin extends BaseEngin<QuickLoginInfo> {
 	public Context mContext;
 
 	public int loginCount = 1;
-	
+
 	public int accountType = 0;
-	
+
 	public LoginEngin(Context context) {
 		super(context);
 		this.mContext = context;
@@ -48,30 +48,30 @@ public class LoginEngin extends BaseEngin<QuickLoginInfo> {
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("n", GoagalInfo.userInfo.username);
 			params.put("p", GoagalInfo.userInfo.password);
-			
+
 			ResultInfo<QuickLoginInfo> resultInfo = getResultInfo(true, QuickLoginInfo.class, params);
-			
+
 			if (resultInfo != null && resultInfo.code == HttpConfig.STATUS_OK) {
 				Logger.msg("无需验证码登录结果----" + JSON.toJSONString(resultInfo.data));
 				if (GoagalInfo.userInfo == null) {
 					GoagalInfo.userInfo = new UserInfo();
 				}
-				
-				if(resultInfo.data != null){
+
+				if (resultInfo.data != null) {
 					loginResult.newSdkReg = resultInfo.data.newSdkReg;
 					loginResult.fixName = resultInfo.data.fixName;
 					loginResult.cpNotice = resultInfo.data.cpNotice;
 				}
-				
+
 				// 保存用户信息
 				saveUserInfo(resultInfo.data);
-				
+
 				loginResult.result = true;
 			} else {
 				loginResult.result = false;
 				loginResult.message = resultInfo.message;
 			}
-			
+
 		} catch (Exception e) {
 			loginResult.result = false;
 		}
@@ -88,19 +88,21 @@ public class LoginEngin extends BaseEngin<QuickLoginInfo> {
 	 */
 	public void saveUserInfo(QuickLoginInfo quickLoginInfo) {
 		String accountNumber = "";
-		//手机号/账号合并
-		if(GoagalInfo.loginType == 2){
+		// 手机号/账号合并
+		if (GoagalInfo.loginType == 2) {
 			accountType = 0;
-			
-			if(!StringUtils.isEmpty(quickLoginInfo.mobile) && GoagalInfo.userInfo.username.equals(quickLoginInfo.mobile)){
+
+			if (!StringUtils.isEmpty(quickLoginInfo.mobile)
+					&& GoagalInfo.userInfo.username.equals(quickLoginInfo.mobile)) {
 				accountNumber = quickLoginInfo.mobile;
 			}
-			
-			if(!StringUtils.isEmpty(quickLoginInfo.userName) && GoagalInfo.userInfo.username.equals(quickLoginInfo.userName)){
+
+			if (!StringUtils.isEmpty(quickLoginInfo.userName)
+					&& GoagalInfo.userInfo.username.equals(quickLoginInfo.userName)) {
 				accountNumber = quickLoginInfo.userName;
 			}
 		}
-		
+
 		GoagalInfo.userInfo.username = accountNumber;
 		GoagalInfo.userInfo.mobile = quickLoginInfo.mobile;
 		GoagalInfo.userInfo.password = quickLoginInfo.passWord;
@@ -109,30 +111,37 @@ public class LoginEngin extends BaseEngin<QuickLoginInfo> {
 		GoagalInfo.userInfo.sign = quickLoginInfo.sign;
 		GoagalInfo.userInfo.validateMobile = quickLoginInfo.isValiMobile;
 		GoagalInfo.userInfo.agentId = quickLoginInfo.agentId;
-		
+
 		GoagalInfo.userInfo.newSdkReg = quickLoginInfo.newSdkReg;
 		GoagalInfo.userInfo.fixName = quickLoginInfo.fixName;
 		GoagalInfo.userInfo.cpNotice = quickLoginInfo.cpNotice;
-		PreferenceUtil.getImpl(context).putString(Constants.LAST_AGENT_ID, GoagalInfo.userInfo.agentId);
 		
+		//返回是否实名认证，生日
+		GoagalInfo.userInfo.isAuthenticated = quickLoginInfo.isAuthenticated;
+		GoagalInfo.userInfo.birthday = quickLoginInfo.birthday;
+
+		PreferenceUtil.getImpl(context).putString(Constants.LAST_AGENT_ID, GoagalInfo.userInfo.agentId);
+
 		GoagalInfo.isLogin = true;
-		if(quickLoginInfo.gameNotice != null){
+		if (quickLoginInfo.gameNotice != null) {
 			GoagalInfo.noticeMsg = quickLoginInfo.gameNotice.body;
 		}
-		
+
 		boolean isExist = UserLoginInfodao.getInstance(mContext).findUserLoginInfoByName(accountNumber);
 		if (!isExist) {
-			UserLoginInfodao.getInstance(mContext).saveUserLoginInfo(accountNumber, quickLoginInfo.passWord,quickLoginInfo.isValiMobile,accountType);
+			UserLoginInfodao.getInstance(mContext).saveUserLoginInfo(accountNumber, quickLoginInfo.passWord,
+					quickLoginInfo.isValiMobile, accountType);
 		} else {
 			// 先删除
 			UserLoginInfodao.getInstance(mContext).deleteUserLoginByName(accountNumber);
 			// 再保存最新的信息
-			UserLoginInfodao.getInstance(mContext).saveUserLoginInfo(accountNumber, quickLoginInfo.passWord,quickLoginInfo.isValiMobile,accountType);
+			UserLoginInfodao.getInstance(mContext).saveUserLoginInfo(accountNumber, quickLoginInfo.passWord,
+					quickLoginInfo.isValiMobile, accountType);
 		}
-		
-		if(GoagalInfo.loginType == 2){
+
+		if (GoagalInfo.loginType == 2) {
 			AccountInfoUtil.insertUserInfo(mContext, GoagalInfo.userInfo);
 		}
-		
+
 	}
 }

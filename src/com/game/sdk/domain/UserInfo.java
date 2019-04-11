@@ -81,4 +81,8 @@ public class UserInfo {
 	// CP是以用户名还是ID为唯一标记，0: 用户名；1：用户ID。该值为0，表示CP属于有问题CP
 	public int cpNotice;
 
+	public int isAuthenticated;//0未实名，1已实名
+
+	public String birthday;//生日
+	
 }

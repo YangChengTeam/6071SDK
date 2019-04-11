@@ -49,4 +49,8 @@ public class QuickLoginInfo {
 	@JSONField(name = "cp_notice")
 	public int cpNotice;
 	
+	public int isAuthenticated;//0未实名，1已实名
+
+	public String birthday;//生日
+	
 }

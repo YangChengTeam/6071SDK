@@ -321,6 +321,7 @@ public class QuickRegisterFragment extends BaseFragment implements OnClickListen
 			if (loginResult.result) {
 				if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
 					EventUtils.setRegister("quick_register", true);
+					Logger.msg("TeaAgent quick_register success--->");
 				}
 				//将logo图及启动图恢复为渠道对应的值
 				if (Util.getInitLogoFileBitmap(loginActivity, Constants.AGENT_LOGO_IMAGE) != null) {
@@ -341,6 +342,7 @@ public class QuickRegisterFragment extends BaseFragment implements OnClickListen
 			} else {
 				if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
 					EventUtils.setRegister("quick_register", false);
+					Logger.msg("TeaAgent quick_register fail--->");
 				}
 				Logger.msg("注册账号失败----");
 				Util.toast(loginActivity, "注册失败");

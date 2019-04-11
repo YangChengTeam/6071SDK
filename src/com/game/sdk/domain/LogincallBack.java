@@ -14,4 +14,8 @@ public class LogincallBack {
 	public String sign;
 	
 	public boolean isBindPhone;
+	
+	public boolean isAuthenticated;
+	
+	public String birthday;
 }

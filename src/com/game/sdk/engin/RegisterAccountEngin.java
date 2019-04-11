@@ -88,7 +88,7 @@ public class RegisterAccountEngin extends BaseEngin<QuickLoginInfo> {
 	 * @param ipassword
 	 */
 	public void saveUserInfo(QuickLoginInfo quickLoginInfo) {
-		
+		Logger.msg("register success --->" + JSON.toJSONString(quickLoginInfo));
 		//存储账号
 		String accountNumber = quickLoginInfo.userName;
 		
@@ -104,6 +104,10 @@ public class RegisterAccountEngin extends BaseEngin<QuickLoginInfo> {
 		GoagalInfo.userInfo.newSdkReg = quickLoginInfo.newSdkReg;
 		GoagalInfo.userInfo.fixName = quickLoginInfo.fixName;
 		GoagalInfo.userInfo.cpNotice = quickLoginInfo.cpNotice;
+		
+		//返回是否实名认证，生日
+		GoagalInfo.userInfo.isAuthenticated = quickLoginInfo.isAuthenticated;
+		GoagalInfo.userInfo.birthday = quickLoginInfo.birthday;
 		
 		//TODO,注册成功后，不需要设置为已登录
 		//1.如果点击"进入游戏"，则回调标记已登录成功，直接进入游戏

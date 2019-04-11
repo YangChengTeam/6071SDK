@@ -300,7 +300,11 @@ public class QuickLoginActivity extends BaseActivity implements OnClickListener 
 					logincallBack.isBindPhone = GoagalInfo.userInfo.validateMobile == 1 ? true : false;
 					logincallBack.logintime = GoagalInfo.userInfo.logintime;
 					logincallBack.sign = GoagalInfo.userInfo.sign;
-
+					
+					//返回实名认证，生日
+					logincallBack.isAuthenticated = GoagalInfo.userInfo.isAuthenticated == 0 ? false : true;
+					logincallBack.birthday = GoagalInfo.userInfo.birthday;
+					
 					GoagalInfo.loginlistener.loginSuccess(logincallBack);
 				}
 
@@ -444,6 +448,7 @@ public class QuickLoginActivity extends BaseActivity implements OnClickListener 
 			if (loginResult.result) {
 				if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
 					EventUtils.setRegister("quick_sms_play_register", true);
+					Logger.msg("TeaAgent quick_register success--->");
 				}
 				// 将logo图及启动图恢复为渠道对应的值
 				if (Util.getInitLogoFileBitmap(QuickLoginActivity.this, Constants.AGENT_LOGO_IMAGE) != null) {
@@ -475,7 +480,11 @@ public class QuickLoginActivity extends BaseActivity implements OnClickListener 
 					logincallBack.isBindPhone = GoagalInfo.userInfo.validateMobile == 1 ? true : false;
 					logincallBack.logintime = GoagalInfo.userInfo.logintime;
 					logincallBack.sign = GoagalInfo.userInfo.sign;
-
+					
+					//返回实名认证，生日
+					logincallBack.isAuthenticated = GoagalInfo.userInfo.isAuthenticated == 0 ? false : true;
+					logincallBack.birthday = GoagalInfo.userInfo.birthday;
+					
 					GoagalInfo.loginlistener.loginSuccess(logincallBack);
 				}
 
@@ -496,6 +505,7 @@ public class QuickLoginActivity extends BaseActivity implements OnClickListener 
 			} else {
 				if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
 					EventUtils.setRegister("quick_sms_play_register", false);
+					Logger.msg("TeaAgent quick_register fail--->");
 				}
 				GoagalInfo.isLogin = false;
 				Logger.msg("极速试玩注册失败----");

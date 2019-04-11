@@ -46,15 +46,12 @@ import com.umeng.analytics.MobclickAgent.EScenarioType;
 import com.umeng.analytics.MobclickAgent.UMAnalyticsConfig;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Toast;
 
@@ -116,7 +113,14 @@ public class FYGameSDK {
 		//Speed.load(acontext);
 		
 		//动态设置渠道信息
-		String appName = SystemUtil.getAppName(acontext) != null ? SystemUtil.getAppName(acontext) : GoagalInfo.getPackageInfo(acontext).packageName;
+		String appName = null;
+		try {
+			appName = SystemUtil.getAppName(acontext) != null ? SystemUtil.getAppName(acontext) : GoagalInfo.getPackageInfo(acontext).packageName;
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			
+		}
 		
 		Logger.msg("appName--->" + appName);
 		
@@ -133,7 +137,8 @@ public class FYGameSDK {
                 .setChannel(GoagalInfo.agentid)
                 .setAid(Integer.valueOf(GoagalInfo.teaAppId))
                 .createTeaConfig());
-        Logger.msg("TeaAgent Init");
+        
+        Logger.msg("TeaAgent Init--->" + GoagalInfo.teaAppId + "--->" + GoagalInfo.teaAppName + "--->" + GoagalInfo.agentid);
 	}
 
 	/**
@@ -529,7 +534,11 @@ public class FYGameSDK {
 		logincallBack.isBindPhone = GoagalInfo.userInfo.validateMobile == 1 ? true : false;
 		logincallBack.logintime = GoagalInfo.userInfo.logintime;
 		logincallBack.sign = GoagalInfo.userInfo.sign;
-
+		
+		//返回实名认证，生日
+		logincallBack.isAuthenticated = GoagalInfo.userInfo.isAuthenticated == 0 ? false : true;
+		logincallBack.birthday = GoagalInfo.userInfo.birthday;
+		
 		GoagalInfo.loginlistener.loginSuccess(logincallBack);
 
 		// 保存登录成功的登录方式，下次直接到此页面
@@ -790,7 +799,7 @@ public class FYGameSDK {
 	 * @return 返回游戏SDK版本号
 	 */
 	public String getVersion() {
-		return "2.3.3";
+		return "2.3.5";
 	}
 
 	/**

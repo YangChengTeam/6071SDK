@@ -658,7 +658,11 @@ public class PhoneLoginFragment extends BaseFragment implements OnClickListener,
 				logincallBack.isBindPhone = GoagalInfo.userInfo.validateMobile == 1 ? true : false;
 				logincallBack.logintime = GoagalInfo.userInfo.logintime;
 				logincallBack.sign = GoagalInfo.userInfo.sign;
-
+				
+				//返回实名认证，生日
+				logincallBack.isAuthenticated = GoagalInfo.userInfo.isAuthenticated == 0 ? false : true;
+				logincallBack.birthday = GoagalInfo.userInfo.birthday;
+				
 				GoagalInfo.loginlistener.loginSuccess(logincallBack);
 				GoagalInfo.loginType = 2;
 
@@ -760,6 +764,10 @@ public class PhoneLoginFragment extends BaseFragment implements OnClickListener,
 				logincallBack.logintime = GoagalInfo.userInfo.logintime;
 				logincallBack.sign = GoagalInfo.userInfo.sign;
 
+				//返回实名认证，生日
+				logincallBack.isAuthenticated = GoagalInfo.userInfo.isAuthenticated == 0 ? false : true;
+				logincallBack.birthday = GoagalInfo.userInfo.birthday;
+				
 				GoagalInfo.loginlistener.loginSuccess(logincallBack);
 
 				GoagalInfo.loginType = 2;

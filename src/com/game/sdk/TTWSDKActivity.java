@@ -15,8 +15,8 @@ import com.game.sdk.domain.PaymentErrorMsg;
 import com.game.sdk.utils.Constants;
 import com.game.sdk.utils.Logger;
 import com.game.sdk.utils.MResource;
+import com.game.sdk.utils.SystemUtil;
 import com.game.sdk.utils.Util;
-import com.ss.android.common.applog.TeaAgent;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
@@ -28,7 +28,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class TTWSDKActivity extends Activity implements OnClickListener {
 
@@ -48,6 +47,8 @@ public class TTWSDKActivity extends Activity implements OnClickListener {
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		
 		//setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		Logger.msg("sdk imei--->" + SystemUtil.getPhoneIMEI(this));
+		Logger.msg("sdk android ID--->" + SystemUtil.getAndroidId(this));
 		
 		fyGmaeSDk = FYGameSDK.defaultSDK();
 		// fyGmaeSDk.openLogout();
@@ -123,6 +124,8 @@ public class TTWSDKActivity extends Activity implements OnClickListener {
 			fyGmaeSDk.login(TTWSDKActivity.this, false, new OnLoginListener() {
 				@Override
 				public void loginSuccess(LogincallBack logincallback) {
+					Logger.msg("login success--->" + JSON.toJSONString(logincallback));
+					
 					//Util.toast(TTWSDKActivity.this, "登录成功");
 					fyGmaeSDk.createFloatButton();
 				}
@@ -138,7 +141,7 @@ public class TTWSDKActivity extends Activity implements OnClickListener {
 		// 充值事件
 		if (null != btn_charger && btn_charger.getId() == v.getId() && fyGmaeSDk.isInitOk()) {
 			String money_str = et_money.getText().toString().trim();
-			String money = "0.1f";
+			String money = "1f";
 			if (!TextUtils.isEmpty(money_str) && !"".equals(money_str)) {
 				money = money_str;
 			}

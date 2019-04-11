@@ -67,7 +67,7 @@ public class UserInfoEngin extends BaseEngin<UserInfo> {
 
 		return result;
 	}
-	
+
 	/**
 	 * 保存用户信息
 	 * 
@@ -94,10 +94,14 @@ public class UserInfoEngin extends BaseEngin<UserInfo> {
 		GoagalInfo.userInfo.vipLevel = userInfo.vipLevel;
 		GoagalInfo.userInfo.shareContent = userInfo.shareContent;
 		GoagalInfo.userInfo.isGameReturn = userInfo.isGameReturn;
-		
+
 		GoagalInfo.userInfo.newSdkReg = userInfo.newSdkReg;
 		GoagalInfo.userInfo.fixName = userInfo.fixName;
 		GoagalInfo.userInfo.cpNotice = userInfo.cpNotice;
+
+		// 返回是否实名认证，生日
+		GoagalInfo.userInfo.isAuthenticated = userInfo.isAuthenticated;
+		GoagalInfo.userInfo.birthday = userInfo.birthday;
 	}
 
 }

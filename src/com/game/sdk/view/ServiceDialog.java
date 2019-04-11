@@ -82,11 +82,11 @@ public class ServiceDialog extends Dialog implements android.view.View.OnClickLi
 				secondQQTv.setCompoundDrawables(drawable, null, null, null);
 			}
 			
-			if(!StringUtils.isEmpty(kefu[0]) && kefu[0].length() > 16){
+			if(kefu.length > 0 && !StringUtils.isEmpty(kefu[0]) && kefu[0].length() > 16){
 				firstQQTv.setText("客服QQ群1");
 			}
 			
-			if(!StringUtils.isEmpty(kefu[1]) && kefu[1].length() > 16){
+			if(kefu.length > 1 && !StringUtils.isEmpty(kefu[1]) && kefu[1].length() > 16){
 				secondQQTv.setText("客服QQ群2");
 			}
 		}

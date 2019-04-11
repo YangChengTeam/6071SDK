@@ -201,7 +201,7 @@ public class AccountLoginFragment extends BaseFragment implements OnClickListene
 	public List<UserInfo> getCommonUserInfosByType() {
 
 		List<UserInfo> list = AccountInfoUtil.loadAllUserInfo(loginActivity);
-		
+
 		if (list == null || list.size() == 0) {
 			list = UserLoginInfodao.getInstance(loginActivity).getUserLoginInfoByType();
 
@@ -264,11 +264,11 @@ public class AccountLoginFragment extends BaseFragment implements OnClickListene
 				serviceTelTv.setText("客服电话：400-796-6071");
 			}
 
-			/*if (!StringUtils.isEmpty(GoagalInfo.inItInfo.qq)) {
-				serviceQQTv.setText("客服QQ：" + Html.fromHtml(GoagalInfo.inItInfo.qq));
-			} else {
-				serviceQQTv.setText("客服QQ：3453725652");
-			}*/
+			/*
+			 * if (!StringUtils.isEmpty(GoagalInfo.inItInfo.qq)) {
+			 * serviceQQTv.setText("客服QQ：" + Html.fromHtml(GoagalInfo.inItInfo.qq)); } else
+			 * { serviceQQTv.setText("客服QQ：3453725652"); }
+			 */
 
 			NoUnderlineSpan mNoUnderlineSpan = new NoUnderlineSpan();
 			if (serviceTelTv.getText() instanceof Spannable) {
@@ -291,7 +291,7 @@ public class AccountLoginFragment extends BaseFragment implements OnClickListene
 	public void onResume() {
 		super.onResume();
 		MobclickAgent.onPageStart("AccountLoginFragment");
-		//MobclickAgent.onResume(loginActivity);
+		// MobclickAgent.onResume(loginActivity);
 	}
 
 	/**
@@ -333,38 +333,38 @@ public class AccountLoginFragment extends BaseFragment implements OnClickListene
 				}
 
 				if (!StringUtils.isEmpty(btnColor)) {
-					
+
 					int roundRadius = DimensionUtil.dip2px(getActivity(), 3); // 8dp 圆角半径
-				    //默认颜色
-				    int fillColor = Color.parseColor("#" + btnColor);//内部填充颜色
-				    //按压后颜色
-				    int fillColorPressed = Color.parseColor("#979696");
-				    
-				    //默认
-				    GradientDrawable gdNormal = new GradientDrawable();
-				    gdNormal.setColor(fillColor);
-				    gdNormal.setCornerRadius(roundRadius);
-				    
-					//按压后
-				    GradientDrawable gdPressed = new GradientDrawable();
-				    gdPressed.setColor(fillColorPressed);
-				    gdPressed.setCornerRadius(roundRadius);
-				    
+					// 默认颜色
+					int fillColor = Color.parseColor("#" + btnColor);// 内部填充颜色
+					// 按压后颜色
+					int fillColorPressed = Color.parseColor("#979696");
+
+					// 默认
+					GradientDrawable gdNormal = new GradientDrawable();
+					gdNormal.setColor(fillColor);
+					gdNormal.setCornerRadius(roundRadius);
+
+					// 按压后
+					GradientDrawable gdPressed = new GradientDrawable();
+					gdPressed.setColor(fillColorPressed);
+					gdPressed.setCornerRadius(roundRadius);
+
 					StateListDrawable stateDrawable = new StateListDrawable();
-					
-					//获取对应的属性值 Android框架自带的属性 attr
-					int pressed = android.R.attr.state_pressed;  
-					int window_focused = android.R.attr.state_window_focused;  
-					int focused = android.R.attr.state_focused;  
+
+					// 获取对应的属性值 Android框架自带的属性 attr
+					int pressed = android.R.attr.state_pressed;
+					int window_focused = android.R.attr.state_window_focused;
+					int focused = android.R.attr.state_focused;
 					int selected = android.R.attr.state_selected;
-					
-					stateDrawable.addState(new int []{pressed , window_focused}, gdPressed);
-					stateDrawable.addState(new int []{pressed , - focused}, gdPressed);
-					stateDrawable.addState(new int []{selected }, gdPressed);
-					stateDrawable.addState(new int []{focused }, gdPressed);
-					stateDrawable.addState(new int []{-selected,- focused,- pressed}, gdNormal);
+
+					stateDrawable.addState(new int[] { pressed, window_focused }, gdPressed);
+					stateDrawable.addState(new int[] { pressed, -focused }, gdPressed);
+					stateDrawable.addState(new int[] { selected }, gdPressed);
+					stateDrawable.addState(new int[] { focused }, gdPressed);
+					stateDrawable.addState(new int[] { -selected, -focused, -pressed }, gdNormal);
 					intoGameBtn.setBackgroundDrawable(stateDrawable);
-					
+
 					// 快速注册按钮颜色
 					quickRegisterTv.setTextColor(Color.parseColor("#" + btnColor));
 				}
@@ -383,7 +383,7 @@ public class AccountLoginFragment extends BaseFragment implements OnClickListene
 			}
 		}
 	}
-	
+
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == findIdByString("change_account_tv")) {
@@ -391,13 +391,13 @@ public class AccountLoginFragment extends BaseFragment implements OnClickListene
 			loginActivity.changeFragment(1);
 			return;
 		}
-		
+
 		if (v.getId() == findIdByString("service_qq_tv")) {
 			GoagalInfo.qqKefuFrom = 0;
 			loginActivity.changeFragment(5);
 			return;
 		}
-		
+
 		if (v.getId() == findIdByString("quick_register_layout")) {
 			loginActivity.changeFragment(3);
 			return;
@@ -497,13 +497,14 @@ public class AccountLoginFragment extends BaseFragment implements OnClickListene
 		if (v.getId() == findIdByString("forget_tv")) {
 			loginActivity.changeFragment(6);
 		}
-		
+
 		if (v.getId() == MResource.getIdByName(loginActivity, "id", "service_tel_tv")) {
-			
-			Logger.msg("isEmulator--->"+EmulatorCheckUtil.isEmulator());
-			
+
+			Logger.msg("isEmulator--->" + EmulatorCheckUtil.isEmulator());
+
 			if (!EmulatorCheckUtil.isEmulator()) {
-				if (SystemUtil.isValidContext(loginActivity) && GoagalInfo.inItInfo != null && !StringUtils.isEmpty(GoagalInfo.inItInfo.tel)) {
+				if (SystemUtil.isValidContext(loginActivity) && GoagalInfo.inItInfo != null
+						&& !StringUtils.isEmpty(GoagalInfo.inItInfo.tel)) {
 					Intent intent = new Intent(Intent.ACTION_DIAL);
 					Uri data = Uri.parse("tel:" + GoagalInfo.inItInfo.tel);
 					intent.setData(data);
@@ -544,48 +545,56 @@ public class AccountLoginFragment extends BaseFragment implements OnClickListene
 			}
 
 			if (loginResult.result) {
-				if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
-					EventUtils.setLogin("normal_login",true);
+				if (GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
+					EventUtils.setLogin("normal_login", true);
 				}
-				
+
 				Logger.msg("登录成功----");
 
-				if(GoagalInfo.userInfo != null && !StringUtils.isEmpty(GoagalInfo.userInfo.agentId)){
-					if(!GoagalInfo.userInfo.agentId.equals(GoagalInfo.agentid)){
+				if (GoagalInfo.userInfo != null && !StringUtils.isEmpty(GoagalInfo.userInfo.agentId)) {
+					if (!GoagalInfo.userInfo.agentId.equals(GoagalInfo.agentid)) {
 						GoagalInfo.agentid = GoagalInfo.userInfo.agentId;
 						new ReInitInfoTaskByUserId().execute();
-					}else{
-						//将logo图及启动图恢复为渠道对应的值
+					} else {
+						// 将logo图及启动图恢复为渠道对应的值
 						if (Util.getInitLogoFileBitmap(loginActivity, Constants.AGENT_LOGO_IMAGE) != null) {
-							GoagalInfo.inItInfo.logoBitmp = Util.getInitLogoFileBitmap(loginActivity,Constants.AGENT_LOGO_IMAGE);
-							Util.writeLaunchImageInSDCard(loginActivity, GoagalInfo.inItInfo.logoBitmp, Constants.LOGO_IMAGE);
+							GoagalInfo.inItInfo.logoBitmp = Util.getInitLogoFileBitmap(loginActivity,
+									Constants.AGENT_LOGO_IMAGE);
+							Util.writeLaunchImageInSDCard(loginActivity, GoagalInfo.inItInfo.logoBitmp,
+									Constants.LOGO_IMAGE);
 						}
-						
+
 						if (Util.getInitLogoFileBitmap(loginActivity, Constants.AGENT_INIT_IMAGE) != null) {
-							GoagalInfo.inItInfo.lunchBitmp = Util.getInitLogoFileBitmap(loginActivity,Constants.AGENT_INIT_IMAGE);
-							Util.writeLaunchImageInSDCard(loginActivity, GoagalInfo.inItInfo.lunchBitmp, Constants.INIT_IMAGE);
+							GoagalInfo.inItInfo.lunchBitmp = Util.getInitLogoFileBitmap(loginActivity,
+									Constants.AGENT_INIT_IMAGE);
+							Util.writeLaunchImageInSDCard(loginActivity, GoagalInfo.inItInfo.lunchBitmp,
+									Constants.INIT_IMAGE);
 						}
 					}
 				}
-				
+
 				if (GoagalInfo.userInfo != null) {
 					GoagalInfo.isLogin = true;
 					LogincallBack logincallBack = new LogincallBack();
-					
-					if(loginResult.newSdkReg == 0){
+
+					if (loginResult.newSdkReg == 0) {
 						logincallBack.username = GoagalInfo.userInfo.username;
-						if(loginResult.cpNotice == 0 && !StringUtils.isEmpty(loginResult.fixName)){
+						if (loginResult.cpNotice == 0 && !StringUtils.isEmpty(loginResult.fixName)) {
 							logincallBack.username = loginResult.fixName;
 						}
 					} else {
 						logincallBack.username = GoagalInfo.userInfo.userId;
 					}
-					
+
 					logincallBack.userId = GoagalInfo.userInfo.userId;
 					logincallBack.isBindPhone = GoagalInfo.userInfo.validateMobile == 1 ? true : false;
 					logincallBack.logintime = GoagalInfo.userInfo.logintime;
 					logincallBack.sign = GoagalInfo.userInfo.sign;
 
+					//返回实名认证，生日
+					logincallBack.isAuthenticated = GoagalInfo.userInfo.isAuthenticated == 0 ? false : true;
+					logincallBack.birthday = GoagalInfo.userInfo.birthday;
+					
 					GoagalInfo.loginlistener.loginSuccess(logincallBack);
 				} else {
 					GoagalInfo.isLogin = false;
@@ -595,7 +604,7 @@ public class AccountLoginFragment extends BaseFragment implements OnClickListene
 				// 保存登录成功的登录方式，下次直接到此页面
 				PreferenceUtil.getImpl(loginActivity).putInt(SystemUtil.getPhoneIMEI(loginActivity),
 						GoagalInfo.loginType);
-				
+
 				if (!StringUtils.isEmpty(GoagalInfo.noticeMsg)) {
 					noticeDialog = new NoticeDialog(loginActivity, GoagalInfo.noticeMsg);
 					noticeDialog.show();
@@ -609,15 +618,14 @@ public class AccountLoginFragment extends BaseFragment implements OnClickListene
 				} else {
 					((Activity) loginActivity).finish();
 				}
-				
+
 			} else {
-				if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
-					EventUtils.setLogin("normal_login",false);
+				if (GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
+					EventUtils.setLogin("normal_login", false);
 				}
 				Logger.msg("登录失败----");
 
-				Util.toast(loginActivity,
-						StringUtils.isEmpty(loginResult.message) ? "服务器异常，请重试" : loginResult.message);
+				Util.toast(loginActivity, StringUtils.isEmpty(loginResult.message) ? "服务器异常，请重试" : loginResult.message);
 
 				LoginErrorMsg loginErrorMsg = new LoginErrorMsg(-1,
 						StringUtils.isEmpty(loginResult.message) ? "服务器异常，请重试" : loginResult.message);
@@ -626,26 +634,26 @@ public class AccountLoginFragment extends BaseFragment implements OnClickListene
 			}
 		}
 	}
-	
+
 	private class ReInitInfoTaskByUserId extends AsyncTask<String, Integer, Boolean> {
-		
+
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
 		}
-		
+
 		@Override
 		protected Boolean doInBackground(String... params) {
 			InitEngin initEngin = new InitEngin(loginActivity);
 			return initEngin.run();
 		}
-		
+
 		@Override
 		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
 		}
 	}
-	
+
 	@Override
 	public void popWindowClose() {
 		if (pw_select_user != null && pw_select_user.isShowing()) {
@@ -661,7 +669,7 @@ public class AccountLoginFragment extends BaseFragment implements OnClickListene
 	public void onPause() {
 		super.onPause();
 		MobclickAgent.onPageEnd("AccountLoginFragment");
-		//MobclickAgent.onPause(loginActivity);
+		// MobclickAgent.onPause(loginActivity);
 	}
 
 	public class NoUnderlineSpan extends UnderlineSpan {
