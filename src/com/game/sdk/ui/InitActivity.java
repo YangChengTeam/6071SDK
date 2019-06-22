@@ -114,7 +114,7 @@ public class InitActivity extends BaseActivity implements InitCloseListener {
 
 	@Override
 	public void initData() {
-
+		
 		handler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -161,6 +161,8 @@ public class InitActivity extends BaseActivity implements InitCloseListener {
 
 	@Override
 	public void onBackPressed() {
+		super.onBackPressed();
+		Logger.msg("onBackPressed --->");
 		return;
 	}
 
@@ -182,5 +184,7 @@ public class InitActivity extends BaseActivity implements InitCloseListener {
 		Logger.msg("init ---> finish");
 		
 		overridePendingTransition(MResource.getIdByName(this, "anim", "fysdk_init_enter"), MResource.getIdByName(this, "anim", "fysdk_init_exit"));
+		
+		Logger.msg("init anim---> finish");
 	}
 }

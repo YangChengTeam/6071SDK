@@ -35,7 +35,7 @@ public class GoagalInfo {
 	
 	public static boolean isLogin = false;// 判断用户是否登录
 	
-	public static String channel = "1728";
+	public static String channel = "3";
 	public static ChannelInfo channelInfo = null;
 	public static InItInfo inItInfo = null;
 	public static PackageInfo packageInfo = null;
