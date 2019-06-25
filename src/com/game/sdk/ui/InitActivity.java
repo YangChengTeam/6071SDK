@@ -161,7 +161,6 @@ public class InitActivity extends BaseActivity implements InitCloseListener {
 
 	@Override
 	public void onBackPressed() {
-		super.onBackPressed();
 		Logger.msg("onBackPressed --->");
 		return;
 	}

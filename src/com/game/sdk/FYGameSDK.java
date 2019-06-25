@@ -286,6 +286,7 @@ public class FYGameSDK {
 		
 		Intent intent = new Intent(context, InitActivity.class);
 		context.startActivity(intent);
+		
 		context.overridePendingTransition(MResource.getIdByName(context, "anim", "fysdk_init_enter"), MResource.getIdByName(context, "anim", "fysdk_init_exit"));
 	}
 	
