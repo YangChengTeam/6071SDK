@@ -163,45 +163,7 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
-        <activity
-            android:name="com.unionpay.uppay.PayActivityEx"
-            android:configChanges="orientation|keyboardHidden"
-            android:excludeFromRecents="true"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" >
-        </activity>
-        <activity
-            android:name="com.ipaynow.plugin.inner_plugin.qqpay.activity.QQPayActivity"
-            android:exported="true"
-            android:launchMode="singleTop" >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:scheme="qwallet1104916964" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="com.ipaynow.plugin.activity.PayMethodActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Dialog" >
-        </activity>
-        <activity
-            android:name="com.ipaynow.plugin.inner_plugin.prepay_plugin.activity.PrePayActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" >
-        </activity>
-        <activity
-            android:name="com.ipaynow.plugin.inner_plugin.prepay_plugin.activity.NotifyActivity"
-            android:configChanges="orientation"
-            android:exported="false"
-            android:screenOrientation="portrait" >
-        </activity>
+        
         <activity
             android:name="com.ipaynow.plugin.inner_plugin.wechatwp.activity.WeChatNotifyActivity"
             android:configChanges="keyboardHidden|navigation|orientation|screenSize"
@@ -219,28 +181,6 @@
             android:theme="@android:style/Theme.Dialog" >
         </activity>
         
-        <service android:name="com.game.sdk.TTWAppService" >
-            <intent-filter android:priority="1000" >
-            </intent-filter>
-        </service>
-
-        <!-- 插件入口界面 -->
-        <activity
-            android:name="com.payeco.android.plugin.PayecoPluginLoadingActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-
-        <!-- 插件拍照界面 -->
-        <activity
-            android:name="com.payeco.android.plugin.PayecoCameraActivity"
-            android:screenOrientation="portrait" />
-
-        <!-- 插件录像界面 -->
-        <activity
-            android:name="com.payeco.android.plugin.PayecoVedioActivity"
-            android:process="com.payeco.android.plugin.vedio"
-            android:screenOrientation="portrait" />
-
         <!-- 百度插件部分 -->
         <!--
         <service
