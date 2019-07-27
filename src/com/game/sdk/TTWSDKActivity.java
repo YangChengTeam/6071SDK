@@ -12,6 +12,7 @@ import com.game.sdk.domain.OnPaymentListener;
 import com.game.sdk.domain.PaymentCallbackInfo;
 import com.game.sdk.domain.PaymentCancelMsg;
 import com.game.sdk.domain.PaymentErrorMsg;
+import com.game.sdk.domain.RoleInfo;
 import com.game.sdk.utils.Constants;
 import com.game.sdk.utils.Logger;
 import com.game.sdk.utils.MResource;
@@ -128,6 +129,22 @@ public class TTWSDKActivity extends Activity implements OnClickListener {
 					
 					//Util.toast(TTWSDKActivity.this, "登录成功");
 					fyGmaeSDk.createFloatButton();
+					
+					fyGmaeSDk.setUserRole(1, logincallback.userId, "10000", "测试角色名", "FWQ1000", "电信4五区", "90", "武汉工会111", new SetRoleListener() {
+						
+						@Override
+						public void roleSetSuccess(RoleInfo roleInfo) {
+							// TODO Auto-generated method stub
+							//Logger.msg("set role success--->");
+						}
+						
+						@Override
+						public void roleSetFail() {
+							// TODO Auto-generated method stub
+							//Logger.msg("set role fail--->");
+						}
+					});
+					
 				}
 				
 				@Override

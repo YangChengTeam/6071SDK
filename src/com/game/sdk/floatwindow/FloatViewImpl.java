@@ -109,11 +109,17 @@ public class FloatViewImpl {
         if (wmParams == null) {
             xfor = 0;
             wmParams = new WindowManager.LayoutParams();
-            wmParams.type = 2;//(GoagalInfo.isEmulator || Build.VERSION.SDK_INT >= 24) ? LayoutParams.TYPE_PHONE : LayoutParams.TYPE_TOAST;
+            //wmParams.type = 2;
+            
+            wmParams.type = GoagalInfo.isEmulator ? LayoutParams.TYPE_PHONE : LayoutParams.TYPE_TOAST;
+            if (Build.VERSION.SDK_INT >= 26) {
+            	wmParams.type = LayoutParams.TYPE_TOAST + 33;
+            }
+            
             // 设置图片格式，效果为背景透明
             wmParams.format = PixelFormat.RGBA_8888;
             // 设置浮动窗口不可聚焦（实现操作除浮动窗口外的其他可见窗口的操作）
-            wmParams.flags = 67109896;
+            wmParams.flags = LayoutParams.FLAG_NOT_FOCUSABLE;
             // 调整悬浮窗显示的停靠位置为左侧置顶
 
             wmParams.gravity = Gravity.LEFT | Gravity.TOP;
@@ -129,11 +135,15 @@ public class FloatViewImpl {
 
         if (wmParams2 == null) {
             wmParams2 = new WindowManager.LayoutParams();
-            wmParams2.type = 2;//(GoagalInfo.isEmulator || Build.VERSION.SDK_INT >= 24) ? LayoutParams.TYPE_PHONE : LayoutParams.TYPE_TOAST;
+            wmParams2.type = GoagalInfo.isEmulator ? LayoutParams.TYPE_PHONE : LayoutParams.TYPE_TOAST;
+            if (Build.VERSION.SDK_INT >= 26) {
+            	wmParams2.type = LayoutParams.TYPE_TOAST + 33;
+            }
+            
             // 设置图片格式，效果为背景透明
             wmParams2.format = PixelFormat.RGBA_8888;
             // 设置浮动窗口不可聚焦（实现操作除浮动窗口外的其他可见窗口的操作）
-            wmParams2.flags = 67109896;
+            wmParams2.flags = LayoutParams.FLAG_NOT_FOCUSABLE;
             // 调整悬浮窗显示的停靠位置为左侧置顶
             wmParams2.gravity = Gravity.LEFT | Gravity.TOP;
 

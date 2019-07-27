@@ -12,10 +12,14 @@ import com.game.sdk.domain.LoginResult;
 import com.game.sdk.domain.LogincallBack;
 import com.game.sdk.domain.OnLoginListener;
 import com.game.sdk.domain.OnPaymentListener;
+import com.game.sdk.domain.ResultInfo;
+import com.game.sdk.domain.RoleInfo;
 import com.game.sdk.domain.UserInfo;
 import com.game.sdk.engin.InitEngin;
 import com.game.sdk.engin.LoginEngin;
+import com.game.sdk.engin.UserRoleEngin;
 import com.game.sdk.floatwindow.FloatViewImpl;
+import com.game.sdk.net.constans.HttpConfig;
 import com.game.sdk.net.constans.ServerConfig;
 import com.game.sdk.net.impls.OKHttpRequest;
 import com.game.sdk.ui.InitActivity;
@@ -701,7 +705,8 @@ public class FYGameSDK {
 		context.startActivity(pay_int);
 		instance.removeFloatButton();
 	}
-
+	
+	
 	/**
 	 * 退出游戏(回收资源)
 	 */
@@ -769,7 +774,69 @@ public class FYGameSDK {
 		FloatViewImpl.getInstance(acontext).removeFloat();
 		// }
 	}
-
+	
+	
+	/**
+	 * 设置用户角色信息
+	 * @param context
+	 * @param dataType 1.进入游戏 2.角色升级 3.进入副本 4.离开副本 5.创建角色
+	 * @param userId 游戏的唯一标示 (就是指用户的ID)
+	 * @param roleid 角色id
+	 * @param roleName 角色名称
+	 * @param serverId 区服ID
+	 * @param serverName 区服名称
+	 * @param roleLevel 角色等级
+	 * @param union 工会名称 (角色工会名称 没有的话写暂无)
+	 */
+	public void setUserRole(int dataType, String userId,String roleId, String roleName,String serverId,String serverName ,String roleLevel, String union,SetRoleListener setRoleListener) {
+		
+		RoleInfo roleInfo = new RoleInfo();
+		roleInfo.setDataType(dataType);
+		roleInfo.setUserId(userId);
+		roleInfo.setRoleId(roleId);
+		roleInfo.setRoleName(roleName);
+		roleInfo.setServerID(serverId);
+		roleInfo.setServerName(serverName);
+		roleInfo.setRoleLevel(roleLevel);
+		roleInfo.setUnion(union);
+		
+		new UserRoleTask(roleInfo,setRoleListener).execute();
+	}
+	
+	
+	private class UserRoleTask extends AsyncTask<String, Integer, ResultInfo<RoleInfo>> {
+		
+		public RoleInfo mRoleInfo;
+		
+		public SetRoleListener mRoleListener;
+	
+		public UserRoleTask(RoleInfo roleInfo,SetRoleListener roleListener) {
+			this.mRoleInfo = roleInfo;
+			this.mRoleListener = roleListener;
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+		}
+		
+		@Override
+		protected ResultInfo<RoleInfo> doInBackground(String... params) {
+			UserRoleEngin userRoleEngin = new UserRoleEngin(acontext,mRoleInfo);
+			return userRoleEngin.run();
+		}
+		
+		@Override
+		protected void onPostExecute(ResultInfo<RoleInfo> result) {
+			super.onPostExecute(result);
+			if (result != null && result.code == HttpConfig.STATUS_OK) {
+				mRoleListener.roleSetSuccess(result.data);
+			}else {
+				mRoleListener.roleSetFail();
+			}
+		}
+	}
+	
 	/**
 	 * 
 	 * @param type
@@ -800,7 +867,7 @@ public class FYGameSDK {
 	 * @return 返回游戏SDK版本号
 	 */
 	public String getVersion() {
-		return "2.3.6";
+		return "2.3.7";
 	}
 
 	/**

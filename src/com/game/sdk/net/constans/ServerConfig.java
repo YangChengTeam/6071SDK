@@ -88,9 +88,11 @@ public class ServerConfig {
 	//解绑手机发送验证码
 	public static final String UNBIND_SEND_CODE_URL = getBaseUrl() + "unbind_mobile_code";
 	
+	//设置用户角色
+	public static final String BIND_USER_ROLE = getBaseUrl() + "create_role";
+	
 	//解除绑定手机
 	public static final String UNBIND_PHONE_NUMBER_URL = getBaseUrl() + "unbind_mobile_check";
-	
 	public static String getBaseUrl() {
 		return DEBUG ? DEBUG_BASE3_URL : BASE3_URL;
 	}
