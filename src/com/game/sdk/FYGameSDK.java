@@ -320,6 +320,11 @@ public class FYGameSDK {
 	 *
 	 */
 	public void login(Context context, boolean isShowQuikLogin, OnLoginListener loginlistener) {
+		//判断是否切换过账号 
+		if(GoagalInfo.isChangeAccount) {
+			GoagalInfo.isLogin = false;
+		}
+		
 		if (GoagalInfo.isLogin) {
 			// recycle();
 			// 如果登录过了，就不需要点击，直接返回
@@ -830,9 +835,13 @@ public class FYGameSDK {
 		protected void onPostExecute(ResultInfo<RoleInfo> result) {
 			super.onPostExecute(result);
 			if (result != null && result.code == HttpConfig.STATUS_OK) {
-				mRoleListener.roleSetSuccess(result.data);
+				if(mRoleListener != null) {
+					mRoleListener.roleSetSuccess(result.data);
+				}
 			}else {
-				mRoleListener.roleSetFail();
+				if(mRoleListener != null) {
+					mRoleListener.roleSetFail();
+				}
 			}
 		}
 	}
@@ -867,7 +876,7 @@ public class FYGameSDK {
 	 * @return 返回游戏SDK版本号
 	 */
 	public String getVersion() {
-		return "2.3.7";
+		return "2.3.8";
 	}
 
 	/**
