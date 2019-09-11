@@ -207,18 +207,18 @@
             android:value="3" />
         <meta-data
             android:name="FY_GAMEID"
-            android:value="115" />
+            android:value="718" />
         <meta-data
             android:name="FY_AGENT"
-            android:value="1299" />
+            android:value="1783" />
         
         <meta-data
             android:name="TEA_APP_ID"
-            android:value="157357" />
+            android:value="167618" />
         
         <meta-data
             android:name="TEA_APP_NAME"
-            android:value="msls" />
+            android:value="jxbsn" />
     </application>
 
 </manifest>

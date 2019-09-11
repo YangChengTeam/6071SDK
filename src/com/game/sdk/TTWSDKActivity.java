@@ -18,6 +18,7 @@ import com.game.sdk.utils.Logger;
 import com.game.sdk.utils.MResource;
 import com.game.sdk.utils.SystemUtil;
 import com.game.sdk.utils.Util;
+import com.ss.android.common.applog.TeaAgent;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
@@ -204,7 +205,7 @@ public class TTWSDKActivity extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 		super.onPause();
 		fyGmaeSDk.removeFloatButton();
-
+		TeaAgent.onPause(this);
 	}
 
 	@Override
@@ -213,6 +214,7 @@ public class TTWSDKActivity extends Activity implements OnClickListener {
 		super.onResume();
 		Logger.msg("----------------onResume");
 		fyGmaeSDk.createFloatButton();
+		TeaAgent.onResume(this);
 	}
 
 	@Override
