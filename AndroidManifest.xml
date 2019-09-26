@@ -4,7 +4,7 @@
     android:versionName="1.0" >
     <uses-sdk
         android:minSdkVersion="17"
-        android:targetSdkVersion="21" />
+        android:targetSdkVersion="26" />
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.webkit.permission.PLUGIN" />
@@ -26,7 +26,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
+	
     <!-- 照相的权限 -->
     <uses-feature android:name="android.hardware.camera" />
 
@@ -191,7 +191,8 @@
 				<action android:name="com.baidu.location.service_v2.2" >
 				</action>
 			</intent-filter>
-		</service>
+		</service>
+
         -->
 
 
@@ -199,7 +200,8 @@
         <!--
              	<meta-data
 			android:name="com.baidu.lbsapi.API_KEY"
-			android:value="DhNxS47YIr3CNdocGoAcy1ts" />
+			android:value="DhNxS47YIr3CNdocGoAcy1ts" />
+
         -->
 				
         <meta-data

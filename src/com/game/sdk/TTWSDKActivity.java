@@ -21,9 +21,12 @@ import com.game.sdk.utils.Util;
 import com.ss.android.common.applog.TeaAgent;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -94,9 +97,9 @@ public class TTWSDKActivity extends Activity implements OnClickListener {
 
 		btn_login.setOnClickListener(this);
 		btn_charger.setOnClickListener(this);
-
+		
 	}
-
+	
 	private static final String PATH = Environment.getExternalStorageDirectory() + "/6071GameBox2SDK";
 	
 	private static void makeBaseDir() {

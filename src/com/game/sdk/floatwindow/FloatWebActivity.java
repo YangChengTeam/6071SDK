@@ -12,7 +12,6 @@ import com.game.sdk.domain.PaymentCallbackInfo;
 import com.game.sdk.domain.PaymentErrorMsg;
 import com.game.sdk.ui.BaseActivity;
 import com.game.sdk.utils.DialogUtil;
-import com.game.sdk.utils.GetDataImpl;
 import com.game.sdk.utils.MResource;
 import com.game.sdk.utils.ThreadPoolManager;
 import com.game.sdk.utils.Util;
@@ -143,7 +142,7 @@ public class FloatWebActivity extends BaseActivity implements OnClickListener {
 							json.put("b", TTWAppService.userinfo.username);
 							json.put("timestamp", Util.getOrderId());
 							json.put("version", FYGameSDK.defaultSDK().getVersion());
-							GetDataImpl.getInstance(FloatWebActivity.this).getTTB(json.toString());
+							//GetDataImpl.getInstance(FloatWebActivity.this).getTTB(json.toString());
 						} catch (NullPointerException e) {
 							e.printStackTrace();
 						} catch (Exception e) {
@@ -285,7 +284,8 @@ public class FloatWebActivity extends BaseActivity implements OnClickListener {
 
 		@Override
 		protected String doInBackground(Void... params) {
-			String result = GetDataImpl.getInstance(FloatWebActivity.this).uploadImage(imageBase64str);
+			//String result = GetDataImpl.getInstance(FloatWebActivity.this).uploadImage(imageBase64str);
+			String result = null;
 			return result;
 		}
 

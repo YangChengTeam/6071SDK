@@ -77,7 +77,7 @@ public class TTWAppService extends Service {
 				System.currentTimeMillis());
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 				new Intent(), 0);
-		notification.setLatestEventInfo(this, "", "", contentIntent);
+		//notification.setLatestEventInfo(this, "", "", contentIntent);
 		startForeground(0, notification);
 	}
 

@@ -11,7 +11,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,389 +26,451 @@ import android.view.WindowManager.LayoutParams;
 import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.game.sdk.domain.GoagalInfo;
+import com.game.sdk.ui.InitActivity;
 import com.game.sdk.ui.MainActivity;
 import com.game.sdk.utils.Constants;
 import com.game.sdk.utils.DimensionUtil;
 import com.game.sdk.utils.EmulatorCheckUtil;
 import com.game.sdk.utils.Logger;
 import com.game.sdk.utils.MResource;
+import com.game.sdk.utils.SystemUtil;
 import com.game.sdk.utils.Util;
+import com.ipaynow.plugin.log.LogUtils;
 
+@SuppressLint("NewApi")
 public class FloatViewImpl {
-    public static int speed = 1;
-    protected static final String TAG = "FloatViewImpl";
-    private static FloatViewImpl instance = null;
+	public static int speed = 1;
+	protected static final String TAG = "FloatViewImpl";
+	private static FloatViewImpl instance = null;
 
-    // 定义浮动窗口布局
-    private RelativeLayout mFloatLayout;
+	// 定义浮动窗口布局
+	private RelativeLayout mFloatLayout;
 
-    private static WindowManager.LayoutParams wmParams;
-    private static WindowManager.LayoutParams wmParams2;
-    // 创建浮动窗口设置布局参数的对象
-    private WindowManager mWindowManager;
+	private static WindowManager.LayoutParams wmParams;
+	private static WindowManager.LayoutParams wmParams2;
+	// 创建浮动窗口设置布局参数的对象
+	private WindowManager mWindowManager;
 
-    private ImageView mFloatView;
-    private LayoutInflater inflater;
+	private ImageView mFloatView;
+	private LayoutInflater inflater;
 
-    private Context mContext;
-    boolean isOne = true;
-    private boolean isClick = true;
-    private static int xfor = 0; // 悬浮按扭方向 0 左 1 右
+	private Context mContext;
+	boolean isOne = true;
+	private boolean isClick = true;
+	private static int xfor = 0; // 悬浮按扭方向 0 左 1 右
 
-    public static Bitmap dragBitmap;
+	public static Bitmap dragBitmap;
 
-    public Bitmap leftBitmap;
+	public Bitmap leftBitmap;
 
-    public Bitmap rightBitmap;
-    
-    private FloatViewImpl(Context context) {
-        init(context);
-    }
+	public Bitmap rightBitmap;
 
-    public synchronized static FloatViewImpl getInstance(Context context) {
-        GoagalInfo.isEmulator = EmulatorCheckUtil.isEmulator();
+	private FloatViewImpl(Context context) {
+		init(context);
+	}
 
-        if (instance == null) {
-            instance = new FloatViewImpl(context);
-        }
-        return instance;
-    }
+	public synchronized static FloatViewImpl getInstance(Context context) {
+		GoagalInfo.isEmulator = EmulatorCheckUtil.isEmulator();
 
-    protected void init(Context context) {
-    	if(context == null){
-    		return;
-    	}
-    	
-        this.mContext = context;
-        try {
-            dragBitmap = Util.getLogoFileBitmap(context, Constants.DRAG_IMAGE);
+		if (instance == null) {
+			instance = new FloatViewImpl(context);
+		}
+		return instance;
+	}
 
-            if (dragBitmap == null) {
-                dragBitmap = BitmapFactory.decodeResource(mContext.getResources(), MResource.getIdByName(mContext, "drawable", "float_drag"));
-            }
+	protected void init(Context context) {
+		if (context == null) {
+			return;
+		}
 
-            leftBitmap = Util.getLogoFileBitmap(context, Constants.DRAG_LEFT_IMAGE);
-            if (leftBitmap == null) {
-                leftBitmap = BitmapFactory.decodeResource(mContext.getResources(), MResource.getIdByName(mContext, "drawable", "float_holder"));
-            }
+		this.mContext = context;
+		try {
+			dragBitmap = Util.getLogoFileBitmap(context, Constants.DRAG_IMAGE);
 
-            rightBitmap = Util.getLogoFileBitmap(context, Constants.DRAG_RIGHT_IMAGE);
-            if (rightBitmap == null) {
-                rightBitmap = BitmapFactory.decodeResource(mContext.getResources(), MResource.getIdByName(mContext, "drawable", "float_holder2"));
-            }
+			if (dragBitmap == null) {
+				dragBitmap = BitmapFactory.decodeResource(mContext.getResources(),
+						MResource.getIdByName(mContext, "drawable", "float_drag"));
+			}
 
-        } catch (Exception e) {
-            Logger.msg("FloatViewImpl image error --- ");
-        }
+			leftBitmap = Util.getLogoFileBitmap(context, Constants.DRAG_LEFT_IMAGE);
+			if (leftBitmap == null) {
+				leftBitmap = BitmapFactory.decodeResource(mContext.getResources(),
+						MResource.getIdByName(mContext, "drawable", "float_holder"));
+			}
 
-        createFloatView();
-    }
+			rightBitmap = Util.getLogoFileBitmap(context, Constants.DRAG_RIGHT_IMAGE);
+			if (rightBitmap == null) {
+				rightBitmap = BitmapFactory.decodeResource(mContext.getResources(),
+						MResource.getIdByName(mContext, "drawable", "float_holder2"));
+			}
 
-    private void createFloatView() {
-    	
-        if (wmParams == null) {
-            xfor = 0;
-            wmParams = new WindowManager.LayoutParams();
-            //wmParams.type = 2;
-            
-            wmParams.type = GoagalInfo.isEmulator ? LayoutParams.TYPE_PHONE : LayoutParams.TYPE_TOAST;
-            if (Build.VERSION.SDK_INT >= 26) {
-            	wmParams.type = LayoutParams.TYPE_TOAST + 33;
-            }
-            
-            // 设置图片格式，效果为背景透明
-            wmParams.format = PixelFormat.RGBA_8888;
-            // 设置浮动窗口不可聚焦（实现操作除浮动窗口外的其他可见窗口的操作）
-            wmParams.flags = LayoutParams.FLAG_NOT_FOCUSABLE;
-            // 调整悬浮窗显示的停靠位置为左侧置顶
+		} catch (Exception e) {
+			Logger.msg("FloatViewImpl image error --- ");
+		}
 
-            wmParams.gravity = Gravity.LEFT | Gravity.TOP;
+		createFloatView();
+	}
 
-            // 以屏幕左上角为原点，设置x、y初始值，相对于gravity
+	@SuppressLint("NewApi")
+	private void createFloatView() {
 
-            // 设置悬浮窗口长宽数据
-            wmParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
-            wmParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-            wmParams.x = 0;
-            wmParams.y = DimensionUtil.getHeight(mContext) / 2 - 180;
-        }
+		if (SystemUtil.isValidContext(mContext)) {
 
-        if (wmParams2 == null) {
-            wmParams2 = new WindowManager.LayoutParams();
-            wmParams2.type = GoagalInfo.isEmulator ? LayoutParams.TYPE_PHONE : LayoutParams.TYPE_TOAST;
-            if (Build.VERSION.SDK_INT >= 26) {
-            	wmParams2.type = LayoutParams.TYPE_TOAST + 33;
-            }
-            
-            // 设置图片格式，效果为背景透明
-            wmParams2.format = PixelFormat.RGBA_8888;
-            // 设置浮动窗口不可聚焦（实现操作除浮动窗口外的其他可见窗口的操作）
-            wmParams2.flags = LayoutParams.FLAG_NOT_FOCUSABLE;
-            // 调整悬浮窗显示的停靠位置为左侧置顶
-            wmParams2.gravity = Gravity.LEFT | Gravity.TOP;
+			if (Build.MANUFACTURER.equals("OnePlus") && !Settings.canDrawOverlays(mContext)) {
+				Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+				intent.setData(Uri.parse("package:" + mContext.getPackageName()));
 
-            // 以屏幕左上角为原点，设置x、y初始值，相对于gravity
+				Toast.makeText(mContext, "请允许使用悬浮窗权限", Toast.LENGTH_LONG).show();
+				((Activity) mContext).startActivity(intent);
+				return;
+			}
 
-            // 设置悬浮窗口长宽数据
-            wmParams2.width = WindowManager.LayoutParams.WRAP_CONTENT;
-            wmParams2.height = WindowManager.LayoutParams.WRAP_CONTENT;
-            wmParams2.x = Util.dip2px(mContext, 45);
-            wmParams2.y = DimensionUtil.getHeight(mContext) / 2 - 180;
-        }
+			if (wmParams == null) {
+				xfor = 0;
+				wmParams = new WindowManager.LayoutParams();
+				// wmParams.type = 2;
 
-        // 获取的是WindowManagerImpl.CompatModeWrapper
-        mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
-        //mWindowManager =  ((Activity)mContext).getWindowManager();
+				wmParams.type = LayoutParams.TYPE_TOAST;
+				if (Build.VERSION.SDK_INT > 23 && Build.VERSION.SDK_INT < 26) {
+					wmParams.type = LayoutParams.TYPE_SYSTEM_ALERT;
+				} else if (Build.VERSION.SDK_INT >= 26) {
+					wmParams.type = LayoutParams.TYPE_TOAST + 33;
+				}
 
-        inflater = LayoutInflater.from(mContext);
-        inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				Logger.msg("Build MANUFACTURER-->" + Build.MANUFACTURER);
 
-        // 获取浮动窗口视图所在布局
-        mFloatLayout = (RelativeLayout) inflater
-                .inflate(MResource.getIdByName(mContext, Constants.Resouce.LAYOUT, "float_layout"), null);
+				// if (Build.MANUFACTURER.equals("OnePlus")) {
+				// wmParams.type = LayoutParams.TYPE_TOAST;
+				// }
 
-        // 添加mFloatLayout
-        mWindowManager.addView(mFloatLayout, wmParams);
-        init();
-    }
+				wmParams.type = GoagalInfo.isEmulator ? LayoutParams.TYPE_PHONE : wmParams.type;
 
-    private int checkXY(int y) {
-        int height = Util.getHeight(mContext);
-        if (height - wmParams.y < Util.dip2px(mContext, 180)) {
-            y = height - Util.dip2px(mContext, 180);
-        }
+				// 设置图片格式，效果为背景透明
+				wmParams.format = PixelFormat.RGBA_8888;
+				// 设置浮动窗口不可聚焦（实现操作除浮动窗口外的其他可见窗口的操作）
+				wmParams.flags = LayoutParams.FLAG_NOT_FOCUSABLE;
+				// 调整悬浮窗显示的停靠位置为左侧置顶
 
-        if (wmParams.y < Util.dip2px(mContext, 50)) {
-            y = Util.dip2px(mContext, 50);
-        }
-        Logger.msg("checkXY-->" + y);
-        return y;
-    }
+				wmParams.gravity = Gravity.LEFT | Gravity.TOP;
 
-    @SuppressLint("NewApi")
-    private void init() {
-        // 浮动窗口按钮
-        mFloatView = (ImageView) mFloatLayout.findViewById(MResource.getIdByName(mContext, "id", "iv_float"));
-        mFloatView.setBackground(new BitmapDrawable(dragBitmap));
+				// 以屏幕左上角为原点，设置x、y初始值，相对于gravity
 
-        // 设置监听浮动窗口的触摸移动
-        mFloatView.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // TODO Auto-generated method stub
-                // getRawX是触摸位置相对于屏幕的坐标，getX是相对于按钮的坐标
-                wmParams.alpha = 10;
-                int x = (int) event.getRawX() - mFloatView.getMeasuredWidth() / 2;
+				// 设置悬浮窗口长宽数据
+				wmParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
+				wmParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+				wmParams.x = 0;
+				wmParams.y = DimensionUtil.getHeight(mContext) / 2 - 180;
+			}
 
-                // 减25为状态栏的高度
-                int y = (int) event.getRawY() - mFloatView.getMeasuredHeight() / 2 - 25;
+			if (wmParams2 == null) {
+				wmParams2 = new WindowManager.LayoutParams();
 
-                // 刷新
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
+				wmParams2.type = LayoutParams.TYPE_TOAST;
 
-                        Log.e("ontouch---", "ACTION_DOWN---X---" + wmParams.x + "---Y--" + wmParams.y);
+				if (Build.VERSION.SDK_INT > 23 && Build.VERSION.SDK_INT < 26) {
+					wmParams2.type = LayoutParams.TYPE_SYSTEM_ALERT;
+				} else if (Build.VERSION.SDK_INT >= 26) {
+					wmParams2.type = LayoutParams.TYPE_TOAST + 33;
+				}
 
-                        if (!isClick) {
-                            isClick = true;
-                        }
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        if (!isClick) {
-                            Log.e("ontouch---", "ACTION_UP---X---" + wmParams.x + "---Y--" + wmParams.y);
-                            int tempy = y;
-                            int tempx = x;
-                            float swidth = mWindowManager.getDefaultDisplay().getWidth();
-                            if (wmParams.x + mFloatView.getMeasuredWidth() / 2 <= swidth / 2) {
-                                tempx = 0;
-                                wmParams2.x = Util.dip2px(mContext, 45);
-                                xfor = 0;
-                                tempy = checkXY(y);
-                                wmParams2.y = tempy + Util.dip2px(mContext, 8);
+				Logger.msg("Build MANUFACTURER-->" + Build.MANUFACTURER);
 
-                            } else if (wmParams.x + mFloatView.getMeasuredWidth() / 2 > swidth / 2) {
-                                tempx = (int) swidth - mFloatView.getMeasuredWidth() / 2;
-                                xfor = 1;
-                                wmParams2.x = (int) swidth - Util.dip2px(mContext, 245);
-                                tempy = checkXY(y);
-                                wmParams2.y = tempy + Util.dip2px(mContext, 8);
-                            }
-                            animate(x, tempx, y, tempy);
-                        }
-                        break;
-                    case MotionEvent.ACTION_MOVE:
+				// if (Build.MANUFACTURER.equals("OnePlus")) {
+				// wmParams2.type = LayoutParams.TYPE_TOAST;
+				// }
 
-                        isHolder = false;
-                        if (!isClick || (Math.abs(wmParams.x - x) > Util.dip2px(mContext, 30)
-                                || Math.abs(wmParams.y - y) > Util.dip2px(mContext, 30))) {
-                            isClick = false;
+				wmParams2.type = GoagalInfo.isEmulator ? LayoutParams.TYPE_PHONE : wmParams2.type;
 
-                            setBackground("float_drag");
+				// 设置图片格式，效果为背景透明
+				wmParams2.format = PixelFormat.RGBA_8888;
+				// 设置浮动窗口不可聚焦（实现操作除浮动窗口外的其他可见窗口的操作）
+				wmParams2.flags = LayoutParams.FLAG_NOT_FOCUSABLE;
+				// 调整悬浮窗显示的停靠位置为左侧置顶
+				wmParams2.gravity = Gravity.LEFT | Gravity.TOP;
 
-                            wmParams.x = x;
-                            wmParams.y = y;
-                            mWindowManager.updateViewLayout(mFloatLayout, wmParams);
+				// 以屏幕左上角为原点，设置x、y初始值，相对于gravity
 
-                            Log.e("ontouch---", "ACTION_MOVE---X---" + wmParams.x + "---Y--" + wmParams.y);
-                        }
+				// 设置悬浮窗口长宽数据
+				wmParams2.width = WindowManager.LayoutParams.WRAP_CONTENT;
+				wmParams2.height = WindowManager.LayoutParams.WRAP_CONTENT;
+				wmParams2.x = Util.dip2px(mContext, 45);
+				wmParams2.y = DimensionUtil.getHeight(mContext) / 2 - 180;
+			}
 
-                        break;
-                }
-                return false; // 此处必须返回false，否则OnClickListener获取不到监听
-            }
-        });
-        mFloatView.setOnClickListener(onclick);
-    }
+			// 获取的是WindowManagerImpl.CompatModeWrapper
+			mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+			// mWindowManager = ((Activity)mContext).getWindowManager();
 
-    private void animate(int x1, int x2, int y1, int y2) {
+			inflater = LayoutInflater.from(mContext);
+			inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        PropertyValuesHolder mPropertyValuesX = PropertyValuesHolder.ofInt("x", x1, x2);
-        PropertyValuesHolder mPropertyValuesY = PropertyValuesHolder.ofInt("y", y1, y2);
-        ValueAnimator mAnimator = ValueAnimator.ofPropertyValuesHolder(mPropertyValuesX,
-                mPropertyValuesY);
-        mAnimator.setInterpolator(new BounceInterpolator());//使用线性插值器
-        mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-            	try{
-            		int x = Integer.parseInt(animation.getAnimatedValue("x") + "");
-                    int y = Integer.parseInt(animation.getAnimatedValue("y") + "");
-                    wmParams.x = x;
-                    wmParams.y = y;
-                    mWindowManager.updateViewLayout(mFloatLayout, wmParams);
-            	}catch(Exception e){
-            		e.printStackTrace();
-            	}
-            }
-        });
-        mAnimator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
+			// 获取浮动窗口视图所在布局
+			mFloatLayout = (RelativeLayout) inflater
+					.inflate(MResource.getIdByName(mContext, Constants.Resouce.LAYOUT, "float_layout"), null);
 
-            }
+			// 添加mFloatLayout
+			mWindowManager.addView(mFloatLayout, wmParams);
+			init();
+		}
 
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                setHolder();
-            }
+	}
 
-            @Override
-            public void onAnimationCancel(Animator animation) {
+	private int checkXY(int y) {
+		int height = Util.getHeight(mContext);
+		if (height - wmParams.y < Util.dip2px(mContext, 180)) {
+			y = height - Util.dip2px(mContext, 180);
+		}
 
-            }
+		if (wmParams.y < Util.dip2px(mContext, 50)) {
+			y = Util.dip2px(mContext, 50);
+		}
+		Logger.msg("checkXY-->" + y);
+		return y;
+	}
 
-            @Override
-            public void onAnimationRepeat(Animator animation) {
+	@SuppressLint("NewApi")
+	private void init() {
+		// 浮动窗口按钮
+		mFloatView = (ImageView) mFloatLayout.findViewById(MResource.getIdByName(mContext, "id", "iv_float"));
+		mFloatView.setBackground(new BitmapDrawable(dragBitmap));
 
-            }
-        });
-        mAnimator.setDuration(1000);
-        mAnimator.setTarget(mWindowManager);
-        mAnimator.start();
-    }
+		// 设置监听浮动窗口的触摸移动
+		mFloatView.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				// getRawX是触摸位置相对于屏幕的坐标，getX是相对于按钮的坐标
+				wmParams.alpha = 10;
+				int x = (int) event.getRawX() - mFloatView.getMeasuredWidth() / 2;
 
-    @SuppressLint("NewApi")
-    private void setBackground(String name) {
-        /*
-         * mFloatView.setImageDrawable(
+				// 减25为状态栏的高度
+				int y = (int) event.getRawY() - mFloatView.getMeasuredHeight() / 2 - 25;
+
+				// 刷新
+				switch (event.getAction()) {
+				case MotionEvent.ACTION_DOWN:
+
+					Log.e("ontouch---", "ACTION_DOWN---X---" + wmParams.x + "---Y--" + wmParams.y);
+
+					if (!isClick) {
+						isClick = true;
+					}
+					break;
+				case MotionEvent.ACTION_UP:
+					if (!isClick) {
+						Log.e("ontouch---", "ACTION_UP---X---" + wmParams.x + "---Y--" + wmParams.y);
+						int tempy = y;
+						int tempx = x;
+						float swidth = mWindowManager.getDefaultDisplay().getWidth();
+						if (wmParams.x + mFloatView.getMeasuredWidth() / 2 <= swidth / 2) {
+							tempx = 0;
+							wmParams2.x = Util.dip2px(mContext, 45);
+							xfor = 0;
+							tempy = checkXY(y);
+							wmParams2.y = tempy + Util.dip2px(mContext, 8);
+
+						} else if (wmParams.x + mFloatView.getMeasuredWidth() / 2 > swidth / 2) {
+							tempx = (int) swidth - mFloatView.getMeasuredWidth() / 2;
+							xfor = 1;
+							wmParams2.x = (int) swidth - Util.dip2px(mContext, 245);
+							tempy = checkXY(y);
+							wmParams2.y = tempy + Util.dip2px(mContext, 8);
+						}
+						animate(x, tempx, y, tempy);
+					}
+					break;
+				case MotionEvent.ACTION_MOVE:
+
+					isHolder = false;
+					if (!isClick || (Math.abs(wmParams.x - x) > Util.dip2px(mContext, 30)
+							|| Math.abs(wmParams.y - y) > Util.dip2px(mContext, 30))) {
+						isClick = false;
+
+						setBackground("float_drag");
+
+						wmParams.x = x;
+						wmParams.y = y;
+						mWindowManager.updateViewLayout(mFloatLayout, wmParams);
+
+						Log.e("ontouch---", "ACTION_MOVE---X---" + wmParams.x + "---Y--" + wmParams.y);
+					}
+
+					break;
+				}
+				return false; // 此处必须返回false，否则OnClickListener获取不到监听
+			}
+		});
+		mFloatView.setOnClickListener(onclick);
+	}
+
+	private void animate(int x1, int x2, int y1, int y2) {
+
+		PropertyValuesHolder mPropertyValuesX = PropertyValuesHolder.ofInt("x", x1, x2);
+		PropertyValuesHolder mPropertyValuesY = PropertyValuesHolder.ofInt("y", y1, y2);
+		ValueAnimator mAnimator = ValueAnimator.ofPropertyValuesHolder(mPropertyValuesX, mPropertyValuesY);
+		mAnimator.setInterpolator(new BounceInterpolator());// 使用线性插值器
+		mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+			@Override
+			public void onAnimationUpdate(ValueAnimator animation) {
+				try {
+					int x = Integer.parseInt(animation.getAnimatedValue("x") + "");
+					int y = Integer.parseInt(animation.getAnimatedValue("y") + "");
+					wmParams.x = x;
+					wmParams.y = y;
+					mWindowManager.updateViewLayout(mFloatLayout, wmParams);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		mAnimator.addListener(new Animator.AnimatorListener() {
+			@Override
+			public void onAnimationStart(Animator animation) {
+
+			}
+
+			@Override
+			public void onAnimationEnd(Animator animation) {
+				setHolder();
+			}
+
+			@Override
+			public void onAnimationCancel(Animator animation) {
+
+			}
+
+			@Override
+			public void onAnimationRepeat(Animator animation) {
+
+			}
+		});
+		mAnimator.setDuration(1000);
+		mAnimator.setTarget(mWindowManager);
+		mAnimator.start();
+	}
+
+	@SuppressLint("NewApi")
+	private void setBackground(String name) {
+		/*
+		 * mFloatView.setImageDrawable(
 		 * mContext.getResources().getDrawable(MResource.getIdByName(mContext,
 		 * "drawable", name)));
 		 */
-        if ("float_holder".equals(name)) {
-            mFloatView.setBackground(new BitmapDrawable(leftBitmap));
-        }
-        if ("float_holder2".equals(name)) {
-            mFloatView.setBackground(new BitmapDrawable(rightBitmap));
-        }
-        if ("float_drag".equals(name)) {
-            mFloatView.setBackground(new BitmapDrawable(dragBitmap));
-        }
-    }
+		if ("float_holder".equals(name)) {
+			mFloatView.setBackground(new BitmapDrawable(leftBitmap));
+		}
+		if ("float_holder2".equals(name)) {
+			mFloatView.setBackground(new BitmapDrawable(rightBitmap));
+		}
+		if ("float_drag".equals(name)) {
+			mFloatView.setBackground(new BitmapDrawable(dragBitmap));
+		}
+	}
 
-    @SuppressLint("NewApi")
-    private void setBackground2(String name) {
-        // item_lay.setBackground(mContext.getResources().getDrawable(MResource.getIdByName(mContext,
-        // "drawable", name)));
-    }
+	@SuppressLint("NewApi")
+	private void setBackground2(String name) {
+		// item_lay.setBackground(mContext.getResources().getDrawable(MResource.getIdByName(mContext,
+		// "drawable", name)));
+	}
 
-    private boolean isHolder = false;
+	private boolean isHolder = false;
 
-    private void setHolder() {
-        isHolder = true;
-        if (xfor == 0) {
-            Util.postDelayed(1000, new Runnable() {
-                @Override
-                public void run() {
-                    if (isHolder) {
-                        isHolder = false;
-                        setBackground("float_holder");
-                    }
-                }
-            });
-        } else {
-            Util.postDelayed(1000, new Runnable() {
-                @Override
-                public void run() {
-                    if (isHolder) {
-                        isHolder = false;
-                        setBackground("float_holder2");
-                    }
-                }
-            });
-        }
-    }
+	private void setHolder() {
+		isHolder = true;
+		if (xfor == 0) {
+			Util.postDelayed(1000, new Runnable() {
+				@Override
+				public void run() {
+					if (isHolder) {
+						isHolder = false;
+						setBackground("float_holder");
+					}
+				}
+			});
+		} else {
+			Util.postDelayed(1000, new Runnable() {
 
-    private void setMenuOut() {
-        // if (xfor == 0) {
-        // setBackground("float_menu_out");
-        // setBackground2("float_bg_left_up");
-        // } else {
-        // setBackground("float_menu_out2");
-        // setBackground2("float_bg_right_up");
-        // }
-    }
+				@Override
+				public void run() {
+					if (isHolder) {
+						isHolder = false;
+						setBackground("float_holder2");
+					}
+				}
 
-    private OnClickListener onclick = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (v.getId() == mFloatView.getId()) {
-                //Speed.getImp().update(mContext, speed++);
-                Logger.msg("current speed ->" + speed);
-                if (isClick && GoagalInfo.isLogin && GoagalInfo.userInfo != null) {
-                    Intent intent = new Intent(mContext, MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-                    mContext.startActivity(intent);
-                    isHolder = false;
-                    removeFloat();
-                }
-                return;
-            }
+			});
+		}
+	}
 
-        }
-    };
+	private void setMenuOut() {
+		// if (xfor == 0) {
+		// setBackground("float_menu_out");
+		// setBackground2("float_bg_left_up");
+		// } else {
+		// setBackground("float_menu_out2");
+		// setBackground2("float_bg_right_up");
+		// }
+	}
 
-    // 隐藏悬浮窗口
-    private void hideFloat() {
-        mFloatLayout.setVisibility(View.GONE);
-        // removeMenuLayout();
-    }
+	private OnClickListener onclick = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			if (v.getId() == mFloatView.getId()) {
+				// Speed.getImp().update(mContext, speed++);
+				Logger.msg("current speed ->" + speed);
+				if (isClick && GoagalInfo.isLogin && GoagalInfo.userInfo != null) {
+					Intent intent = new Intent(mContext, MainActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+					mContext.startActivity(intent);
+					isHolder = false;
+					removeFloat();
+				}
+				return;
+			}
 
-    // 移除悬浮窗口
-    public void removeFloat() {
-        try {
-            mWindowManager.removeView(mFloatLayout);
-            // removeMenuLayout();
-        } catch (Exception e) {
-        }
-        instance = null;
-    }
+		}
+	};
 
-    // 显示悬浮窗口
-    public void ShowFloat() {
-        mFloatLayout.setVisibility(View.VISIBLE);
-        setHolder();
-    }
+	// 隐藏悬浮窗口
+	private void hideFloat() {
+		mFloatLayout.setVisibility(View.GONE);
+		// removeMenuLayout();
+	}
+
+	// 移除悬浮窗口
+	public void removeFloat() {
+		try {
+			mWindowManager.removeView(mFloatLayout);
+			// removeMenuLayout();
+		} catch (Exception e) {
+			e.printStackTrace();
+			Logger.msg("removeFloat ->" + e.getMessage());
+
+		}
+		instance = null;
+	}
+
+	// 显示悬浮窗口
+	public void ShowFloat() {
+		if(SystemUtil.isValidContext(mContext)) {
+			if (mFloatLayout != null) {
+				if (Build.MANUFACTURER.equals("OnePlus") && !Settings.canDrawOverlays(mContext)) {
+					Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+					intent.setData(Uri.parse("package:" + mContext.getPackageName()));
+
+					((Activity) mContext).startActivity(intent);
+					
+					return;
+				}
+				mFloatLayout.setVisibility(View.VISIBLE);
+				setHolder();
+			}else {
+				createFloatView();
+			}
+		}
+	}
 
 }

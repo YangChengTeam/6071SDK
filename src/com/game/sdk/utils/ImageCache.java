@@ -58,7 +58,7 @@ public class ImageCache {
 			protected Bitmap doInBackground(String... params) {
 				InputStream is = null;
 				try {
-					is = GetDataImpl.getInstance(ctx).getImgFromNet(imgurl);
+					//is = GetDataImpl.getInstance(ctx).getImgFromNet(imgurl);
 				} catch (IllegalStateException e) {
 					e.printStackTrace();
 				}
@@ -159,7 +159,7 @@ public class ImageCache {
 		}
 
 		// 从网络上获取，获取后将图片保存到内存与sdcard中
-		InputStream is = GetDataImpl.getInstance(ctx).getImgFromNet(imgurl);
+		InputStream is = null;
 		Bitmap bm_net;
 		if (null != is) {
 			bm_net = BitmapFactory.decodeStream(is);

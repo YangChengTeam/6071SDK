@@ -1,12 +1,10 @@
 package com.game.sdk.utils;
 
-import org.apache.http.HttpHost;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.conn.params.ConnRouteParams;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
@@ -27,20 +25,20 @@ public class NetworkImpl {
 			return null;
 		}
 		HttpClient client = null;
-		if (isCmwapType(ctx)) {
-			HttpParams params = new BasicHttpParams();
-			HttpConnectionParams.setConnectionTimeout(params, TIMEOUT * 1000);// 设置链接超时时间
-			HttpConnectionParams.setSoTimeout(params, TIMEOUT * 1000);// 设置请求超时时间
-			HttpConnectionParams.setSocketBufferSize(params, 100 * 1024);
-			HttpClientParams.setRedirecting(params, true);
-			client = new DefaultHttpClient(params);
-		} else {
-			client = new DefaultHttpClient();
-			HttpParams params = client.getParams();
-			params.setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT,
-					TIMEOUT * 1000);
-			params.setParameter(CoreConnectionPNames.SO_TIMEOUT, TIMEOUT * 1000);
-		}
+//		if (isCmwapType(ctx)) {
+//			HttpParams params = new BasicHttpParams();
+//			HttpConnectionParams.setConnectionTimeout(params, TIMEOUT * 1000);// 设置链接超时时间
+//			HttpConnectionParams.setSoTimeout(params, TIMEOUT * 1000);// 设置请求超时时间
+//			HttpConnectionParams.setSocketBufferSize(params, 100 * 1024);
+//			HttpClientParams.setRedirecting(params, true);
+//			client = new DefaultHttpClient(params);
+//		} else {
+//			client = new DefaultHttpClient();
+//			HttpParams params = client.getParams();
+//			params.setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT,
+//					TIMEOUT * 1000);
+//			params.setParameter(CoreConnectionPNames.SO_TIMEOUT, TIMEOUT * 1000);
+//		}
 		return client;
 	}
 

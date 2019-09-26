@@ -48,7 +48,7 @@ import com.ss.android.common.applog.TeaConfigBuilder;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.analytics.MobclickAgent.EScenarioType;
 import com.umeng.analytics.MobclickAgent.UMAnalyticsConfig;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -57,11 +57,13 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
+import android.provider.Settings;
 import android.widget.Toast;
 
 /**
  * author zhangkai 2016年7月22日上午9:45:18
  */
+@SuppressLint("NewApi")
 public class FYGameSDK {
 
 	private static FYGameSDK instance;
@@ -112,37 +114,36 @@ public class FYGameSDK {
 		Util.getGameInfo(acontext);
 		// GoagalInfo.setGoagalInfo(acontext, PathUtil.getGolgalDir());
 		OKHttpRequest.initPicasso(acontext);// 初始化picasso
-		
-		//暂时去掉游戏“加速”功能
-		//Speed.load(acontext);
-		
-		//动态设置渠道信息
+
+		// 暂时去掉游戏“加速”功能
+		// Speed.load(acontext);
+
+		// 动态设置渠道信息
 		String appName = null;
 		try {
-			appName = SystemUtil.getAppName(acontext) != null ? SystemUtil.getAppName(acontext) : GoagalInfo.getPackageInfo(acontext).packageName;
-		}catch(Exception e) {
+			appName = SystemUtil.getAppName(acontext) != null ? SystemUtil.getAppName(acontext)
+					: GoagalInfo.getPackageInfo(acontext).packageName;
+		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
-			
+		} finally {
+
 		}
-		
+
 		Logger.msg("appName--->" + appName);
-		
+
 		// 友盟统计初始化
-		UMAnalyticsConfig umConfig = new UMAnalyticsConfig(acontext, "5879b43ca325113edf0010f8", appName + "---" + GoagalInfo.agentid,
-				EScenarioType.E_UM_NORMAL, true);
+		UMAnalyticsConfig umConfig = new UMAnalyticsConfig(acontext, "5879b43ca325113edf0010f8",
+				appName + "---" + GoagalInfo.agentid, EScenarioType.E_UM_NORMAL, true);
 		MobclickAgent.startWithConfigure(umConfig);
 		MobclickAgent.setScenarioType(acontext, EScenarioType.E_UM_NORMAL);
-		MobclickAgent.openActivityDurationTrack(false);//禁止默认的页面统计方式，这样将不会再自动统计Activity
-		
+		MobclickAgent.openActivityDurationTrack(false);// 禁止默认的页面统计方式，这样将不会再自动统计Activity
+
 		TeaAgent.setUserUniqueID(SystemUtil.getPhoneIMEI(acontext));
-        TeaAgent.init(TeaConfigBuilder.create(acontext)
-                .setAppName(GoagalInfo.teaAppName)
-                .setChannel(GoagalInfo.agentid)
-                .setAid(Integer.valueOf(GoagalInfo.teaAppId))
-                .createTeaConfig());
-        
-        Logger.msg("TeaAgent Init--->" + GoagalInfo.teaAppId + "--->" + GoagalInfo.teaAppName + "--->" + GoagalInfo.agentid);
+		TeaAgent.init(TeaConfigBuilder.create(acontext).setAppName(GoagalInfo.teaAppName).setChannel(GoagalInfo.agentid)
+				.setAid(Integer.valueOf(GoagalInfo.teaAppId)).createTeaConfig());
+
+		Logger.msg("TeaAgent Init--->" + GoagalInfo.teaAppId + "--->" + GoagalInfo.teaAppName + "--->"
+				+ GoagalInfo.agentid);
 	}
 
 	/**
@@ -153,7 +154,7 @@ public class FYGameSDK {
 		ThreadPoolManager.getInstance().addTask(new Runnable() {
 			@Override
 			public void run() {
-				
+
 				InitEngin initEngin = new InitEngin(acontext);
 
 				boolean result = initEngin.run();
@@ -242,7 +243,7 @@ public class FYGameSDK {
 		alogout = logoutCallback;
 		init();
 	}
-	
+
 	/**
 	 * 初始化相关数据（带初始化回调）
 	 * 
@@ -254,9 +255,9 @@ public class FYGameSDK {
 	 *            退出游戏回调
 	 */
 	public void initSDK(final Activity context, OnSDKInitListener initCallback, Runnable logoutCallback) {
-		initSDK(context,initCallback,null,logoutCallback);
+		initSDK(context, initCallback, null, logoutCallback);
 	}
-	
+
 	/**
 	 * 初始化相关数据（带初始化回调）
 	 * 
@@ -269,11 +270,12 @@ public class FYGameSDK {
 	 * @param logoutCallback
 	 *            游戏退出回调
 	 */
-	public void initSDK(final Activity context, OnSDKInitListener initCallback,Runnable switchAccountCallback, Runnable logoutCallback) {
-		if(isInitOk){
+	public void initSDK(final Activity context, OnSDKInitListener initCallback, Runnable switchAccountCallback,
+			Runnable logoutCallback) {
+		if (isInitOk) {
 			return;
 		}
-		
+
 		GoagalInfo.tempActivity = context;
 		acontext = context;
 		switchCallBack = switchAccountCallback;
@@ -281,20 +283,22 @@ public class FYGameSDK {
 		GoagalInfo.initActivity = context;
 		GoagalInfo.loginoutRunnable = logoutCallback;
 		this.initCallback = initCallback;
-		
-		//预初始化(移到此处预初始化，2017.5.12修改)
+
+		// 预初始化(移到此处预初始化，2017.5.12修改)
 		preInit();
-		
-		/*Intent intent = new Intent(context, InitActivity.class);
-		context.startActivity(intent);*/
-		
+
+		/*
+		 * Intent intent = new Intent(context, InitActivity.class);
+		 * context.startActivity(intent);
+		 */
+
 		Intent intent = new Intent(context, InitActivity.class);
 		context.startActivity(intent);
-		
-		context.overridePendingTransition(MResource.getIdByName(context, "anim", "fysdk_init_enter"), MResource.getIdByName(context, "anim", "fysdk_init_exit"));
+
+		context.overridePendingTransition(MResource.getIdByName(context, "anim", "fysdk_init_enter"),
+				MResource.getIdByName(context, "anim", "fysdk_init_exit"));
 	}
-	
-	
+
 	/**
 	 * 获取游戏SDK单例
 	 * 
@@ -320,11 +324,11 @@ public class FYGameSDK {
 	 *
 	 */
 	public void login(Context context, boolean isShowQuikLogin, OnLoginListener loginlistener) {
-		//判断是否切换过账号 
-		if(GoagalInfo.isChangeAccount) {
+		// 判断是否切换过账号
+		if (GoagalInfo.isChangeAccount) {
 			GoagalInfo.isLogin = false;
 		}
-		
+
 		if (GoagalInfo.isLogin) {
 			// recycle();
 			// 如果登录过了，就不需要点击，直接返回
@@ -341,53 +345,49 @@ public class FYGameSDK {
 			Util.toast(acontext, "网络不给力，请检查网络设置");
 			return;
 		}
-		
-		//第一步:如果安装过游戏盒子,从游戏盒子/或者本地的数据库文件中获取当前登录用户信息
-		/*boolean isFirst = PreferenceUtil.getImpl(context).getBoolean(Constants.isFirstAccount, true);
-		if(isFirst){
-	        try{
-	        	ContentResolver contentResolver = context.getContentResolver();
-		        Uri uri = Uri.parse("content://com.sdk.rpc.provide/gamesdk");
-		        
-	        	 Bundle gameBoxBundle = contentResolver.call(uri, "search_login", null, null);
-	             if(gameBoxBundle != null){
-	             	
-	             	GoagalInfo.userInfo = new UserInfo();
-	             	
-	             	String userName = !StringUtils.isEmpty(gameBoxBundle.getString("phone")) ? gameBoxBundle.getString("phone") : gameBoxBundle.getString("username");
-	             	
-	             	if(!StringUtils.isEmpty(userName)){
-	             		GoagalInfo.userInfo.username = userName;
-	             		GoagalInfo.userInfo.password = gameBoxBundle.getString("password");
-	             		GoagalInfo.userInfo.accountType = 0;//账号合并，此处已经不需要
-	             		GoagalInfo.loginType = 2;
-	             		
-	             		AccountInfoUtil.insertUserInfoFromPublic(context, GoagalInfo.userInfo);
-	             		
-	             	}else{
-	             		GoagalInfo.userInfo = null;
-	             	}
-	             	
-	             }
-	        }catch(Exception e){
-	        	Logger.msg("ContentResolver error--->");
-	        	e.printStackTrace();
-	        }
-	        
-	        PreferenceUtil.getImpl(context).putBoolean(Constants.isFirstAccount, false);
-		}*/
-		
-        //第二步:从本地保存的账户中获取一个账号
-        //if(GoagalInfo.userInfo == null){
-    	GoagalInfo.loginType = PreferenceUtil.getImpl(context).getInt(SystemUtil.getPhoneIMEI(context), 0);
-    	
+
+		// 第一步:如果安装过游戏盒子,从游戏盒子/或者本地的数据库文件中获取当前登录用户信息
+		/*
+		 * boolean isFirst =
+		 * PreferenceUtil.getImpl(context).getBoolean(Constants.isFirstAccount, true);
+		 * if(isFirst){ try{ ContentResolver contentResolver =
+		 * context.getContentResolver(); Uri uri =
+		 * Uri.parse("content://com.sdk.rpc.provide/gamesdk");
+		 * 
+		 * Bundle gameBoxBundle = contentResolver.call(uri, "search_login", null, null);
+		 * if(gameBoxBundle != null){
+		 * 
+		 * GoagalInfo.userInfo = new UserInfo();
+		 * 
+		 * String userName = !StringUtils.isEmpty(gameBoxBundle.getString("phone")) ?
+		 * gameBoxBundle.getString("phone") : gameBoxBundle.getString("username");
+		 * 
+		 * if(!StringUtils.isEmpty(userName)){ GoagalInfo.userInfo.username = userName;
+		 * GoagalInfo.userInfo.password = gameBoxBundle.getString("password");
+		 * GoagalInfo.userInfo.accountType = 0;//账号合并，此处已经不需要 GoagalInfo.loginType = 2;
+		 * 
+		 * AccountInfoUtil.insertUserInfoFromPublic(context, GoagalInfo.userInfo);
+		 * 
+		 * }else{ GoagalInfo.userInfo = null; }
+		 * 
+		 * } }catch(Exception e){ Logger.msg("ContentResolver error--->");
+		 * e.printStackTrace(); }
+		 * 
+		 * PreferenceUtil.getImpl(context).putBoolean(Constants.isFirstAccount, false);
+		 * }
+		 */
+
+		// 第二步:从本地保存的账户中获取一个账号
+		// if(GoagalInfo.userInfo == null){
+		GoagalInfo.loginType = PreferenceUtil.getImpl(context).getInt(SystemUtil.getPhoneIMEI(context), 0);
+
 		UserInfo currentUserInfo = getLastUserInfo();
 		if (currentUserInfo != null) {
 			GoagalInfo.userInfo = currentUserInfo;
 			GoagalInfo.loginType = 2;
 		}
-        //}
-        
+		// }
+
 		// 设置登录监听
 		GoagalInfo.loginlistener = loginlistener;
 
@@ -395,7 +395,7 @@ public class FYGameSDK {
 
 		if (GoagalInfo.userInfo != null && isAutoLogin) {
 			PreferenceUtil.getImpl(context).putBoolean(Constants.isAutoLogin, true);
-			
+
 			GoagalInfo.isChangeAccount = false;
 			autoLoginDialog = new LoginInDialog(acontext, GoagalInfo.userInfo.username);
 			autoLoginDialog.setCanceledOnTouchOutside(false);
@@ -418,11 +418,11 @@ public class FYGameSDK {
 					GoagalInfo.isQuick = 0;
 					login_int = new Intent(context, LoginActivity.class);
 				} else {
-					
-					if(GoagalInfo.userInfo != null){
+
+					if (GoagalInfo.userInfo != null) {
 						GoagalInfo.isQuick = 0;
 						login_int = new Intent(context, LoginActivity.class);
-					}else{
+					} else {
 						// is_mqr : 1：开，0：关
 						if (GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isMqr == 1) {
 							GoagalInfo.isQuick = 1;
@@ -434,20 +434,19 @@ public class FYGameSDK {
 					}
 				}
 			}
-			
+
 			if (GoagalInfo.loginType == 2) {
 				GoagalInfo.isQuick = 0;
 				login_int = new Intent(context, LoginActivity.class);
 			}
-			
+
 			login_int.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			context.startActivity(login_int);
 		}
 	}
 
 	/**
-	 * 自动登录时会调用
-	 * (账号+密码方式)登录
+	 * 自动登录时会调用 (账号+密码方式)登录
 	 * 
 	 * @author admin
 	 *
@@ -476,14 +475,14 @@ public class FYGameSDK {
 					Logger.msg("登录成功----");
 					GoagalInfo.isLogin = true;
 					// Util.toast(acontext, "登录成功");
-					
-					if(GoagalInfo.userInfo != null && !StringUtils.isEmpty(GoagalInfo.userInfo.agentId)){
-						if(!GoagalInfo.userInfo.agentId.equals(GoagalInfo.agentid)){
+
+					if (GoagalInfo.userInfo != null && !StringUtils.isEmpty(GoagalInfo.userInfo.agentId)) {
+						if (!GoagalInfo.userInfo.agentId.equals(GoagalInfo.agentid)) {
 							GoagalInfo.agentid = GoagalInfo.userInfo.agentId;
 							new ReInitInfoTaskByUserId().execute();
 						}
 					}
-					
+
 					if (!StringUtils.isEmpty(GoagalInfo.noticeMsg)) {
 						AutoNoticeDialog noticeDialog = new AutoNoticeDialog(acontext, GoagalInfo.noticeMsg);
 						noticeDialog.show();
@@ -509,46 +508,46 @@ public class FYGameSDK {
 	}
 
 	private class ReInitInfoTaskByUserId extends AsyncTask<String, Integer, Boolean> {
-		
+
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
 		}
-		
+
 		@Override
 		protected Boolean doInBackground(String... params) {
 			InitEngin initEngin = new InitEngin(acontext);
 			return initEngin.run();
 		}
-		
+
 		@Override
 		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
 		}
 	}
-	
+
 	public void loginSuccess() {
 
 		LogincallBack logincallBack = new LogincallBack();
-		
-		if(GoagalInfo.userInfo.newSdkReg == 0){
+
+		if (GoagalInfo.userInfo.newSdkReg == 0) {
 			logincallBack.username = GoagalInfo.userInfo.username;
-			if(GoagalInfo.userInfo.cpNotice == 0 && !StringUtils.isEmpty(GoagalInfo.userInfo.fixName)){
+			if (GoagalInfo.userInfo.cpNotice == 0 && !StringUtils.isEmpty(GoagalInfo.userInfo.fixName)) {
 				logincallBack.username = GoagalInfo.userInfo.fixName;
 			}
 		} else {
 			logincallBack.username = GoagalInfo.userInfo.userId;
 		}
-		
+
 		logincallBack.userId = GoagalInfo.userInfo.userId;
 		logincallBack.isBindPhone = GoagalInfo.userInfo.validateMobile == 1 ? true : false;
 		logincallBack.logintime = GoagalInfo.userInfo.logintime;
 		logincallBack.sign = GoagalInfo.userInfo.sign;
-		
-		//返回实名认证，生日
+
+		// 返回实名认证，生日
 		logincallBack.isAuthenticated = GoagalInfo.userInfo.isAuthenticated == 0 ? false : true;
 		logincallBack.birthday = GoagalInfo.userInfo.birthday;
-		
+
 		GoagalInfo.loginlistener.loginSuccess(logincallBack);
 
 		// 保存登录成功的登录方式，下次直接到此页面
@@ -565,11 +564,9 @@ public class FYGameSDK {
 		UserInfo userInfo = null;
 		try {
 			/*
-			 * String userInfoStr =
-			 * PreferenceUtil.getImpl(acontext).getString(SystemUtil.
-			 * getPhoneIMEI(acontext)+userName, ""); if
-			 * (!StringUtils.isEmpty(userInfoStr)) { userInfo =
-			 * JSON.parseObject(userInfoStr, UserInfo.class); }
+			 * String userInfoStr = PreferenceUtil.getImpl(acontext).getString(SystemUtil.
+			 * getPhoneIMEI(acontext)+userName, ""); if (!StringUtils.isEmpty(userInfoStr))
+			 * { userInfo = JSON.parseObject(userInfoStr, UserInfo.class); }
 			 */
 
 		} catch (Exception e) {
@@ -580,32 +577,33 @@ public class FYGameSDK {
 
 	public UserInfo getLastUserInfo() {
 		UserInfo lastUserInfo = null;
-		
+
 		List<UserInfo> list = AccountInfoUtil.loadAllUserInfo(acontext);
-		
-		if(list == null){
+
+		if (list == null) {
 			list = new ArrayList<UserInfo>();
 		}
-		
-		//合并账号，只读取一次
+
+		// 合并账号，只读取一次
 		boolean isRead = PreferenceUtil.getImpl(acontext).getBoolean(Constants.isReadLastVersion, false);
-		if(!isRead){
+		if (!isRead) {
 			List<UserInfo> lastVersionPhoneList = MobileInfoUtil.loadAllUserInfo(acontext);
-			if(lastVersionPhoneList != null && lastVersionPhoneList.size() > 0){
-				if(list.size() == 0){
+			if (lastVersionPhoneList != null && lastVersionPhoneList.size() > 0) {
+				if (list.size() == 0) {
 					for (int i = 0; i < lastVersionPhoneList.size(); i++) {
 						UserInfo _userInfo = lastVersionPhoneList.get(i);
-						list.add(0,_userInfo);
+						list.add(0, _userInfo);
 						AccountInfoUtil.insertUserInfo(acontext, _userInfo);
 					}
-				}else{
+				} else {
 					for (int i = 0; i < lastVersionPhoneList.size(); i++) {
 						UserInfo _userInfo = lastVersionPhoneList.get(i);
-						
+
 						int len = list.size();
-						for(int j = 0;j < len;j++){
-							if(!StringUtils.isEmpty(_userInfo.username) && !_userInfo.username.equals(list.get(j).username)){
-								list.add(0,_userInfo);
+						for (int j = 0; j < len; j++) {
+							if (!StringUtils.isEmpty(_userInfo.username)
+									&& !_userInfo.username.equals(list.get(j).username)) {
+								list.add(0, _userInfo);
 								AccountInfoUtil.insertUserInfo(acontext, _userInfo);
 							}
 						}
@@ -613,18 +611,18 @@ public class FYGameSDK {
 				}
 			}
 			PreferenceUtil.getImpl(acontext).putBoolean(Constants.isReadLastVersion, true);
-			
-			//合并2.2之前的版本，第一次读取时，清除主页模块的缓存
-			
+
+			// 合并2.2之前的版本，第一次读取时，清除主页模块的缓存
+
 			PreferenceUtil.getImpl(acontext).putString(ServerConfig.MAIN_MODULE_URL, "");
 		}
-		
+
 		if (list != null && list.size() > 0) {
 			lastUserInfo = list.get(0);
 		} else {
 			lastUserInfo = UserLoginInfodao.getInstance(acontext).getUserInfoLastByType();
 		}
-		
+
 		return lastUserInfo;
 	}
 
@@ -710,8 +708,7 @@ public class FYGameSDK {
 		context.startActivity(pay_int);
 		instance.removeFloatButton();
 	}
-	
-	
+
 	/**
 	 * 退出游戏(回收资源)
 	 */
@@ -729,38 +726,39 @@ public class FYGameSDK {
 	 */
 	public void switchUser() {
 		recycle(1);
-		
-		//TODO 此处需求待定，切换账号时，SDK中只注销资源，不跳转到登录界面，游戏收到回调后做可跳转到登录操作界面
-		if(!isOpenLogout()){
+
+		// TODO 此处需求待定，切换账号时，SDK中只注销资源，不跳转到登录界面，游戏收到回调后做可跳转到登录操作界面
+		if (!isOpenLogout()) {
 			Intent intent = new Intent(acontext, LoginActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			acontext.startActivity(intent);
 		}
 	}
-	
+
 	/**
 	 * 显示悬浮按钮
 	 */
 	public void createFloatButton() {
-		if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
+		
+		if (GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
 			TeaAgent.onResume(acontext);
 			Logger.msg("TeaAgent onResume");
 		}
 		if (!GoagalInfo.isLogin) {
 			return;
 		}
-		
+
 		boolean isShow = PreferenceUtil.getImpl(acontext).getBoolean("IS_SHOW_OPEN_WINDOW", true);
-		if(isShow && Build.VERSION.SDK_INT >= 24){
+		if (isShow && Build.VERSION.SDK_INT >= 24) {
 			acontext.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					Toast.makeText(acontext, "请手动开启悬浮窗权限",Toast.LENGTH_LONG).show();
+					Toast.makeText(acontext, "请手动开启悬浮窗权限", Toast.LENGTH_LONG).show();
 				}
 			});
 			PreferenceUtil.getImpl(acontext).putBoolean("IS_SHOW_OPEN_WINDOW", false);
 		}
-		
+
 		Logger.msg("悬浮按钮启动");
 		FloatViewImpl.getInstance(acontext).ShowFloat();
 	}
@@ -771,7 +769,7 @@ public class FYGameSDK {
 	public void removeFloatButton() {
 		// if (GoagalInfo.isLogin) {
 		Logger.msg("移除悬浮按钮");
-		if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
+		if (GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
 			TeaAgent.onPause(acontext);
 			Logger.msg("TeaAgent onPause");
 
@@ -779,22 +777,31 @@ public class FYGameSDK {
 		FloatViewImpl.getInstance(acontext).removeFloat();
 		// }
 	}
-	
-	
+
 	/**
 	 * 设置用户角色信息
+	 * 
 	 * @param context
-	 * @param dataType 1.进入游戏 2.角色升级 3.进入副本 4.离开副本 5.创建角色
-	 * @param userId 游戏的唯一标示 (就是指用户的ID)
-	 * @param roleid 角色id
-	 * @param roleName 角色名称
-	 * @param serverId 区服ID
-	 * @param serverName 区服名称
-	 * @param roleLevel 角色等级
-	 * @param union 工会名称 (角色工会名称 没有的话写暂无)
+	 * @param dataType
+	 *            1.进入游戏 2.角色升级 3.进入副本 4.离开副本 5.创建角色
+	 * @param userId
+	 *            游戏的唯一标示 (就是指用户的ID)
+	 * @param roleid
+	 *            角色id
+	 * @param roleName
+	 *            角色名称
+	 * @param serverId
+	 *            区服ID
+	 * @param serverName
+	 *            区服名称
+	 * @param roleLevel
+	 *            角色等级
+	 * @param union
+	 *            工会名称 (角色工会名称 没有的话写暂无)
 	 */
-	public void setUserRole(int dataType, String userId,String roleId, String roleName,String serverId,String serverName ,String roleLevel, String union,SetRoleListener setRoleListener) {
-		
+	public void setUserRole(int dataType, String userId, String roleId, String roleName, String serverId,
+			String serverName, String roleLevel, String union, SetRoleListener setRoleListener) {
+
 		RoleInfo roleInfo = new RoleInfo();
 		roleInfo.setDataType(dataType);
 		roleInfo.setUserId(userId);
@@ -804,66 +811,64 @@ public class FYGameSDK {
 		roleInfo.setServerName(serverName);
 		roleInfo.setRoleLevel(roleLevel);
 		roleInfo.setUnion(union);
-		
-		new UserRoleTask(roleInfo,setRoleListener).execute();
+
+		new UserRoleTask(roleInfo, setRoleListener).execute();
 	}
-	
-	
+
 	private class UserRoleTask extends AsyncTask<String, Integer, ResultInfo<RoleInfo>> {
-		
+
 		public RoleInfo mRoleInfo;
-		
+
 		public SetRoleListener mRoleListener;
-	
-		public UserRoleTask(RoleInfo roleInfo,SetRoleListener roleListener) {
+
+		public UserRoleTask(RoleInfo roleInfo, SetRoleListener roleListener) {
 			this.mRoleInfo = roleInfo;
 			this.mRoleListener = roleListener;
 		}
-		
+
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
 		}
-		
+
 		@Override
 		protected ResultInfo<RoleInfo> doInBackground(String... params) {
-			UserRoleEngin userRoleEngin = new UserRoleEngin(acontext,mRoleInfo);
+			UserRoleEngin userRoleEngin = new UserRoleEngin(acontext, mRoleInfo);
 			return userRoleEngin.run();
 		}
-		
+
 		@Override
 		protected void onPostExecute(ResultInfo<RoleInfo> result) {
 			super.onPostExecute(result);
 			if (result != null && result.code == HttpConfig.STATUS_OK) {
-				if(mRoleListener != null) {
+				if (mRoleListener != null) {
 					mRoleListener.roleSetSuccess(result.data);
 				}
-			}else {
-				if(mRoleListener != null) {
+			} else {
+				if (mRoleListener != null) {
 					mRoleListener.roleSetFail();
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param type
-	 * 1.切换账号
-	 * 2.退出游戏
+	 *            1.切换账号 2.退出游戏
 	 */
 	public void recycle(int type) {
 
 		Logger.msg("回收资源");
-		
+
 		if (switchCallBack != null && type == 1) {
 			switchCallBack.run();
 		}
-		
-		if (alogout != null  && type == 2) {
+
+		if (alogout != null && type == 2) {
 			alogout.run();
 		}
-		
+
 		removeFloatButton();
 
 		GoagalInfo.userInfo = null;
@@ -876,7 +881,7 @@ public class FYGameSDK {
 	 * @return 返回游戏SDK版本号
 	 */
 	public String getVersion() {
-		return "2.4.0";
+		return "2.4.2";
 	}
 
 	/**
