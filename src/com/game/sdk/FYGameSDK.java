@@ -881,7 +881,7 @@ public class FYGameSDK {
 	 * @return 返回游戏SDK版本号
 	 */
 	public String getVersion() {
-		return "2.4.2";
+		return "2.4.4";
 	}
 
 	/**

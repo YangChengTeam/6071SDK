@@ -477,28 +477,29 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 							 */
 							// mainActivity.changeFragment(10);
 
-							if (CheckUtil.isInstallGameBox(mainActivity)) {
-
-								// 自定义事件
-								MobclickAgent.onEvent(mainActivity, "score_open_game_box");
-
-								String pwd = Base64.encode(Encrypt.encode(GoagalInfo.userInfo.password).getBytes());
-
-								String mobile = StringUtils.isEmpty(GoagalInfo.userInfo.mobile)
-										? GoagalInfo.userInfo.username : GoagalInfo.userInfo.mobile;
-
-								Uri uri = Uri.parse("gamebox://?act=GoodTypeActivity&pwd=" + pwd + "&phone=" + mobile
-										+ "&username=" + GoagalInfo.userInfo.username + "&data=" + GoagalInfo.gameid);
-
-								Logger.msg("积分商城URI---" + uri.toString());
-								Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-								mainActivity.startActivity(intent);
-							} else {
-								gameBoxDown(1);
-							}
-
+//							if (CheckUtil.isInstallGameBox(mainActivity)) {
+//
+//								// 自定义事件
+//								MobclickAgent.onEvent(mainActivity, "score_open_game_box");
+//
+//								String pwd = Base64.encode(Encrypt.encode(GoagalInfo.userInfo.password).getBytes());
+//
+//								String mobile = StringUtils.isEmpty(GoagalInfo.userInfo.mobile)
+//										? GoagalInfo.userInfo.username : GoagalInfo.userInfo.mobile;
+//
+//								Uri uri = Uri.parse("gamebox://?act=GoodTypeActivity&pwd=" + pwd + "&phone=" + mobile
+//										+ "&username=" + GoagalInfo.userInfo.username + "&data=" + GoagalInfo.gameid);
+//
+//								Logger.msg("积分商城URI---" + uri.toString());
+//								Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+//								mainActivity.startActivity(intent);
+//							} else {
+//								gameBoxDown(1);
+//							}
+							Util.toast(mainActivity, "敬请期待");
 						}
 						if (moduleInfo.type == 0 && moduleInfo.typeVal.equals(Constants.GAME_PACKAGE)) {
+							Util.toast(mainActivity, "敬请期待");
 							// Intent intent = new Intent(mainActivity,
 							// GamePackageActivity.class);
 							// startActivity(intent);
@@ -511,29 +512,29 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 							 */
 
 							// mainActivity.changeFragment(11);
-
-							if (CheckUtil.isInstallGameBox(mainActivity)) {
-
-								// 自定义事件
-								MobclickAgent.onEvent(mainActivity, "package_open_game_box");
-
-								String pwd = Base64.encode(Encrypt.encode(GoagalInfo.userInfo.password).getBytes());
-
-								String mobile = StringUtils.isEmpty(GoagalInfo.userInfo.mobile)
-										? GoagalInfo.userInfo.username : GoagalInfo.userInfo.mobile;
-
-								String tempData = Base64.encode(
-										("{\"game_id\":\"" + GoagalInfo.gameid + "\", \"game_name\":\"\"}").getBytes());
-								Uri uri = Uri.parse("gamebox://?act=GiftListActivity&pwd=" + pwd + "&phone=" + mobile
-										+ "&username=" + GoagalInfo.userInfo.username + "&data=" + tempData);
-
-								Logger.msg("游戏礼包URI---" + uri.toString());
-								Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-								mainActivity.startActivity(intent);
-
-							} else {
-								gameBoxDown(2);
-							}
+							
+//							if (CheckUtil.isInstallGameBox(mainActivity)) {
+//
+//								// 自定义事件
+//								MobclickAgent.onEvent(mainActivity, "package_open_game_box");
+//
+//								String pwd = Base64.encode(Encrypt.encode(GoagalInfo.userInfo.password).getBytes());
+//
+//								String mobile = StringUtils.isEmpty(GoagalInfo.userInfo.mobile)
+//										? GoagalInfo.userInfo.username : GoagalInfo.userInfo.mobile;
+//
+//								String tempData = Base64.encode(
+//										("{\"game_id\":\"" + GoagalInfo.gameid + "\", \"game_name\":\"\"}").getBytes());
+//								Uri uri = Uri.parse("gamebox://?act=GiftListActivity&pwd=" + pwd + "&phone=" + mobile
+//										+ "&username=" + GoagalInfo.userInfo.username + "&data=" + tempData);
+//
+//								Logger.msg("游戏礼包URI---" + uri.toString());
+//								Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+//								mainActivity.startActivity(intent);
+//
+//							} else {
+//								gameBoxDown(2);
+//							}
 						}
 
 						if (moduleInfo.type == 0 && moduleInfo.typeVal.equals(Constants.ACCOUNT_SAFETY)) {
@@ -543,25 +544,26 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnPag
 
 						// 游戏中心
 						if (moduleInfo.type == 0 && moduleInfo.typeVal.equals(Constants.GAME_CENTER)) {
-							if (CheckUtil.isInstallGameBox(mainActivity)) {
-
-								// 自定义事件
-								MobclickAgent.onEvent(mainActivity, "gamecenter_open_game_box");
-
-								String pwd = Base64.encode(Encrypt.encode(GoagalInfo.userInfo.password).getBytes());
-
-								String mobile = StringUtils.isEmpty(GoagalInfo.userInfo.mobile)
-										? GoagalInfo.userInfo.username : GoagalInfo.userInfo.mobile;
-
-								Uri uri = Uri.parse("gamebox://?act=MainActivity&pwd=" + pwd + "&phone=" + mobile
-										+ "&username=" + GoagalInfo.userInfo.username);
-
-								Logger.msg("游戏中心---" + uri.toString());
-								Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-								mainActivity.startActivity(intent);
-							} else {
-								gameBoxDown(3);
-							}
+							Util.toast(mainActivity, "敬请期待");
+//							if (CheckUtil.isInstallGameBox(mainActivity)) {
+//
+//								// 自定义事件
+//								MobclickAgent.onEvent(mainActivity, "gamecenter_open_game_box");
+//
+//								String pwd = Base64.encode(Encrypt.encode(GoagalInfo.userInfo.password).getBytes());
+//
+//								String mobile = StringUtils.isEmpty(GoagalInfo.userInfo.mobile)
+//										? GoagalInfo.userInfo.username : GoagalInfo.userInfo.mobile;
+//
+//								Uri uri = Uri.parse("gamebox://?act=MainActivity&pwd=" + pwd + "&phone=" + mobile
+//										+ "&username=" + GoagalInfo.userInfo.username);
+//
+//								Logger.msg("游戏中心---" + uri.toString());
+//								Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+//								mainActivity.startActivity(intent);
+//							} else {
+//								gameBoxDown(3);
+//							}
 						}
 					}
 

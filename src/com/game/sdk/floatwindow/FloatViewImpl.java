@@ -68,6 +68,8 @@ public class FloatViewImpl {
 
 	public Bitmap rightBitmap;
 
+	boolean isShowCanDrawOverlays = true;
+	
 	private FloatViewImpl(Context context) {
 		init(context);
 	}
@@ -118,14 +120,19 @@ public class FloatViewImpl {
 	private void createFloatView() {
 
 		if (SystemUtil.isValidContext(mContext)) {
-
-			if (Build.MANUFACTURER.equals("OnePlus") && !Settings.canDrawOverlays(mContext)) {
+		
+			if (!Settings.canDrawOverlays(mContext) && isShowCanDrawOverlays) {
 				Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
 				intent.setData(Uri.parse("package:" + mContext.getPackageName()));
-
+				intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+				Logger.msg("canDrawOverlays createFloatView ->");
+				
 				Toast.makeText(mContext, "请允许使用悬浮窗权限", Toast.LENGTH_LONG).show();
 				((Activity) mContext).startActivity(intent);
+				isShowCanDrawOverlays = false;
 				return;
+			}else {
+				isShowCanDrawOverlays = false;
 			}
 
 			if (wmParams == null) {
@@ -457,11 +464,13 @@ public class FloatViewImpl {
 	public void ShowFloat() {
 		if(SystemUtil.isValidContext(mContext)) {
 			if (mFloatLayout != null) {
-				if (Build.MANUFACTURER.equals("OnePlus") && !Settings.canDrawOverlays(mContext)) {
+				if (!Settings.canDrawOverlays(mContext)) {
 					Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
 					intent.setData(Uri.parse("package:" + mContext.getPackageName()));
-
+					intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 					((Activity) mContext).startActivity(intent);
+					
+					Logger.msg("canDrawOverlays ShowFloat ->");
 					
 					return;
 				}

@@ -185,8 +185,12 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 					if (resultStatus == 9000) {
 						// 支付成功
 						if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
-							EventUtils.setPurchase("","","",1,payWay,"rmb",true,(int)amount);
-					        Logger.msg("TeaAgent Pay True");
+							if(amount > 1) {
+								EventUtils.setPurchase("","","",1,payWay,"rmb",true,(int)amount);
+								Logger.msg("TeaAgent Pay True");
+							}else {
+								Logger.msg("TeaAgent Pay amount <=1 ");
+							}
 						}
 						PaymentCallbackInfo pci = new PaymentCallbackInfo();
 						pci.money = amount;
@@ -226,7 +230,7 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 				} else {
 					if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
 						EventUtils.setPurchase("","","",1,payWay,"rmb",false,(int)amount);
-						Logger.msg("-----支付成功");
+						Logger.msg("TeaAgent Pay False");
 					}
 					// 如果msg为null 是支付宝那边返回数据为null
 					PaymentErrorMsg msg_e = new PaymentErrorMsg();
@@ -976,7 +980,12 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 		if (isnowpay.equals("2")) {
 			if (nowpayCode.equals("00")) {
 				if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
-					EventUtils.setPurchase("","","",1,payWay,"rmb",true,(int)amount);
+					if(amount > 1) {
+						EventUtils.setPurchase("","","",1,payWay,"rmb",true,(int)amount);
+						Logger.msg("TeaAgent Pay True");
+					}else {
+						Logger.msg("TeaAgent Pay amount <=1 ");
+					}
 				}
 				// Util.toast(this, "支付成功");
 				Logger.msg("支付成功--->");
@@ -1000,6 +1009,7 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 			if (nowpayCode.equals("02")) {
 				if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
 					EventUtils.setPurchase("","","",1,payWay,"rmb",false,(int)amount);
+					Logger.msg("TeaAgent Pay False");
 				}
 				// Util.toast(this, "支付取消");
 				Logger.msg("支付取消--->");
@@ -1024,6 +1034,7 @@ public class PayActivity extends BaseActivity implements OnClickListener, PayRes
 			if (nowpayCode.equals("01")) {
 				if(GoagalInfo.inItInfo != null && GoagalInfo.inItInfo.isPostToToutiaoSdk == 1) {
 					EventUtils.setPurchase("","","",1,payWay,"rmb",false,(int)amount);
+					Logger.msg("TeaAgent Pay False");
 				}
 				Util.toast(this, nowpayMsg);
 				PaymentErrorMsg msg_e = new PaymentErrorMsg();
